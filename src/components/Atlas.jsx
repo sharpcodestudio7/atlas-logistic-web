@@ -1010,10 +1010,10 @@ function PaymentMarquee() {
 
 function Footer() {
   const soc = [
-    { n: "Instagram", h: "https://www.instagram.com/atlaslogisticaglobal", img: "/images/insta sin fondo.svg", size: 36 },
-    { n: "TikTok", h: "https://www.tiktok.com/@atlas.logistic", img: "/images/tiktok (1).svg", size: 36 },
-    { n: "Facebook", h: "https://www.facebook.com/atlaslogistic", img: "/images/facebook.svg", size: 26 },
-    { n: "LinkedIn", h: "https://www.linkedin.com/company/atlas-logistic", img: "/images/linkdn (1).svg", size: 36 },
+    { n: "Instagram", h: "https://www.instagram.com/atlaslogisticaglobal", img: "/images/insta sin fondo.png", size: 36 },
+    { n: "TikTok", h: "https://www.tiktok.com/@atlas.logistic", img: "/images/tiktok (1).png", size: 36 },
+    { n: "Facebook", h: "https://www.facebook.com/atlaslogistic", img: "/images/facebook.png", size: 26 },
+    { n: "LinkedIn", h: "https://www.linkedin.com/company/atlas-logistic", img: "/images/linkdn.png", size: 36 },
   ];
   return (
     <footer id="contacto" style={{ background: "#0c2340", color: "#fff", position: "relative", overflow: "hidden" }}>
@@ -1058,14 +1058,14 @@ function Footer() {
             <Logo h={70} style={{ marginBottom: 20 }} />
             <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#9ca3af", lineHeight: 1.75, maxWidth: 420, marginBottom: 28 }}>Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!</p>
             <div style={{ marginBottom: 28 }}>
-              <a href={PH} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, textDecoration: "none" }}>
-                <div style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
+              <a href={PH} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14, textDecoration: "none" }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(27,111,234,0.12)", border: "1px solid rgba(27,111,234,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(27,111,234,0.4))" }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
                 </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#d1d5db" }}>+57 322 605 5431</span>
               </a>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                <div style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(27,111,234,0.12)", border: "1px solid rgba(27,111,234,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2, filter: "drop-shadow(0 0 8px rgba(27,111,234,0.4))" }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
                 </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#d1d5db" }}>Carrera 31b # 4A-11, Bogotá, Colombia — Barrio Veraguas</span>
               </div>
             </div>
