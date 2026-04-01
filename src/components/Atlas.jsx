@@ -31,7 +31,7 @@ function AnimBtn({ href, children, bg, hoverBg, shadow, hoverShadow, external = 
         display: "inline-flex", alignItems: "center", gap: 10,
         background: hov ? (hoverBg || bg) : bg,
         color: "#fff", padding: style?.padding || "12px 24px", borderRadius: 50,
-        fontSize: 13, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif",
+        fontSize: 15, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif",
         textTransform: "uppercase", letterSpacing: 0.5, textDecoration: "none",
         boxShadow: hov ? (hoverShadow || shadow || "0 12px 32px rgba(0,0,0,0.2)") : (shadow || "0 6px 20px rgba(0,0,0,0.15)"),
         transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -59,7 +59,7 @@ function NavLink({ href, label }) {
   };
   return (
     <a href={href} onClick={scrollTo} style={{
-      color: hov ? "#fff" : "rgba(255,255,255,0.7)", fontSize: 15, fontWeight: 500,
+      color: hov ? "#fff" : "rgba(255,255,255,0.7)", fontSize: 17, fontWeight: 500,
       fontFamily: "'Fira Sans',sans-serif", textDecoration: "none",
       transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
       position: "relative", paddingBottom: 8, display: "inline-block",
@@ -130,11 +130,11 @@ function Nav() {
       {mo && <div style={{ background: scrolled ? "rgba(12,35,64,0.95)" : "rgba(12,35,64,0.97)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderTop: "1px solid rgba(255,255,255,0.08)", padding: "12px 24px" }}>
         {lnk.map(l => <a key={l.h} href={l.h} onClick={(e) => { e.preventDefault(); setMo(false); const el = document.getElementById(l.h.replace('#','')); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} style={{ display: "block", padding: "12px 0", color: "rgba(255,255,255,0.8)", fontSize: 16, fontWeight: 500, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>{l.l}</a>)}
         <div style={{ paddingTop: 16, paddingBottom: 8, display: "flex", gap: 10 }}>
-          <a href={WA} target="_blank" rel="noopener noreferrer" onClick={() => setMo(false)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "12px 16px", borderRadius: 50, background: "#25D366", color: "#fff", fontSize: 13, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none" }}>
+          <a href={WA} target="_blank" rel="noopener noreferrer" onClick={() => setMo(false)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "12px 16px", borderRadius: 50, background: "#25D366", color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
             WhatsApp
           </a>
-          <a href={PH} onClick={() => setMo(false)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "12px 16px", borderRadius: 50, background: "linear-gradient(135deg, #1b6fea, #00a6ff)", color: "#fff", fontSize: 13, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none" }}>
+          <a href={PH} onClick={() => setMo(false)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "12px 16px", borderRadius: 50, background: "linear-gradient(135deg, #1b6fea, #00a6ff)", color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none" }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
             Llamar
           </a>
@@ -151,8 +151,8 @@ function Hero() {
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(12,35,64,0.9) 0%, rgba(12,35,64,0.72) 40%, rgba(12,35,64,0.55) 100%)" }} />
       <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "120px 24px 60px", width: "100%" }}>
         <div style={{ maxWidth: 800 }}>
-          <R delay={200}><h1 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)", lineHeight: 1.08, letterSpacing: "-0.02em" }}>Tu carga internacional,<br />a tiempo y sin fronteras.</h1></R>
-          <R delay={400}><p style={{ marginTop: 24, color: "rgba(255,255,255,0.75)", fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)", maxWidth: 500, lineHeight: 1.7, fontFamily: "'Roboto',sans-serif" }}>Operador Logístico Integral en Colombia: Transporte Marítimo, Aéreo y Agenciamiento Aduanero.</p></R>
+          <R delay={200}><h1 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)", lineHeight: 1.08, letterSpacing: "-0.02em" }}>¡Desde donde estés<br />hasta donde lo necesites!</h1></R>
+          <R delay={400}><p style={{ marginTop: 20, color: "rgba(255,255,255,0.75)", fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)", maxWidth: 500, lineHeight: 1.7, fontFamily: "'Roboto',sans-serif" }}>Especialistas en logística internacional aérea: Importaciones, exportaciones por courier y agenciamiento aduanero.</p></R>
           <R delay={600}><div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", gap: 14 }}>
             <AnimBtn href={WA} external bg="#00a6ff" hoverBg="#1b6fea" shadow="0 8px 24px rgba(0,166,255,0.35)" hoverShadow="0 14px 32px rgba(27,111,234,0.4)">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
@@ -244,13 +244,13 @@ function SvcCard({ icon, title, desc, color, hoverAnim }) {
           transition: "color 0.3s",
         }}>{title}</h3>
         <p style={{
-          fontFamily: "'Roboto',sans-serif", fontSize: 14, lineHeight: 1.6,
+          fontFamily: "'Roboto',sans-serif", fontSize: 15, lineHeight: 1.6,
           color: hov ? "#4b5563" : "#6b7280",
           transition: "color 0.3s",
         }}>{desc}</p>
       </div>
       <span style={{
-        fontFamily: "'Fira Sans',sans-serif", fontSize: 13, fontWeight: 600,
+        fontFamily: "'Fira Sans',sans-serif", fontSize: 14, fontWeight: 600,
         color: hov ? "#1b6fea" : "#00a6ff",
         transition: "color 0.3s", display: "inline-flex", alignItems: "center", gap: 4, marginTop: 14,
       }}>
@@ -268,10 +268,10 @@ function Services() {
   const data = [
     { k: "importacion", t: "Importación por Courier", d: "Recepción de envíos desde el exterior hacia Colombia con liberación rápida puerta a puerta.", color: "#1b6fea" },
     { k: "exportacion", t: "Exportación por Courier", d: "Envíos desde Colombia hacia más de 220 países con trámites simplificados y tránsito express.", color: "#00a6ff" },
-    { k: "maritimo", t: "Transporte Marítimo", d: "Gestión integral de carga marítima internacional con tiempos competitivos y seguimiento.", color: "#0c2340" },
-    { k: "aereo", t: "Transporte Aéreo", d: "Carga aérea rápida y segura para envíos urgentes o de alto valor con cobertura global.", color: "#1b6fea" },
-    { k: "casillero", t: "Casillero Internacional", d: "Direcciones en EE.UU., España y China para consolidar compras y optimizar costos.", color: "#00a6ff" },
-    { k: "terrestre", t: "Carga Terrestre", d: "Transporte terrestre eficiente con cobertura en distintas ciudades y total confiabilidad.", color: "#0c2340" },
+    { k: "terrestre", t: "Envíos Terrestres a Venezuela", d: "Transporte terrestre eficiente y de menor costo con cobertura en distintas ciudades.", color: "#0c2340" },
+    { k: "casillero", t: "Casillero Internacional", d: "Direcciones en EE.UU., España y China para consolidar compras y optimizar costos.", color: "#1b6fea" },
+    { k: "aereo", t: "Triangulación de Envíos", d: "Envíos directos entre países, reduciendo tiempos de tránsito y evitando procesos intermedios.", color: "#00a6ff" },
+    { k: "importacion", t: "Operaciones Especiales", d: "Exportaciones temporales, reembarques, mercancías peligrosas, calibraciones y reparaciones.", color: "#0c2340" },
   ];
   const maxPos = data.length - visible;
   const canLeft = pos > 0;
@@ -416,7 +416,7 @@ function StatCard({ icon, value, numEnd, numSuffix, label, color, hoverAnim }) {
         textShadow: hov ? "none" : "none",
       }}>{numEnd != null ? <AnimCounter end={numEnd} suffix={numSuffix} /> : value}</h3>
       <p style={{
-        fontFamily: "'Roboto',sans-serif", fontSize: 11, lineHeight: 1.35,
+        fontFamily: "'Roboto',sans-serif", fontSize: 13, lineHeight: 1.35,
         color: hov ? "#1b6fea" : "#6b7280",
         transition: "color 0.3s",
       }}>{label}</p>
@@ -489,7 +489,7 @@ function VideoCard() {
           </svg>
         </div>
         <p style={{
-          fontFamily: "'Fira Sans',sans-serif", fontSize: 14, fontWeight: 600,
+          fontFamily: "'Fira Sans',sans-serif", fontSize: 15, fontWeight: 600,
           color: hov ? "#1b6fea" : "#9ca3af",
           transition: "color 0.3s",
         }}>Video institucional</p>
@@ -516,7 +516,7 @@ function About() {
               <span style={{ width: 44, height: 3, background: "#1b6fea", borderRadius: 4, display: "inline-block" }} />
               <span style={{ width: 18, height: 3, background: "#00a6ff", borderRadius: 4, display: "inline-block" }} />
             </div>
-            <div style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#4b5563", lineHeight: 1.8 }}>
+            <div style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#4b5563", lineHeight: 1.8 }}>
               <p style={{ marginBottom: 16 }}>En <strong style={{ color: "#1d1d1b" }}>ATLAS LOGISTIC</strong> somos especialistas en logística internacional aérea, brindando soluciones integrales en importaciones y exportaciones, garantizando rapidez, seguridad y confiabilidad en cada operación.</p>
               <p style={{ marginBottom: 16 }}>Gestionamos cada envío con altos estándares de precisión y control, respaldados por un equipo comprometido en ofrecer un servicio personalizado en todas las etapas del proceso logístico.</p>
               <p>Más que transportar mercancías, facilitamos el comercio internacional y generamos oportunidades que impulsan el crecimiento de nuestros clientes a nivel global.</p>
@@ -545,10 +545,10 @@ function WhyUsCard({ icon, title, desc, color, hoverAnim }) {
   return (
     <div
       style={{
-        background: hov ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)",
+        background: hov ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.09)",
         backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
         borderRadius: 16, padding: "32px 24px", textAlign: "center",
-        border: "1px solid " + (hov ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)"),
+        border: "1px solid " + (hov ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.12)"),
         transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)", cursor: "default",
         display: "flex", flexDirection: "column", alignItems: "center",
         boxShadow: hov
@@ -571,13 +571,13 @@ function WhyUsCard({ icon, title, desc, color, hoverAnim }) {
         <AnimIcon hov={hov} color={color} size={56} hoverAnim={hoverAnim}>{icon}</AnimIcon>
       </div>
       <h3 style={{
-        fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 17, marginBottom: 10, lineHeight: 1.35,
+        fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 18, marginBottom: 10, lineHeight: 1.35,
         color: "#ffffff", transition: "all 0.3s",
         textShadow: hov ? "0 0 20px rgba(0,166,255,0.3)" : "none",
       }}>{title}</h3>
       <p style={{
-        fontFamily: "'Roboto',sans-serif", fontSize: 13, lineHeight: 1.65,
-        color: hov ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.5)",
+        fontFamily: "'Roboto',sans-serif", fontSize: 14, lineHeight: 1.65,
+        color: hov ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.65)",
         transition: "color 0.3s",
       }}>{desc}</p>
     </div>
@@ -619,52 +619,52 @@ function WhyUs() {
       {/* Interconnected flight routes network */}
       <svg className={`routes-${routePhase}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" fill="none">
         <defs>
-          <radialGradient id="ng"><stop offset="0%" stopColor="rgba(0,166,255,0.1)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
-          <radialGradient id="wg"><stop offset="0%" stopColor="rgba(255,255,255,0.08)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+          <radialGradient id="ng"><stop offset="0%" stopColor="rgba(0,166,255,0.16)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+          <radialGradient id="wg"><stop offset="0%" stopColor="rgba(255,255,255,0.14)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
         </defs>
         {/* Hub nodes */}
-        <circle cx="120" cy="420" r="4" fill="rgba(0,166,255,0.15)" className="nd nd1" /><circle cx="120" cy="420" r="9" stroke="rgba(0,166,255,0.08)" strokeWidth="1" fill="none" className="node-pulse nd nd1" /><circle cx="120" cy="420" r="30" fill="url(#ng)" className="nd nd1" />
-        <circle cx="380" cy="180" r="3.5" fill="rgba(255,255,255,0.12)" className="nd nd2" /><circle cx="380" cy="180" r="8" stroke="rgba(255,255,255,0.06)" strokeWidth="1" fill="none" className="node-pulse nd nd2" /><circle cx="380" cy="180" r="25" fill="url(#wg)" className="nd nd2" />
-        <circle cx="720" cy="80" r="3.5" fill="rgba(0,166,255,0.14)" className="nd nd3" /><circle cx="720" cy="80" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" className="node-pulse nd nd3" /><circle cx="720" cy="80" r="25" fill="url(#ng)" className="nd nd3" />
-        <circle cx="1280" cy="120" r="4" fill="rgba(255,255,255,0.12)" className="nd nd5" /><circle cx="1280" cy="120" r="9" stroke="rgba(255,255,255,0.06)" strokeWidth="1" fill="none" className="node-pulse nd nd5" /><circle cx="1280" cy="120" r="30" fill="url(#wg)" className="nd nd5" />
-        <circle cx="280" cy="500" r="3" fill="rgba(0,166,255,0.12)" className="nd nd1" /><circle cx="280" cy="500" r="7" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="nd nd1" /><circle cx="280" cy="500" r="22" fill="url(#ng)" className="nd nd1" />
-        <circle cx="650" cy="50" r="3" fill="rgba(255,255,255,0.1)" className="nd nd3" /><circle cx="650" cy="50" r="7" stroke="rgba(255,255,255,0.05)" strokeWidth="1" fill="none" className="nd nd3" />
-        <circle cx="980" cy="200" r="3.5" fill="rgba(0,166,255,0.13)" className="nd nd4" /><circle cx="980" cy="200" r="8" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="node-pulse nd nd4" /><circle cx="980" cy="200" r="25" fill="url(#ng)" className="nd nd4" />
-        <circle cx="200" cy="250" r="3" fill="rgba(255,255,255,0.1)" className="nd nd1" /><circle cx="200" cy="250" r="7" stroke="rgba(255,255,255,0.05)" strokeWidth="1" fill="none" className="nd nd1" />
-        <circle cx="160" cy="380" r="2.5" fill="rgba(0,166,255,0.1)" className="nd nd1" /><circle cx="160" cy="380" r="6" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd1" />
-        <circle cx="240" cy="320" r="2.5" fill="rgba(255,255,255,0.08)" className="nd nd1" /><circle cx="240" cy="320" r="6" stroke="rgba(255,255,255,0.04)" strokeWidth="1" fill="none" className="nd nd1" />
-        <circle cx="1380" cy="160" r="3" fill="rgba(0,166,255,0.1)" className="nd nd5" /><circle cx="1380" cy="160" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd5" />
-        <circle cx="750" cy="60" r="2.5" fill="rgba(255,255,255,0.08)" className="nd nd3" />
-        <circle cx="1180" cy="340" r="3" fill="rgba(0,166,255,0.1)" className="nd nd4" /><circle cx="1180" cy="340" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd4" />
-        <circle cx="1350" cy="480" r="3" fill="rgba(255,255,255,0.09)" className="nd nd5" /><circle cx="1350" cy="480" r="7" stroke="rgba(255,255,255,0.04)" strokeWidth="1" fill="none" className="nd nd5" />
-        <circle cx="500" cy="450" r="2.5" fill="rgba(0,166,255,0.08)" className="nd nd2" /><circle cx="500" cy="450" r="6" stroke="rgba(0,166,255,0.04)" strokeWidth="1" fill="none" className="nd nd2" />
-        <circle cx="850" cy="350" r="2.5" fill="rgba(255,255,255,0.07)" className="nd nd3" /><circle cx="850" cy="350" r="6" stroke="rgba(255,255,255,0.04)" strokeWidth="1" fill="none" className="nd nd3" />
+        <circle cx="120" cy="420" r="4" fill="rgba(0,166,255,0.22)" className="nd nd1" /><circle cx="120" cy="420" r="9" stroke="rgba(0,166,255,0.13)" strokeWidth="1" fill="none" className="node-pulse nd nd1" /><circle cx="120" cy="420" r="30" fill="url(#ng)" className="nd nd1" />
+        <circle cx="380" cy="180" r="3.5" fill="rgba(255,255,255,0.18)" className="nd nd2" /><circle cx="380" cy="180" r="8" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd2" /><circle cx="380" cy="180" r="25" fill="url(#wg)" className="nd nd2" />
+        <circle cx="720" cy="80" r="3.5" fill="rgba(0,166,255,0.2)" className="nd nd3" /><circle cx="720" cy="80" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" className="node-pulse nd nd3" /><circle cx="720" cy="80" r="25" fill="url(#ng)" className="nd nd3" />
+        <circle cx="1280" cy="120" r="4" fill="rgba(255,255,255,0.18)" className="nd nd5" /><circle cx="1280" cy="120" r="9" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd5" /><circle cx="1280" cy="120" r="30" fill="url(#wg)" className="nd nd5" />
+        <circle cx="280" cy="500" r="3" fill="rgba(0,166,255,0.18)" className="nd nd1" /><circle cx="280" cy="500" r="7" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="nd nd1" /><circle cx="280" cy="500" r="22" fill="url(#ng)" className="nd nd1" />
+        <circle cx="650" cy="50" r="3" fill="rgba(255,255,255,0.16)" className="nd nd3" /><circle cx="650" cy="50" r="7" stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="none" className="nd nd3" />
+        <circle cx="980" cy="200" r="3.5" fill="rgba(0,166,255,0.19)" className="nd nd4" /><circle cx="980" cy="200" r="8" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="node-pulse nd nd4" /><circle cx="980" cy="200" r="25" fill="url(#ng)" className="nd nd4" />
+        <circle cx="200" cy="250" r="3" fill="rgba(255,255,255,0.16)" className="nd nd1" /><circle cx="200" cy="250" r="7" stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="none" className="nd nd1" />
+        <circle cx="160" cy="380" r="2.5" fill="rgba(0,166,255,0.16)" className="nd nd1" /><circle cx="160" cy="380" r="6" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd1" />
+        <circle cx="240" cy="320" r="2.5" fill="rgba(255,255,255,0.14)" className="nd nd1" /><circle cx="240" cy="320" r="6" stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none" className="nd nd1" />
+        <circle cx="1380" cy="160" r="3" fill="rgba(0,166,255,0.16)" className="nd nd5" /><circle cx="1380" cy="160" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd5" />
+        <circle cx="750" cy="60" r="2.5" fill="rgba(255,255,255,0.14)" className="nd nd3" />
+        <circle cx="1180" cy="340" r="3" fill="rgba(0,166,255,0.16)" className="nd nd4" /><circle cx="1180" cy="340" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd4" />
+        <circle cx="1350" cy="480" r="3" fill="rgba(255,255,255,0.15)" className="nd nd5" /><circle cx="1350" cy="480" r="7" stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none" className="nd nd5" />
+        <circle cx="500" cy="450" r="2.5" fill="rgba(0,166,255,0.13)" className="nd nd2" /><circle cx="500" cy="450" r="6" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" className="nd nd2" />
+        <circle cx="850" cy="350" r="2.5" fill="rgba(255,255,255,0.12)" className="nd nd3" /><circle cx="850" cy="350" r="6" stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none" className="nd nd3" />
         {/* Flight routes */}
-        <path d="M120 420 C180 300, 300 200, 380 180" stroke="rgba(255,255,255,0.06)" strokeWidth="1.2" strokeDasharray="8 5" className="rt rt1 route-main" />
-        <path d="M120 420 C300 280, 500 120, 720 80" stroke="rgba(0,166,255,0.055)" strokeWidth="1.3" strokeDasharray="10 6" className="rt rt1 route-main" />
-        <path d="M120 420 C160 450, 220 480, 280 500" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="6 4" className="rt rt1 route-mid" />
-        <path d="M380 180 C450 100, 580 60, 720 80" stroke="rgba(255,255,255,0.055)" strokeWidth="1.1" strokeDasharray="8 5" className="rt rt2 route-main" />
-        <path d="M380 180 C430 100, 540 40, 650 50" stroke="rgba(0,166,255,0.04)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt2 route-sub" />
-        <path d="M720 80 C800 100, 900 160, 980 200" stroke="rgba(0,166,255,0.055)" strokeWidth="1.2" strokeDasharray="8 5" className="rt rt3 route-main" />
-        <path d="M720 80 C900 40, 1100 60, 1280 120" stroke="rgba(255,255,255,0.05)" strokeWidth="1.1" strokeDasharray="10 6" className="rt rt3 route-main" />
-        <path d="M980 200 C1060 150, 1180 120, 1280 120" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="6 4" className="rt rt4 route-mid" />
-        <path d="M980 200 C1020 250, 1100 310, 1180 340" stroke="rgba(0,166,255,0.04)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt4 route-sub" />
-        <path d="M1280 120 C1310 130, 1350 145, 1380 160" stroke="rgba(0,166,255,0.045)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt5 route-sub" />
-        <path d="M1280 120 C1320 250, 1350 380, 1350 480" stroke="rgba(255,255,255,0.04)" strokeWidth="0.8" strokeDasharray="8 5" className="rt rt5 route-mid" />
-        <path d="M1180 340 C1220 390, 1300 440, 1350 480" stroke="rgba(0,166,255,0.035)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt5 route-sub" />
-        <path d="M120 420 C140 340, 170 280, 200 250" stroke="rgba(0,166,255,0.045)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt1 route-mid" />
-        <path d="M200 250 C260 220, 320 195, 380 180" stroke="rgba(255,255,255,0.04)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt1 route-sub" />
-        <path d="M120 420 C150 380, 200 340, 240 320" stroke="rgba(255,255,255,0.04)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt1 route-sub" />
-        <path d="M240 320 C280 260, 340 210, 380 180" stroke="rgba(0,166,255,0.035)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt2 route-sub" />
-        <path d="M280 500 C400 400, 560 200, 720 80" stroke="rgba(0,166,255,0.04)" strokeWidth="0.9" strokeDasharray="8 6" className="rt rt2 route-mid" />
-        <path d="M650 50 C680 50, 720 55, 750 60" stroke="rgba(255,255,255,0.035)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt3 route-sub" />
-        <path d="M750 60 C740 65, 730 72, 720 80" stroke="rgba(255,255,255,0.035)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt3 route-sub" />
-        <path d="M120 420 C130 400, 145 390, 160 380" stroke="rgba(0,166,255,0.035)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt1 route-sub" />
-        <path d="M280 500 C360 480, 430 460, 500 450" stroke="rgba(255,255,255,0.035)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt2 route-mid" />
-        <path d="M500 450 C600 430, 720 390, 850 350" stroke="rgba(0,166,255,0.035)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt3 route-mid" />
-        <path d="M850 350 C920 320, 980 250, 980 200" stroke="rgba(255,255,255,0.035)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt3 route-sub" />
-        <path d="M850 350 C950 340, 1080 340, 1180 340" stroke="rgba(0,166,255,0.03)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt4 route-sub" />
-        <path d="M500 450 C550 350, 620 200, 720 80" stroke="rgba(255,255,255,0.03)" strokeWidth="0.6" strokeDasharray="6 5" className="rt rt2 route-mid" />
+        <path d="M120 420 C180 300, 300 200, 380 180" stroke="rgba(255,255,255,0.16)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt1 route-main" />
+        <path d="M120 420 C300 280, 500 120, 720 80" stroke="rgba(0,166,255,0.09)" strokeWidth="1.5" strokeDasharray="10 6" className="rt rt1 route-main" />
+        <path d="M120 420 C160 450, 220 480, 280 500" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="6 4" className="rt rt1 route-mid" />
+        <path d="M380 180 C450 100, 580 60, 720 80" stroke="rgba(255,255,255,0.15)" strokeWidth="1.3" strokeDasharray="8 5" className="rt rt2 route-main" />
+        <path d="M380 180 C430 100, 540 40, 650 50" stroke="rgba(0,166,255,0.07)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt2 route-sub" />
+        <path d="M720 80 C800 100, 900 160, 980 200" stroke="rgba(0,166,255,0.09)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt3 route-main" />
+        <path d="M720 80 C900 40, 1100 60, 1280 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1.3" strokeDasharray="10 6" className="rt rt3 route-main" />
+        <path d="M980 200 C1060 150, 1180 120, 1280 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="6 4" className="rt rt4 route-mid" />
+        <path d="M980 200 C1020 250, 1100 310, 1180 340" stroke="rgba(0,166,255,0.07)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt4 route-sub" />
+        <path d="M1280 120 C1310 130, 1350 145, 1380 160" stroke="rgba(0,166,255,0.13)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt5 route-sub" />
+        <path d="M1280 120 C1320 250, 1350 380, 1350 480" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="8 5" className="rt rt5 route-mid" />
+        <path d="M1180 340 C1220 390, 1300 440, 1350 480" stroke="rgba(0,166,255,0.06)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt5 route-sub" />
+        <path d="M120 420 C140 340, 170 280, 200 250" stroke="rgba(0,166,255,0.13)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt1 route-mid" />
+        <path d="M200 250 C260 220, 320 195, 380 180" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt1 route-sub" />
+        <path d="M120 420 C150 380, 200 340, 240 320" stroke="rgba(255,255,255,0.12)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt1 route-sub" />
+        <path d="M240 320 C280 260, 340 210, 380 180" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt2 route-sub" />
+        <path d="M280 500 C400 400, 560 200, 720 80" stroke="rgba(0,166,255,0.07)" strokeWidth="0.9" strokeDasharray="8 6" className="rt rt2 route-mid" />
+        <path d="M650 50 C680 50, 720 55, 750 60" stroke="rgba(255,255,255,0.06)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt3 route-sub" />
+        <path d="M750 60 C740 65, 730 72, 720 80" stroke="rgba(255,255,255,0.06)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt3 route-sub" />
+        <path d="M120 420 C130 400, 145 390, 160 380" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt1 route-sub" />
+        <path d="M280 500 C360 480, 430 460, 500 450" stroke="rgba(255,255,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt2 route-mid" />
+        <path d="M500 450 C600 430, 720 390, 850 350" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt3 route-mid" />
+        <path d="M850 350 C920 320, 980 250, 980 200" stroke="rgba(255,255,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt3 route-sub" />
+        <path d="M850 350 C950 340, 1080 340, 1180 340" stroke="rgba(0,166,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt4 route-sub" />
+        <path d="M500 450 C550 350, 620 200, 720 80" stroke="rgba(255,255,255,0.05)" strokeWidth="0.6" strokeDasharray="6 5" className="rt rt2 route-mid" />
       </svg>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
         <R><div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -706,7 +706,7 @@ function Process() {
             <span style={{ width: 48, height: 2, background: "#1b6fea", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 28, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
           </div>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", marginTop: 16, maxWidth: 500, margin: "16px auto 0" }}>Un proceso optimizado para garantizar tu satisfacción en cada etapa del envío.</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>Un proceso optimizado para garantizar tu satisfacción en cada etapa del envío.</p>
         </div></R>
         {/* Timeline nodes */}
         <R delay={200}>
@@ -780,7 +780,7 @@ function Process() {
                     <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, background: "linear-gradient(135deg, #00a6ff, #1b6fea)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", lineHeight: 1 }}>{s.n}</span>
                     <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: isMobile ? 17 : 22, color: "#1d1d1b", lineHeight: 1.3 }}>{s.t}</h3>
                   </div>
-                  <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", lineHeight: 1.75 }}>{s.d}</p>
+                  <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", lineHeight: 1.75 }}>{s.d}</p>
                 </div>
               </div>
             ))}
@@ -846,7 +846,7 @@ function CTA() {
             <span style={{ width: 48, height: 2, background: "#1b6fea", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 28, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
           </div>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", marginTop: 16, maxWidth: 500, margin: "16px auto 0" }}>Calcula el peso volumétrico de tu envío y cotiza en minutos.</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>Calcula el peso volumétrico de tu envío y cotiza en minutos.</p>
         </div></R>
         <div className="grid lg:grid-cols-2 gap-10" style={{ alignItems: "center" }}>
           {/* Calculator card */}
@@ -881,11 +881,11 @@ function CTA() {
                 backgroundClip: calcHov ? "text" : "unset",
                 transition: "color 0.3s",
               }}>Calculadora de peso volumétrico</h3>
-              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#6b7280", marginBottom: 20, lineHeight: 1.5 }}>Tu paquete se factura por el peso mayor entre el físico y el volumétrico.</p>
+              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#6b7280", marginBottom: 20, lineHeight: 1.5 }}>Tu paquete se factura por el peso mayor entre el físico y el volumétrico.</p>
               <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 12, marginBottom: 14 }}>
                 {[["largo", "Largo (cm)"], ["ancho", "Ancho (cm)"], ["alto", "Alto (cm)"]].map(([k, label]) => (
                   <div key={k}>
-                    <label style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 11, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</label>
+                    <label style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</label>
                     <input type="text" inputMode="decimal" placeholder="0" value={dims[k]} onChange={e => handleDim(k, e.target.value)}
                       onFocus={e => { e.target.style.borderColor = "rgba(27,111,234,0.3)"; e.target.style.boxShadow = "0 0 0 3px rgba(0,166,255,0.1)"; }}
                       onBlur={e => { e.target.style.borderColor = "rgba(27,111,234,0.1)"; e.target.style.boxShadow = "none"; }}
@@ -894,7 +894,7 @@ function CTA() {
                 ))}
               </div>
               <div style={{ marginBottom: 20 }}>
-                <label style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 11, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>Peso físico (kg) — opcional</label>
+                <label style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>Peso físico (kg) — opcional</label>
                 <input type="text" inputMode="decimal" placeholder="0" value={peso} onChange={e => { if (e.target.value === "" || /^\d*\.?\d*$/.test(e.target.value)) setPeso(e.target.value); }}
                   onFocus={e => { e.target.style.borderColor = "rgba(27,111,234,0.3)"; e.target.style.boxShadow = "0 0 0 3px rgba(0,166,255,0.1)"; }}
                   onBlur={e => { e.target.style.borderColor = "rgba(27,111,234,0.1)"; e.target.style.boxShadow = "none"; }}
@@ -927,7 +927,7 @@ function CTA() {
           <R dir="right" delay={200}>
             <div style={{ textAlign: "center", padding: "20px 0" }}>
               <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 22, color: "#1d1d1b", marginBottom: 12 }}>¿Necesitas una cotización?</h3>
-              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", maxWidth: 380, margin: "0 auto 28px", lineHeight: 1.7 }}>Nuestro equipo te asesora sin compromiso. Escríbenos por WhatsApp o llámanos directamente.</p>
+              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", maxWidth: 400, margin: "0 auto 28px", lineHeight: 1.7 }}>Nuestro equipo te asesora sin compromiso. Escríbenos por WhatsApp o llámanos directamente.</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center" }}>
                 <AnimBtn href={WA} external bg="#25D366" hoverBg="#1ea855" shadow="0 6px 20px rgba(37,211,102,0.25)" hoverShadow="0 14px 32px rgba(37,211,102,0.35)">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
@@ -1020,53 +1020,53 @@ function Footer() {
       {/* Footer flight routes */}
       <svg className="footer-routes" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid slice" fill="none">
         <defs>
-          <radialGradient id="fng"><stop offset="0%" stopColor="rgba(0,166,255,0.08)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
-          <radialGradient id="fwg"><stop offset="0%" stopColor="rgba(255,255,255,0.06)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+          <radialGradient id="fng"><stop offset="0%" stopColor="rgba(0,166,255,0.13)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+          <radialGradient id="fwg"><stop offset="0%" stopColor="rgba(255,255,255,0.16)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
         </defs>
         {/* Nodes */}
-        <circle cx="80" cy="320" r="3.5" fill="rgba(0,166,255,0.14)" /><circle cx="80" cy="320" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" /><circle cx="80" cy="320" r="25" fill="url(#fng)" />
-        <circle cx="350" cy="120" r="3" fill="rgba(255,255,255,0.1)" /><circle cx="350" cy="120" r="7" stroke="rgba(255,255,255,0.05)" strokeWidth="1" fill="none" />
-        <circle cx="600" cy="60" r="3" fill="rgba(0,166,255,0.12)" /><circle cx="600" cy="60" r="7" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" /><circle cx="600" cy="60" r="22" fill="url(#fng)" />
-        <circle cx="900" cy="100" r="3.5" fill="rgba(255,255,255,0.11)" /><circle cx="900" cy="100" r="8" stroke="rgba(255,255,255,0.05)" strokeWidth="1" fill="none" />
-        <circle cx="1150" cy="180" r="3" fill="rgba(0,166,255,0.1)" /><circle cx="1150" cy="180" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" />
-        <circle cx="1380" cy="80" r="3.5" fill="rgba(255,255,255,0.12)" /><circle cx="1380" cy="80" r="8" stroke="rgba(255,255,255,0.06)" strokeWidth="1" fill="none" /><circle cx="1380" cy="80" r="25" fill="url(#fwg)" />
-        <circle cx="200" cy="220" r="2.5" fill="rgba(255,255,255,0.08)" />
-        <circle cx="480" cy="280" r="2.5" fill="rgba(0,166,255,0.08)" />
-        <circle cx="750" cy="340" r="2.5" fill="rgba(255,255,255,0.07)" />
-        <circle cx="1050" cy="300" r="2.5" fill="rgba(0,166,255,0.08)" />
-        <circle cx="1300" cy="350" r="2.5" fill="rgba(255,255,255,0.07)" />
+        <circle cx="80" cy="320" r="3.5" fill="rgba(0,166,255,0.2)" /><circle cx="80" cy="320" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" /><circle cx="80" cy="320" r="25" fill="url(#fng)" />
+        <circle cx="350" cy="120" r="3" fill="rgba(255,255,255,0.16)" /><circle cx="350" cy="120" r="7" stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="none" />
+        <circle cx="600" cy="60" r="3" fill="rgba(0,166,255,0.18)" /><circle cx="600" cy="60" r="7" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" /><circle cx="600" cy="60" r="22" fill="url(#fng)" />
+        <circle cx="900" cy="100" r="3.5" fill="rgba(255,255,255,0.11)" /><circle cx="900" cy="100" r="8" stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="none" />
+        <circle cx="1150" cy="180" r="3" fill="rgba(0,166,255,0.16)" /><circle cx="1150" cy="180" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" />
+        <circle cx="1380" cy="80" r="3.5" fill="rgba(255,255,255,0.18)" /><circle cx="1380" cy="80" r="8" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" /><circle cx="1380" cy="80" r="25" fill="url(#fwg)" />
+        <circle cx="200" cy="220" r="2.5" fill="rgba(255,255,255,0.14)" />
+        <circle cx="480" cy="280" r="2.5" fill="rgba(0,166,255,0.13)" />
+        <circle cx="750" cy="340" r="2.5" fill="rgba(255,255,255,0.12)" />
+        <circle cx="1050" cy="300" r="2.5" fill="rgba(0,166,255,0.13)" />
+        <circle cx="1300" cy="350" r="2.5" fill="rgba(255,255,255,0.12)" />
         {/* Routes */}
-        <path d="M80 320 C150 250, 260 160, 350 120" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="7 5" className="ft-route route-main" />
-        <path d="M80 320 C200 280, 350 200, 600 60" stroke="rgba(0,166,255,0.045)" strokeWidth="1.2" strokeDasharray="9 5" className="ft-route route-main" />
-        <path d="M350 120 C420 80, 520 60, 600 60" stroke="rgba(255,255,255,0.04)" strokeWidth="0.8" strokeDasharray="6 4" className="ft-route route-mid" />
-        <path d="M600 60 C700 70, 800 85, 900 100" stroke="rgba(0,166,255,0.045)" strokeWidth="1" strokeDasharray="7 5" className="ft-route route-main" />
-        <path d="M600 60 C800 30, 1100 40, 1380 80" stroke="rgba(255,255,255,0.04)" strokeWidth="1" strokeDasharray="9 6" className="ft-route route-mid" />
-        <path d="M900 100 C980 130, 1080 165, 1150 180" stroke="rgba(255,255,255,0.04)" strokeWidth="0.8" strokeDasharray="6 4" className="ft-route route-sub" />
-        <path d="M900 100 C1050 80, 1200 75, 1380 80" stroke="rgba(0,166,255,0.04)" strokeWidth="0.9" strokeDasharray="7 5" className="ft-route route-mid" />
-        <path d="M1150 180 C1230 140, 1300 100, 1380 80" stroke="rgba(0,166,255,0.035)" strokeWidth="0.7" strokeDasharray="5 4" className="ft-route route-sub" />
-        <path d="M80 320 C160 300, 250 260, 200 220" stroke="rgba(0,166,255,0.035)" strokeWidth="0.7" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M200 220 C280 180, 320 140, 350 120" stroke="rgba(255,255,255,0.035)" strokeWidth="0.7" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M80 320 C200 340, 380 310, 480 280" stroke="rgba(255,255,255,0.035)" strokeWidth="0.7" strokeDasharray="5 4" className="ft-route route-mid" />
-        <path d="M480 280 C580 260, 680 350, 750 340" stroke="rgba(0,166,255,0.03)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M750 340 C850 330, 950 310, 1050 300" stroke="rgba(255,255,255,0.03)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M1050 300 C1150 290, 1230 360, 1300 350" stroke="rgba(0,166,255,0.03)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M1050 300 C1100 240, 1130 200, 1150 180" stroke="rgba(255,255,255,0.03)" strokeWidth="0.6" strokeDasharray="5 4" className="ft-route route-sub" />
+        <path d="M80 320 C150 250, 260 160, 350 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="7 5" className="ft-route route-main" />
+        <path d="M80 320 C200 280, 350 200, 600 60" stroke="rgba(0,166,255,0.13)" strokeWidth="1.4" strokeDasharray="9 5" className="ft-route route-main" />
+        <path d="M350 120 C420 80, 520 60, 600 60" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="6 4" className="ft-route route-mid" />
+        <path d="M600 60 C700 70, 800 85, 900 100" stroke="rgba(0,166,255,0.13)" strokeWidth="1" strokeDasharray="7 5" className="ft-route route-main" />
+        <path d="M600 60 C800 30, 1100 40, 1380 80" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeDasharray="9 6" className="ft-route route-mid" />
+        <path d="M900 100 C980 130, 1080 165, 1150 180" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="6 4" className="ft-route route-sub" />
+        <path d="M900 100 C1050 80, 1200 75, 1380 80" stroke="rgba(0,166,255,0.07)" strokeWidth="0.9" strokeDasharray="7 5" className="ft-route route-mid" />
+        <path d="M1150 180 C1230 140, 1300 100, 1380 80" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="ft-route route-sub" />
+        <path d="M80 320 C160 300, 250 260, 200 220" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="4 3" className="ft-route route-sub" />
+        <path d="M200 220 C280 180, 320 140, 350 120" stroke="rgba(255,255,255,0.06)" strokeWidth="0.7" strokeDasharray="4 3" className="ft-route route-sub" />
+        <path d="M80 320 C200 340, 380 310, 480 280" stroke="rgba(255,255,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="ft-route route-mid" />
+        <path d="M480 280 C580 260, 680 350, 750 340" stroke="rgba(0,166,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
+        <path d="M750 340 C850 330, 950 310, 1050 300" stroke="rgba(255,255,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
+        <path d="M1050 300 C1150 290, 1230 360, 1300 350" stroke="rgba(0,166,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
+        <path d="M1050 300 C1100 240, 1130 200, 1150 180" stroke="rgba(255,255,255,0.05)" strokeWidth="0.6" strokeDasharray="5 4" className="ft-route route-sub" />
       </svg>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "56px 24px", position: "relative", zIndex: 2 }}>
         <div className="grid lg:grid-cols-2 gap-12">
           <R dir="left"><div>
             <Logo h={70} style={{ marginBottom: 20 }} />
-            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#9ca3af", lineHeight: 1.75, maxWidth: 400, marginBottom: 28 }}>Operador Logístico Integral en Colombia. Transporte Marítimo, Aéreo y Agenciamiento Aduanero. Desde donde estés, hasta donde lo necesites.</p>
+            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#9ca3af", lineHeight: 1.75, maxWidth: 420, marginBottom: 28 }}>Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!</p>
             <div style={{ marginBottom: 28 }}>
               <a href={PH} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, textDecoration: "none" }}>
                 <div style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
-                </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#d1d5db" }}>+57 322 605 5431</span>
+                </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#d1d5db" }}>+57 322 605 5431</span>
               </a>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
                 <div style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#d1d5db" }}>Carrera 31b # 4A-11, Bogotá, Colombia — Barrio Veraguas</span>
+                </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#d1d5db" }}>Carrera 31b # 4A-11, Bogotá, Colombia — Barrio Veraguas</span>
               </div>
             </div>
             <div style={{ display: "flex", gap: 8 }}>
@@ -1083,8 +1083,8 @@ function Footer() {
       </div>
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", position: "relative", zIndex: 2 }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "18px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 11, color: "#6b7280" }}>© {new Date().getFullYear()} Atlas Logistic SAS — Todos los derechos reservados.</p>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 11, color: "#4b5563" }}>Bogotá, Colombia</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#6b7280" }}>© {new Date().getFullYear()} Atlas Logistic SAS — Todos los derechos reservados.</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#4b5563" }}>Bogotá, Colombia</p>
         </div>
       </div>
     </footer>
