@@ -1010,10 +1010,10 @@ function PaymentMarquee() {
 
 function Footer() {
   const soc = [
-    { n: "Instagram", h: "https://www.instagram.com/atlaslogisticaglobal", d: "M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2m-.2 2A3.6 3.6 0 004 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 010 2.5 1.25 1.25 0 010-2.5M12 7a5 5 0 110 10 5 5 0 010-10m0 2a3 3 0 100 6 3 3 0 000-6z" },
-    { n: "TikTok", h: "https://www.tiktok.com/@atlas.logistic", d: "M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.76.32 2.89 2.89 0 012.88-3.2c.28 0 .55.04.81.1v-3.5a6.37 6.37 0 00-.81-.05 6.34 6.34 0 106.34 6.34V8.73a8.19 8.19 0 004.76 1.52V6.8a4.84 4.84 0 01-1-.11z" },
-    { n: "Facebook", h: "https://www.facebook.com/atlaslogistic", d: "M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" },
-    { n: "LinkedIn", h: "https://www.linkedin.com/company/atlas-logistic", d: "M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z" },
+    { n: "Instagram", h: "https://www.instagram.com/atlaslogisticaglobal", img: "/images/insta sin fondo.svg", size: 36 },
+    { n: "TikTok", h: "https://www.tiktok.com/@atlas.logistic", img: "/images/tiktok (1).svg", size: 36 },
+    { n: "Facebook", h: "https://www.facebook.com/atlaslogistic", img: "/images/facebook.svg", size: 26 },
+    { n: "LinkedIn", h: "https://www.linkedin.com/company/atlas-logistic", img: "/images/linkdn (1).svg", size: 36 },
   ];
   return (
     <footer id="contacto" style={{ background: "#0c2340", color: "#fff", position: "relative", overflow: "hidden" }}>
@@ -1070,10 +1070,10 @@ function Footer() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              {soc.map(s => <a key={s.n} href={s.h} target="_blank" rel="noopener noreferrer" aria-label={s.n} style={{ width: 38, height: 38, borderRadius: 19, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.3s", textDecoration: "none", color: "#fff" }}
-                onMouseEnter={e => { e.currentTarget.style.background = "#1b6fea"; e.currentTarget.style.borderColor = "#1b6fea"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; }}
-              ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={s.d} /></svg></a>)}
+              {soc.map(s => <a key={s.n} href={s.h} target="_blank" rel="noopener noreferrer" aria-label={s.n} style={{ display: "flex", alignItems: "center", justifyContent: "center", transition: "opacity 0.3s", textDecoration: "none", opacity: 1 }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = "0.75"; }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
+              ><img src={s.img} alt={s.n} style={{ width: s.size, height: s.size, objectFit: "contain" }} /></a>)}
             </div>
           </div></R>
           <R dir="right" delay={200}><div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", minHeight: 260 }}>
