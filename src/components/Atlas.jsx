@@ -55,7 +55,11 @@ function NavLink({ href, label }) {
     e.preventDefault();
     const id = href.replace('#', '');
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) {
+      const offset = 100;
+      const top = el.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   };
   return (
     <a href={href} onClick={scrollTo} style={{
@@ -144,6 +148,40 @@ function Nav() {
   );
 }
 
+function TypeWriter() {
+  const words = ["Importaciones", "Exportaciones", "Courier", "Agenciamiento Aduanero", "Logística Internacional"];
+  const [displayed, setDisplayed] = useState("");
+  const [wordIndex, setWordIndex] = useState(0);
+  const [phase, setPhase] = useState("typing"); // "typing" | "waiting" | "deleting"
+  useEffect(() => {
+    const word = words[wordIndex];
+    let timeout;
+    if (phase === "typing") {
+      if (displayed.length < word.length) {
+        timeout = setTimeout(() => setDisplayed(word.slice(0, displayed.length + 1)), 80);
+      } else {
+        timeout = setTimeout(() => setPhase("waiting"), 1500);
+      }
+    } else if (phase === "waiting") {
+      setPhase("deleting");
+    } else if (phase === "deleting") {
+      if (displayed.length > 0) {
+        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 50);
+      } else {
+        setWordIndex(i => (i + 1) % words.length);
+        setPhase("typing");
+      }
+    }
+    return () => clearTimeout(timeout);
+  }, [displayed, phase, wordIndex]);
+  return (
+    <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+      <span style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)", color: "rgba(255,255,255,0.75)", fontWeight: 400 }}>Especialistas en</span>
+      <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)", color: "#ffffff" }}>{displayed}<span style={{ animation: "blink 0.5s step-end infinite", marginLeft: 1 }}>|</span></span>
+    </div>
+  );
+}
+
 function Hero() {
   return (
     <section id="inicio" style={{ position: "relative", minHeight: "75vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
@@ -152,15 +190,16 @@ function Hero() {
       <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "120px 24px 60px", width: "100%" }}>
         <div style={{ maxWidth: 800 }}>
           <R delay={200}><h1 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)", lineHeight: 1.08, letterSpacing: "-0.02em" }}>¡Desde donde estés<br />hasta donde lo necesites!</h1></R>
-          <R delay={400}><p style={{ marginTop: 20, color: "rgba(255,255,255,0.75)", fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)", maxWidth: 500, lineHeight: 1.7, fontFamily: "'Roboto',sans-serif" }}>Especialistas en logística internacional aérea: Importaciones, exportaciones por courier y agenciamiento aduanero.</p></R>
+          <R delay={300}><TypeWriter /></R>
+
           <R delay={600}><div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", gap: 14 }}>
             <AnimBtn href={WA} external bg="#00a6ff" hoverBg="#1b6fea" shadow="0 8px 24px rgba(0,166,255,0.35)" hoverShadow="0 14px 32px rgba(27,111,234,0.4)">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
               Cotizar mi envío
             </AnimBtn>
-            <AnimBtn href={PH} bg="linear-gradient(135deg, #1b6fea, #00a6ff)" hoverBg="linear-gradient(135deg, #00a6ff, #1b6fea)" shadow="0 8px 24px rgba(27,111,234,0.3)" hoverShadow="0 14px 32px rgba(0,166,255,0.4)">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
-              Llamar ahora
+            <AnimBtn href="#contacto" bg="linear-gradient(135deg, #1b6fea, #00a6ff)" hoverBg="linear-gradient(135deg, #00a6ff, #1b6fea)" shadow="0 8px 24px rgba(27,111,234,0.3)" hoverShadow="0 14px 32px rgba(0,166,255,0.4)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /></svg>
+              Contáctanos
             </AnimBtn>
           </div></R>
         </div>
@@ -172,6 +211,7 @@ function Hero() {
 
 function AnimIcon({ children, size = 56, hov = false, color = "#1b6fea", hoverAnim = "whyusPulse" }) {
   const [drawn, setDrawn] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
   const ref = useRef(null);
   useEffect(() => {
     const el = ref.current;
@@ -180,6 +220,11 @@ function AnimIcon({ children, size = 56, hov = false, color = "#1b6fea", hoverAn
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
+  useEffect(() => {
+    if (!hov) return;
+    const interval = setInterval(() => setAnimKey(k => k + 1), 3000);
+    return () => clearInterval(interval);
+  }, [hov]);
   return (
     <div ref={ref} style={{
       color: hov ? "#00a6ff" : color,
@@ -189,7 +234,7 @@ function AnimIcon({ children, size = 56, hov = false, color = "#1b6fea", hoverAn
       display: "flex", justifyContent: "center",
       animation: hov ? `${hoverAnim} 1.2s ease infinite` : "none",
     }}>
-      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={drawn ? "anim-icon-drawn" : "anim-icon-hidden"}>{children}</svg>
+      <svg key={animKey} width={size} height={size} viewBox="0 0 32 32" fill="none" className={drawn ? "anim-icon-drawn" : "anim-icon-hidden"}>{children}</svg>
     </div>
   );
 }
@@ -933,10 +978,6 @@ function CTA() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
                   Cotizar por WhatsApp
                 </AnimBtn>
-                <AnimBtn href={PH} bg="linear-gradient(135deg, #1b6fea, #00a6ff)" hoverBg="linear-gradient(135deg, #00a6ff, #1b6fea)" shadow="0 6px 20px rgba(27,111,234,0.25)" hoverShadow="0 14px 32px rgba(0,166,255,0.35)">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
-                  Llamar ahora
-                </AnimBtn>
               </div>
             </div>
           </R>
@@ -1008,15 +1049,209 @@ function PaymentMarquee() {
   );
 }
 
+function SuccessTypeWriter() {
+  const full = "¡Gracias por contactarte con Atlas!";
+  const blueStart = full.indexOf("Atlas!");
+  const [displayed, setDisplayed] = useState("");
+  useEffect(() => {
+    if (displayed.length >= full.length) return;
+    const t = setTimeout(() => setDisplayed(full.slice(0, displayed.length + 1)), 70);
+    return () => clearTimeout(t);
+  }, [displayed]);
+  const before = displayed.slice(0, Math.min(displayed.length, blueStart));
+  const blue = displayed.length > blueStart ? displayed.slice(blueStart) : "";
+  return (
+    <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 300, fontSize: "clamp(2rem, 4vw, 3rem)", color: "#1d1d1b", lineHeight: 1.15 }}>
+      {before}<span style={{ color: "#1b6fea" }}>{blue}</span>
+      {displayed.length < full.length && <span style={{ animation: "blink 0.5s step-end infinite" }}>|</span>}
+    </h2>
+  );
+}
+
+function ContactTypeWriter() {
+  const words = ["¿Listo para tu próximo envío internacional?", "¿Necesitas importar o exportar?", "¿Buscas un aliado logístico confiable?"];
+  const [displayed, setDisplayed] = useState("");
+  const [wordIndex, setWordIndex] = useState(0);
+  const [phase, setPhase] = useState("typing");
+  useEffect(() => {
+    const word = words[wordIndex];
+    let timeout;
+    if (phase === "typing") {
+      if (displayed.length < word.length) {
+        timeout = setTimeout(() => setDisplayed(word.slice(0, displayed.length + 1)), 80);
+      } else {
+        timeout = setTimeout(() => setPhase("waiting"), 1500);
+      }
+    } else if (phase === "waiting") {
+      setPhase("deleting");
+    } else if (phase === "deleting") {
+      if (displayed.length > 0) {
+        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 50);
+      } else {
+        setWordIndex(i => (i + 1) % words.length);
+        setPhase("typing");
+      }
+    }
+    return () => clearTimeout(timeout);
+  }, [displayed, phase, wordIndex]);
+  return (
+    <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 300, fontSize: "clamp(2rem, 4vw, 3rem)", color: "#1d1d1b", lineHeight: 1.15, margin: 0, minHeight: "4.5em" }}>
+      {displayed}<span style={{ animation: "blink 0.5s step-end infinite" }}>|</span>
+    </h2>
+  );
+}
+
+function ContactForm() {
+  const [form, setForm] = useState({ nombre: "", celular: "", correo: "", servicio: "", mensaje: "", datosCheck: false, novedadesCheck: false });
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [focused, setFocused] = useState(null);
+  const [datosError, setDatosError] = useState(false);
+  const [btnHov, setBtnHov] = useState(false);
+
+  const lineInput = (extra = {}) => ({
+    width: "100%", boxSizing: "border-box",
+    borderTop: "none", borderLeft: "none", borderRight: "none",
+    borderBottom: "1px solid #d1d5db", borderRadius: 0,
+    padding: "12px 4px", background: "transparent",
+    fontSize: 15, color: "#1d1d1b", outline: "none",
+    transition: "border-color 0.2s", fontFamily: "'Roboto',sans-serif",
+    ...extra,
+  });
+
+  const handleChange = e => {
+    const { name, value, type, checked } = e.target;
+    if (name === "datosCheck" && checked) setDatosError(false);
+    setForm(f => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    if (!form.datosCheck) { setDatosError(true); return; }
+    setSending(true);
+    const payload = {
+      nombre: form.nombre || "",
+      celular: form.celular || "",
+      correo: form.correo || "",
+      servicio: form.servicio || "",
+      mensaje: form.mensaje || "",
+      newsletter: form.novedadesCheck ? "Sí" : "No",
+    };
+    try {
+      await fetch("https://script.google.com/macros/s/AKfycbzBO8LNUloveix7d9vDkrw0DGYRIReHxEsLW0HVpF03Tae-dkyMkgcoRJOPdU-W-8Sp/exec", {
+        method: "POST", mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (_) {}
+    setSending(false);
+    setSent(true);
+  };
+
+  const scrollTo = id => {
+    const el = document.getElementById(id);
+    if (el) { const top = el.getBoundingClientRect().top + window.scrollY - 100; window.scrollTo({ top, behavior: "smooth" }); }
+  };
+
+  const focusBorder = name => focused === name ? { borderBottomColor: "#1b6fea" } : {};
+  const checkLabelStyle = { display: "flex", alignItems: "flex-start", gap: 10, fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#1d1d1b", lineHeight: 1.5, cursor: "pointer" };
+
+  if (sent) return (
+    <section id="contacto" style={{ background: "#ffffff", padding: "80px 0" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
+        <div style={{ paddingRight: 56 }}>
+          <SuccessTypeWriter />
+        </div>
+        <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />
+        <div style={{ paddingLeft: 56 }}>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", lineHeight: 1.75, marginBottom: 20 }}>
+            Tu mensaje ha sido enviado correctamente. Agradecemos tu interés en nuestros servicios. Muy pronto uno de nuestros asesores se comunicará contigo para brindarte la información que necesitas.
+          </p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", lineHeight: 1.75, marginBottom: 24 }}>
+            Mientras tanto, te invitamos a conocer todos nuestros servicios logísticos.
+          </p>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <button onClick={() => scrollTo("servicios")} style={{ background: "none", border: "none", padding: 0, color: "#1b6fea", fontSize: 15, fontWeight: 600, fontFamily: "'Fira Sans',sans-serif", cursor: "pointer" }}>Ver servicios</button>
+            <span style={{ color: "#d1d5db" }}>|</span>
+            <button onClick={() => scrollTo("inicio")} style={{ background: "none", border: "none", padding: 0, color: "#1b6fea", fontSize: 15, fontWeight: 600, fontFamily: "'Fira Sans',sans-serif", cursor: "pointer" }}>Volver al inicio</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+
+  return (
+    <section id="contacto" style={{ background: "#ffffff", padding: "80px 0" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
+        {/* Columna izquierda */}
+        <div style={{ paddingRight: 56 }}>
+          <ContactTypeWriter />
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", marginTop: 20, maxWidth: 380, lineHeight: 1.75 }}>Nos alegra que estés aquí. Cuéntanos tu necesidad y un asesor de Atlas Logistic te contactará muy pronto.</p>
+        </div>
+        {/* Línea divisora */}
+        <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />
+        {/* Columna derecha - formulario */}
+        <form onSubmit={handleSubmit} style={{ paddingLeft: 56, display: "flex", flexDirection: "column", gap: 0 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
+            <input name="nombre" placeholder="Nombre completo" required value={form.nombre} onChange={handleChange}
+              style={{ ...lineInput(), ...focusBorder("nombre") }}
+              onFocus={() => setFocused("nombre")} onBlur={() => setFocused(null)} />
+            <input name="celular" placeholder="Celular" required value={form.celular} onChange={handleChange}
+              style={{ ...lineInput(), ...focusBorder("celular") }}
+              onFocus={() => setFocused("celular")} onBlur={() => setFocused(null)} />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
+            <input name="correo" type="email" placeholder="Correo electrónico" required value={form.correo} onChange={handleChange}
+              style={{ ...lineInput(), ...focusBorder("correo") }}
+              onFocus={() => setFocused("correo")} onBlur={() => setFocused(null)} />
+            <select name="servicio" required value={form.servicio} onChange={handleChange}
+              style={{ ...lineInput(), color: form.servicio ? "#1d1d1b" : "#9ca3af", ...focusBorder("servicio") }}
+              onFocus={() => setFocused("servicio")} onBlur={() => setFocused(null)}>
+              <option value="" disabled>Servicio de interés</option>
+              <option value="Importación por Courier">Importación por Courier</option>
+              <option value="Exportación por Courier">Exportación por Courier</option>
+              <option value="Envíos Terrestres a Venezuela">Envíos Terrestres a Venezuela</option>
+              <option value="Casillero Internacional">Casillero Internacional</option>
+              <option value="Triangulación de Envíos">Triangulación de Envíos</option>
+              <option value="Operaciones Especiales">Operaciones Especiales</option>
+            </select>
+          </div>
+          <textarea name="mensaje" placeholder="Mensaje" value={form.mensaje} onChange={handleChange}
+            style={{ ...lineInput({ minHeight: 80, resize: "vertical" }), ...focusBorder("mensaje"), marginBottom: 20 }}
+            onFocus={() => setFocused("mensaje")} onBlur={() => setFocused(null)} />
+          <div style={{ marginBottom: 10 }}>
+            <label style={checkLabelStyle}>
+              <input type="checkbox" name="datosCheck" checked={form.datosCheck} onChange={handleChange} style={{ marginTop: 3, accentColor: "#1b6fea", flexShrink: 0 }} />
+              <span>Acepto la <a href="/tratamiento-de-datos" style={{ color: "#1b6fea", textDecoration: "underline", cursor: "pointer" }}>política de tratamiento de datos</a></span>
+            </label>
+            {datosError && <p style={{ color: "#ef4444", fontSize: 12, marginTop: 4, marginLeft: 24 }}>* Debes aceptar la política de tratamiento de datos para continuar</p>}
+          </div>
+          <label style={checkLabelStyle}>
+            <input type="checkbox" name="novedadesCheck" checked={form.novedadesCheck} onChange={handleChange} style={{ marginTop: 3, accentColor: "#1b6fea", flexShrink: 0 }} />
+            <span>Acepto recibir información sobre servicios y novedades</span>
+          </label>
+          <div>
+            <button type="submit" disabled={sending}
+              onMouseEnter={() => setBtnHov(true)} onMouseLeave={() => setBtnHov(false)}
+              style={{ marginTop: 24, padding: "14px 40px", borderRadius: 50, border: "none", cursor: sending ? "not-allowed" : "pointer", color: "#fff", fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 15, transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", background: sending ? "#9ca3af" : btnHov ? "linear-gradient(135deg, #00a6ff, #1b6fea)" : "#1b6fea", transform: btnHov && !sending ? "translateY(-2px)" : "translateY(0)", boxShadow: btnHov && !sending ? "0 8px 24px rgba(27,111,234,0.35)" : "none" }}>
+              {sending ? "Enviando..." : "Enviar mensaje"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   const soc = [
-    { n: "Instagram", h: "https://www.instagram.com/atlaslogisticaglobal", img: "/images/insta sin fondo.png", size: 36 },
+    { n: "Instagram", h: "https://www.instagram.com/atlaslogisticaglobal", img: "/images/insta sin fondo.png", size: 40 },
     { n: "TikTok", h: "https://www.tiktok.com/@atlas.logistic", img: "/images/tiktok (1).png", size: 36 },
-    { n: "Facebook", h: "https://www.facebook.com/atlaslogistic", img: "/images/facebook.png", size: 26 },
-    { n: "LinkedIn", h: "https://www.linkedin.com/company/atlas-logistic", img: "/images/linkdn.png", size: 36 },
+    { n: "Facebook", h: "https://www.facebook.com/people/Atlas-Logistic/61584724776185/?rdid=vyjOiEPX9GyLlMXR&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1ApsfDGCmG%2F", img: "/images/facebook.png", size: 29 },
+    { n: "LinkedIn", h: "https://www.linkedin.com/company/atlas-logistic", img: "/images/linkdn.png", size: 34 },
   ];
   return (
-    <footer id="contacto" style={{ background: "#0c2340", color: "#fff", position: "relative", overflow: "hidden" }}>
+    <footer style={{ background: "#0c2340", color: "#fff", position: "relative", overflow: "hidden" }}>
       {/* Footer flight routes */}
       <svg className="footer-routes" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid slice" fill="none">
         <defs>
@@ -1053,31 +1288,37 @@ function Footer() {
         <path d="M1050 300 C1100 240, 1130 200, 1150 180" stroke="rgba(255,255,255,0.05)" strokeWidth="0.6" strokeDasharray="5 4" className="ft-route route-sub" />
       </svg>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "56px 24px", position: "relative", zIndex: 2 }}>
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-2 gap-12" style={{ alignItems: "stretch" }}>
           <R dir="left"><div>
             <Logo h={70} style={{ marginBottom: 20 }} />
-            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#9ca3af", lineHeight: 1.75, maxWidth: 420, marginBottom: 28 }}>Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!</p>
+            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#ffffff", lineHeight: 1.75, maxWidth: 420, marginBottom: 28 }}>Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!</p>
             <div style={{ marginBottom: 28 }}>
-              <a href={PH} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14, textDecoration: "none" }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(27,111,234,0.12)", border: "1px solid rgba(27,111,234,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(27,111,234,0.4))" }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(0,166,255,0.3))" }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ stroke: "url(#gradFoot)" }}>
+                    <defs><linearGradient id="gradFoot" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#ffffff"/><stop offset="100%" stopColor="#00a6ff"/></linearGradient></defs>
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+                  </svg>
                 </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#d1d5db" }}>+57 322 605 5431</span>
-              </a>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(27,111,234,0.12)", border: "1px solid rgba(27,111,234,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2, filter: "drop-shadow(0 0 8px rgba(27,111,234,0.4))" }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(0,166,255,0.3))" }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ stroke: "url(#gradFoot2)" }}>
+                    <defs><linearGradient id="gradFoot2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#ffffff"/><stop offset="100%" stopColor="#00a6ff"/></linearGradient></defs>
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
+                  </svg>
                 </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#d1d5db" }}>Carrera 31b # 4A-11, Bogotá, Colombia — Barrio Veraguas</span>
               </div>
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              {soc.map(s => <a key={s.n} href={s.h} target="_blank" rel="noopener noreferrer" aria-label={s.n} style={{ display: "flex", alignItems: "center", justifyContent: "center", transition: "opacity 0.3s", textDecoration: "none", opacity: 1 }}
+              {soc.map(s => <a key={s.n} href={s.h} target="_blank" rel="noopener noreferrer" aria-label={s.n} style={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", transition: "opacity 0.3s", textDecoration: "none", opacity: 1 }}
                 onMouseEnter={e => { e.currentTarget.style.opacity = "0.75"; }}
                 onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
               ><img src={s.img} alt={s.n} style={{ width: s.size, height: s.size, objectFit: "contain" }} /></a>)}
             </div>
           </div></R>
-          <R dir="right" delay={200}><div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", minHeight: 260 }}>
-            <iframe title="Ubicación" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.937!2d-74.094!3d4.601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMzYnMDMuNiJOIDc0wrAwNSczNi4wIlc!5e0!3m2!1ses!2sco!4v1" width="100%" height="100%" style={{ border: 0, minHeight: 260 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+          <R dir="right" delay={200}><div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", height: "100%", minHeight: 420 }}>
+            <iframe title="Ubicación" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.937!2d-74.094!3d4.601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMzYnMDMuNiJOIDc0wrAwNSczNi4wIlc!5e0!3m2!1ses!2sco!4v1" width="100%" height="100%" style={{ border: 0, minHeight: 420, display: "block" }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
           </div></R>
         </div>
       </div>
@@ -1098,4 +1339,4 @@ function WF() {
     <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
   </a>;
 }
-export { Nav, Hero, Services, About, WhyUs, Process, CTA, PaymentMarquee, Footer, WF, VideoCard };
+export { Nav, Hero, Services, About, WhyUs, Process, CTA, PaymentMarquee, ContactForm, Footer, WF, VideoCard };
