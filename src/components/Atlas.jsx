@@ -32,7 +32,7 @@ function AnimBtn({ href, children, bg, hoverBg, shadow, hoverShadow, external = 
         background: hov ? (hoverBg || bg) : bg,
         color: "#fff", padding: style?.padding || "12px 24px", borderRadius: 50,
         fontSize: 15, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif",
-        textTransform: "uppercase", letterSpacing: 0.5, textDecoration: "none",
+        textTransform: "none", letterSpacing: 0, textDecoration: "none",
         boxShadow: hov ? (hoverShadow || shadow || "0 12px 32px rgba(0,0,0,0.2)") : (shadow || "0 6px 20px rgba(0,0,0,0.15)"),
         transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
         transform: pressed ? "scale(0.96)" : hov ? "translateY(-2px)" : "translateY(0)",
@@ -1158,7 +1158,7 @@ function ContactForm() {
 
   if (sent) return (
     <section id="contacto" style={{ background: "#ffffff", padding: "80px 0" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
         <div style={{ paddingRight: 56 }}>
           <SuccessTypeWriter />
         </div>
@@ -1182,16 +1182,16 @@ function ContactForm() {
 
   return (
     <section id="contacto" style={{ background: "#ffffff", padding: "80px 0" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
         {/* Columna izquierda */}
-        <div style={{ paddingRight: 56 }}>
+        <div style={{ paddingRight: 80 }}>
           <ContactTypeWriter />
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", marginTop: 20, maxWidth: 380, lineHeight: 1.75 }}>Nos alegra que estés aquí. Cuéntanos tu necesidad y un asesor de Atlas Logistic te contactará muy pronto.</p>
         </div>
         {/* Línea divisora */}
         <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />
         {/* Columna derecha - formulario */}
-        <form onSubmit={handleSubmit} style={{ paddingLeft: 56, display: "flex", flexDirection: "column", gap: 0 }}>
+        <form onSubmit={handleSubmit} style={{ paddingLeft: 80, display: "flex", flexDirection: "column", gap: 0 }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
             <input name="nombre" placeholder="Nombre completo" required value={form.nombre} onChange={handleChange}
               style={{ ...lineInput(), ...focusBorder("nombre") }}
@@ -1244,6 +1244,21 @@ function ContactForm() {
 }
 
 function Footer() {
+  const [routePhase, setRoutePhase] = useState("hidden");
+  const sectionRef = useRef(null);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        setRoutePhase("drawing");
+        setTimeout(() => setRoutePhase("flowing"), 3500);
+        obs.unobserve(el);
+      }
+    }, { threshold: 0.2 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
   const soc = [
     { n: "Instagram", h: "https://www.instagram.com/atlaslogisticaglobal", img: "/images/insta sin fondo.png", size: 40 },
     { n: "TikTok", h: "https://www.tiktok.com/@atlas.logistic", img: "/images/tiktok (1).png", size: 36 },
@@ -1251,45 +1266,57 @@ function Footer() {
     { n: "LinkedIn", h: "https://www.linkedin.com/company/atlas-logistic", img: "/images/linkdn.png", size: 34 },
   ];
   return (
-    <footer style={{ background: "#0c2340", color: "#fff", position: "relative", overflow: "hidden" }}>
-      {/* Footer flight routes */}
-      <svg className="footer-routes" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid slice" fill="none">
+    <footer ref={sectionRef} style={{ background: "linear-gradient(135deg, #0c2340 0%, #0a1e38 40%, #112e55 100%)", color: "#fff", position: "relative", overflow: "hidden" }}>
+      <svg className={`routes-${routePhase}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" fill="none">
         <defs>
-          <radialGradient id="fng"><stop offset="0%" stopColor="rgba(0,166,255,0.13)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
-          <radialGradient id="fwg"><stop offset="0%" stopColor="rgba(255,255,255,0.16)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+          <radialGradient id="fng2"><stop offset="0%" stopColor="rgba(0,166,255,0.16)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+          <radialGradient id="fwg2"><stop offset="0%" stopColor="rgba(255,255,255,0.14)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
         </defs>
-        {/* Nodes */}
-        <circle cx="80" cy="320" r="3.5" fill="rgba(0,166,255,0.2)" /><circle cx="80" cy="320" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" /><circle cx="80" cy="320" r="25" fill="url(#fng)" />
-        <circle cx="350" cy="120" r="3" fill="rgba(255,255,255,0.16)" /><circle cx="350" cy="120" r="7" stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="none" />
-        <circle cx="600" cy="60" r="3" fill="rgba(0,166,255,0.18)" /><circle cx="600" cy="60" r="7" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" /><circle cx="600" cy="60" r="22" fill="url(#fng)" />
-        <circle cx="900" cy="100" r="3.5" fill="rgba(255,255,255,0.11)" /><circle cx="900" cy="100" r="8" stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="none" />
-        <circle cx="1150" cy="180" r="3" fill="rgba(0,166,255,0.16)" /><circle cx="1150" cy="180" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" />
-        <circle cx="1380" cy="80" r="3.5" fill="rgba(255,255,255,0.18)" /><circle cx="1380" cy="80" r="8" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" /><circle cx="1380" cy="80" r="25" fill="url(#fwg)" />
-        <circle cx="200" cy="220" r="2.5" fill="rgba(255,255,255,0.14)" />
-        <circle cx="480" cy="280" r="2.5" fill="rgba(0,166,255,0.13)" />
-        <circle cx="750" cy="340" r="2.5" fill="rgba(255,255,255,0.12)" />
-        <circle cx="1050" cy="300" r="2.5" fill="rgba(0,166,255,0.13)" />
-        <circle cx="1300" cy="350" r="2.5" fill="rgba(255,255,255,0.12)" />
-        {/* Routes */}
-        <path d="M80 320 C150 250, 260 160, 350 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="7 5" className="ft-route route-main" />
-        <path d="M80 320 C200 280, 350 200, 600 60" stroke="rgba(0,166,255,0.13)" strokeWidth="1.4" strokeDasharray="9 5" className="ft-route route-main" />
-        <path d="M350 120 C420 80, 520 60, 600 60" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="6 4" className="ft-route route-mid" />
-        <path d="M600 60 C700 70, 800 85, 900 100" stroke="rgba(0,166,255,0.13)" strokeWidth="1" strokeDasharray="7 5" className="ft-route route-main" />
-        <path d="M600 60 C800 30, 1100 40, 1380 80" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeDasharray="9 6" className="ft-route route-mid" />
-        <path d="M900 100 C980 130, 1080 165, 1150 180" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="6 4" className="ft-route route-sub" />
-        <path d="M900 100 C1050 80, 1200 75, 1380 80" stroke="rgba(0,166,255,0.07)" strokeWidth="0.9" strokeDasharray="7 5" className="ft-route route-mid" />
-        <path d="M1150 180 C1230 140, 1300 100, 1380 80" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="ft-route route-sub" />
-        <path d="M80 320 C160 300, 250 260, 200 220" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M200 220 C280 180, 320 140, 350 120" stroke="rgba(255,255,255,0.06)" strokeWidth="0.7" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M80 320 C200 340, 380 310, 480 280" stroke="rgba(255,255,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="ft-route route-mid" />
-        <path d="M480 280 C580 260, 680 350, 750 340" stroke="rgba(0,166,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M750 340 C850 330, 950 310, 1050 300" stroke="rgba(255,255,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M1050 300 C1150 290, 1230 360, 1300 350" stroke="rgba(0,166,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="ft-route route-sub" />
-        <path d="M1050 300 C1100 240, 1130 200, 1150 180" stroke="rgba(255,255,255,0.05)" strokeWidth="0.6" strokeDasharray="5 4" className="ft-route route-sub" />
+        <circle cx="120" cy="420" r="4" fill="rgba(0,166,255,0.22)" className="nd nd1" /><circle cx="120" cy="420" r="9" stroke="rgba(0,166,255,0.13)" strokeWidth="1" fill="none" className="node-pulse nd nd1" /><circle cx="120" cy="420" r="30" fill="url(#fng2)" className="nd nd1" />
+        <circle cx="380" cy="180" r="3.5" fill="rgba(255,255,255,0.18)" className="nd nd2" /><circle cx="380" cy="180" r="8" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd2" /><circle cx="380" cy="180" r="25" fill="url(#fwg2)" className="nd nd2" />
+        <circle cx="720" cy="80" r="3.5" fill="rgba(0,166,255,0.2)" className="nd nd3" /><circle cx="720" cy="80" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" className="node-pulse nd nd3" /><circle cx="720" cy="80" r="25" fill="url(#fng2)" className="nd nd3" />
+        <circle cx="1280" cy="120" r="4" fill="rgba(255,255,255,0.18)" className="nd nd5" /><circle cx="1280" cy="120" r="9" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd5" /><circle cx="1280" cy="120" r="30" fill="url(#fwg2)" className="nd nd5" />
+        <circle cx="280" cy="500" r="3" fill="rgba(0,166,255,0.18)" className="nd nd1" /><circle cx="280" cy="500" r="7" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="nd nd1" /><circle cx="280" cy="500" r="22" fill="url(#fng2)" className="nd nd1" />
+        <circle cx="650" cy="50" r="3" fill="rgba(255,255,255,0.16)" className="nd nd3" /><circle cx="650" cy="50" r="7" stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="none" className="nd nd3" />
+        <circle cx="980" cy="200" r="3.5" fill="rgba(0,166,255,0.19)" className="nd nd4" /><circle cx="980" cy="200" r="8" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="node-pulse nd nd4" /><circle cx="980" cy="200" r="25" fill="url(#fng2)" className="nd nd4" />
+        <circle cx="200" cy="250" r="3" fill="rgba(255,255,255,0.16)" className="nd nd1" /><circle cx="200" cy="250" r="7" stroke="rgba(255,255,255,0.14)" strokeWidth="1" fill="none" className="nd nd1" />
+        <circle cx="160" cy="380" r="2.5" fill="rgba(0,166,255,0.16)" className="nd nd1" /><circle cx="160" cy="380" r="6" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd1" />
+        <circle cx="240" cy="320" r="2.5" fill="rgba(255,255,255,0.14)" className="nd nd1" /><circle cx="240" cy="320" r="6" stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none" className="nd nd1" />
+        <circle cx="1380" cy="160" r="3" fill="rgba(0,166,255,0.16)" className="nd nd5" /><circle cx="1380" cy="160" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd5" />
+        <circle cx="750" cy="60" r="2.5" fill="rgba(255,255,255,0.14)" className="nd nd3" />
+        <circle cx="1180" cy="340" r="3" fill="rgba(0,166,255,0.16)" className="nd nd4" /><circle cx="1180" cy="340" r="7" stroke="rgba(0,166,255,0.05)" strokeWidth="1" fill="none" className="nd nd4" />
+        <circle cx="1350" cy="480" r="3" fill="rgba(255,255,255,0.15)" className="nd nd5" /><circle cx="1350" cy="480" r="7" stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none" className="nd nd5" />
+        <circle cx="500" cy="450" r="2.5" fill="rgba(0,166,255,0.13)" className="nd nd2" /><circle cx="500" cy="450" r="6" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" className="nd nd2" />
+        <circle cx="850" cy="350" r="2.5" fill="rgba(255,255,255,0.12)" className="nd nd3" /><circle cx="850" cy="350" r="6" stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none" className="nd nd3" />
+        <path d="M120 420 C180 300, 300 200, 380 180" stroke="rgba(255,255,255,0.16)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt1 route-main" />
+        <path d="M120 420 C300 280, 500 120, 720 80" stroke="rgba(0,166,255,0.09)" strokeWidth="1.5" strokeDasharray="10 6" className="rt rt1 route-main" />
+        <path d="M120 420 C160 450, 220 480, 280 500" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="6 4" className="rt rt1 route-mid" />
+        <path d="M380 180 C450 100, 580 60, 720 80" stroke="rgba(255,255,255,0.15)" strokeWidth="1.3" strokeDasharray="8 5" className="rt rt2 route-main" />
+        <path d="M380 180 C430 100, 540 40, 650 50" stroke="rgba(0,166,255,0.07)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt2 route-sub" />
+        <path d="M720 80 C800 100, 900 160, 980 200" stroke="rgba(0,166,255,0.09)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt3 route-main" />
+        <path d="M720 80 C900 40, 1100 60, 1280 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1.3" strokeDasharray="10 6" className="rt rt3 route-main" />
+        <path d="M980 200 C1060 150, 1180 120, 1280 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="6 4" className="rt rt4 route-mid" />
+        <path d="M980 200 C1020 250, 1100 310, 1180 340" stroke="rgba(0,166,255,0.07)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt4 route-sub" />
+        <path d="M1280 120 C1310 130, 1350 145, 1380 160" stroke="rgba(0,166,255,0.13)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt5 route-sub" />
+        <path d="M1280 120 C1320 250, 1350 380, 1350 480" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="8 5" className="rt rt5 route-mid" />
+        <path d="M1180 340 C1220 390, 1300 440, 1350 480" stroke="rgba(0,166,255,0.06)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt5 route-sub" />
+        <path d="M120 420 C140 340, 170 280, 200 250" stroke="rgba(0,166,255,0.13)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt1 route-mid" />
+        <path d="M200 250 C260 220, 320 195, 380 180" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="5 4" className="rt rt1 route-sub" />
+        <path d="M120 420 C150 380, 200 340, 240 320" stroke="rgba(255,255,255,0.12)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt1 route-sub" />
+        <path d="M240 320 C280 260, 340 210, 380 180" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt2 route-sub" />
+        <path d="M280 500 C400 400, 560 200, 720 80" stroke="rgba(0,166,255,0.07)" strokeWidth="0.9" strokeDasharray="8 6" className="rt rt2 route-mid" />
+        <path d="M650 50 C680 50, 720 55, 750 60" stroke="rgba(255,255,255,0.06)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt3 route-sub" />
+        <path d="M750 60 C740 65, 730 72, 720 80" stroke="rgba(255,255,255,0.06)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt3 route-sub" />
+        <path d="M120 420 C130 400, 145 390, 160 380" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="4 3" className="rt rt1 route-sub" />
+        <path d="M280 500 C360 480, 430 460, 500 450" stroke="rgba(255,255,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt2 route-mid" />
+        <path d="M500 450 C600 430, 720 390, 850 350" stroke="rgba(0,166,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt3 route-mid" />
+        <path d="M850 350 C920 320, 980 250, 980 200" stroke="rgba(255,255,255,0.06)" strokeWidth="0.7" strokeDasharray="5 4" className="rt rt3 route-sub" />
+        <path d="M850 350 C950 340, 1080 340, 1180 340" stroke="rgba(0,166,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt4 route-sub" />
+        <path d="M500 450 C550 350, 620 200, 720 80" stroke="rgba(255,255,255,0.05)" strokeWidth="0.6" strokeDasharray="6 5" className="rt rt2 route-mid" />
       </svg>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "56px 24px", position: "relative", zIndex: 2 }}>
         <div className="grid lg:grid-cols-2 gap-12" style={{ alignItems: "stretch" }}>
-          <R dir="left"><div>
+          <R dir="left"><div style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "32px 28px" }}>
             <Logo h={70} style={{ marginBottom: 20 }} />
             <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#ffffff", lineHeight: 1.75, maxWidth: 420, marginBottom: 28 }}>Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!</p>
             <div style={{ marginBottom: 28 }}>
