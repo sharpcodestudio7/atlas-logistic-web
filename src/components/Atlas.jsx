@@ -6,13 +6,27 @@ import { WA_LINK as WA, PHONE_LINK as PH, IMAGES } from '@/lib/constants';
 
 function R({ children, className = "", delay = 0, dir = "up" }) {
   const [ref, v] = useInView();
-  const b = dir === "left" ? "translate-x-8" : dir === "right" ? "-translate-x-8" : "translate-y-8";
+  const b = dir === "left" ? "translate-x-16" : dir === "right" ? "-translate-x-16" : "translate-y-16";
   return <div ref={ref} className={`transition-all ease-out ${v ? "opacity-100 translate-x-0 translate-y-0" : `opacity-0 ${b}`} ${className}`} style={{ transitionDuration: "800ms", transitionDelay: `${delay}ms` }}>{children}</div>;
 }
 
-function Stg({ children, className = "", ms = 100 }) {
+function Stg({ children, className = "", ms = 100, dirs }) {
   const [ref, v] = useInView();
-  return <div ref={ref} className={className}>{Array.isArray(children) ? children.map((c, i) => <div key={i} className={`transition-all ease-out ${v ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`} style={{ transitionDuration: "700ms", transitionDelay: `${i * ms}ms`, height: "100%" }}>{c}</div>) : children}</div>;
+  const arr = Array.isArray(children) ? children : [children];
+  const count = arr.length;
+  return (
+    <div ref={ref} className={className}>
+      {arr.map((c, i) => {
+        const dir = dirs ? dirs(i, count) : "up";
+        const anim = dir === "left" ? "springLeft" : dir === "right" ? "springRight" : "springUp";
+        return (
+          <div key={i} style={{ animation: v ? `${anim} 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * ms}ms both` : "none", opacity: v ? undefined : 0, height: "100%" }}>
+            {c}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 function Logo({ h = 52, style = {} }) {
@@ -306,6 +320,31 @@ function SvcCard({ icon, title, desc, color, hoverAnim }) {
   );
 }
 
+function SvcCarousel({ data, gap, visible, pos }) {
+  const [ref, v] = useInView();
+  return (
+    <div ref={ref} style={{
+      display: "flex", gap,
+      transform: `translateX(calc(${-pos} * (100% + ${gap}px) / ${visible}))`,
+      transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+    }}>
+      {data.map((s, i) => {
+        const dir = i === 0 ? "left" : i === data.length - 1 ? "right" : "up";
+        const anim = dir === "left" ? "springLeft" : dir === "right" ? "springRight" : "springUp";
+        return (
+          <div key={i} style={{
+            width: `calc((100% - ${gap * (visible - 1)}px) / ${visible})`, flexShrink: 0,
+            animation: v ? `${anim} 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 100}ms both` : "none",
+            opacity: v ? undefined : 0,
+          }}>
+            <SvcCard icon={svcIcons[s.k].icon} title={s.t} desc={s.d} color={s.color} hoverAnim={svcIcons[s.k].hoverAnim} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function Services() {
   const [pos, setPos] = useState(0);
   const ww = useWW();
@@ -367,17 +406,7 @@ function Services() {
           <ArrowBtn dir={-1} active={canLeft} ww={ww} />
           <ArrowBtn dir={1} active={canRight} ww={ww} />
           <div style={{ overflow: "hidden" }}>
-            <div style={{
-              display: "flex", gap: gap,
-              transform: `translateX(calc(${-pos} * (100% + ${gap}px) / ${visible}))`,
-              transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}>
-              {data.map((s, i) => (
-                <div key={i} style={{ width: `calc((100% - ${gap * (visible - 1)}px) / ${visible})`, flexShrink: 0 }}>
-                  <SvcCard icon={svcIcons[s.k].icon} title={s.t} desc={s.d} color={s.color} hoverAnim={svcIcons[s.k].hoverAnim} />
-                </div>
-              ))}
-            </div>
+            <SvcCarousel data={data} gap={gap} visible={visible} pos={pos} />
           </div>
           {/* Dots indicator */}
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 24 }}>
@@ -573,13 +602,11 @@ function About() {
           </R>
         </div>
         {/* Stats row - 4 columns */}
-        <R delay={300}>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {stats.map((s, i) => (
-              <StatCard key={i} icon={s.icon} value={s.v} numEnd={s.numEnd} numSuffix={s.numSuffix} label={s.l} color={s.color} hoverAnim={s.hoverAnim} />
-            ))}
-          </div>
-        </R>
+        <Stg className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5" ms={150} dirs={(i, n) => i === 0 ? "left" : i === n - 1 ? "right" : "up"}>
+          {stats.map((s, i) => (
+            <StatCard key={i} icon={s.icon} value={s.v} numEnd={s.numEnd} numSuffix={s.numSuffix} label={s.l} color={s.color} hoverAnim={s.hoverAnim} />
+          ))}
+        </Stg>
       </div>
     </section>
   );
@@ -720,11 +747,180 @@ function WhyUs() {
             <span style={{ width: 28, height: 2, background: "rgba(0,166,255,0.3)", borderRadius: 4, display: "inline-block" }} />
           </div>
         </div></R>
-        <Stg className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5" ms={120}>
+        <Stg className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5" ms={120} dirs={(i, n) => i === 0 ? "left" : i === n - 1 ? "right" : "up"}>
           {items.map((a, i) => (
             <WhyUsCard key={i} icon={a.icon} title={a.t} desc={a.d} color={a.color} hoverAnim={a.hoverAnim} />
           ))}
         </Stg>
+      </div>
+    </section>
+  );
+}
+
+function ShowcaseSlider() {
+  const images = [
+    "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80",
+    "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80",
+    "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=80",
+    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
+  ];
+  const slides = [
+    { tag: "IMPORTACIONES", title: "Tu mercancía en Colombia, sin complicaciones", desc: "Gestionamos cada importación desde el origen hasta tu puerta. Trámites aduaneros, liberación express y seguimiento en tiempo real para que tú solo te preocupes por vender.", statNum: "3-5 días", statLabel: "Tiempo promedio de entrega aérea" },
+    { tag: "EXPORTACIONES", title: "Colombia al mundo, con rapidez y confianza", desc: "Exporta tus productos a más de 220 países con procesos aduaneros simplificados. Somos tu aliado estratégico para conquistar mercados internacionales.", statNum: "220+", statLabel: "Países de cobertura global" },
+    { tag: "CASILLERO INTERNACIONAL", title: "Compra en el exterior como si estuvieras allá", desc: "Tenemos direcciones en EE.UU., España y China para que compres en cualquier tienda internacional y recibas tus productos directamente en Colombia.", statNum: "3 países", statLabel: "Con direcciones disponibles" },
+    { tag: "RED GLOBAL", title: "Una red logística que no tiene fronteras", desc: "Operamos con aliados estratégicos en los principales hubs logísticos del mundo. Tu carga siempre estará en manos expertas, sin importar el destino.", statNum: "5,000+", statLabel: "Envíos gestionados exitosamente" },
+  ];
+
+  const [current, setCurrent] = useState(0);
+  const [outgoing, setOutgoing] = useState(null);
+  const [entering, setEntering] = useState(false);
+  const [textPhase, setTextPhase] = useState("visible"); // "visible" | "exiting" | "entering"
+  const [progressKey, setProgressKey] = useState(0);
+  const ww = useWW();
+  const isMobile = ww < 768;
+  const autoTimer = useRef(null);
+  const transTimers = useRef([]);
+
+  const goTo = (idx) => {
+    if (idx === current || outgoing !== null) return;
+    clearTimeout(autoTimer.current);
+    transTimers.current.forEach(clearTimeout);
+    transTimers.current = [];
+
+    setOutgoing(current);
+    setTextPhase("exiting");
+
+    transTimers.current.push(setTimeout(() => {
+      setCurrent(idx);
+      setOutgoing(null);
+      setEntering(true);
+      setTextPhase("entering");
+      setProgressKey(k => k + 1);
+    }, 800));
+
+    transTimers.current.push(setTimeout(() => {
+      setEntering(false);
+      setTextPhase("visible");
+    }, 1800));
+  };
+
+  const goToRef = useRef(goTo);
+  goToRef.current = goTo;
+
+  useEffect(() => {
+    autoTimer.current = setTimeout(() => {
+      goToRef.current((current + 1) % slides.length);
+    }, 7000);
+    return () => clearTimeout(autoTimer.current);
+  }, [current]);
+
+  useEffect(() => () => { clearTimeout(autoTimer.current); transTimers.current.forEach(clearTimeout); }, []);
+
+  const s = slides[current];
+
+  return (
+    <section style={{ background: "#f0f4f8", padding: isMobile ? "40px 0" : "80px 0" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", minHeight: isMobile ? 320 : 420, borderRadius: 24, overflow: "hidden" }}>
+
+          {/* Left — Image */}
+          <div style={{ width: isMobile ? "100%" : "50%", height: isMobile ? 320 : "auto", minHeight: isMobile ? 320 : 420, position: "relative", overflow: "hidden", flexShrink: 0 }}>
+            {images.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt=""
+                style={{
+                  position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+                  pointerEvents: "none",
+                  zIndex: outgoing === i ? 3 : current === i ? 2 : 1,
+                  opacity: i !== current && i !== outgoing ? 0 : i === current && !entering ? 1 : undefined,
+                  animation: i === current && entering
+                    ? "zoomIn 1000ms ease both"
+                    : i === outgoing
+                    ? "zoomOut 800ms ease forwards"
+                    : "none",
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Right — Text */}
+          <div style={{
+            width: isMobile ? "100%" : "50%",
+            background: "linear-gradient(135deg, #0c2340 0%, #1b4080 100%)",
+            padding: isMobile ? "32px 24px 40px" : "40px 40px",
+            display: "flex", flexDirection: "column", justifyContent: "center",
+            position: "relative", overflow: "hidden",
+          }}>
+            {/* Decorative circle */}
+            <div style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,166,255,0.08) 0%, transparent 70%)", top: -80, right: -80, pointerEvents: "none", zIndex: 0 }} />
+
+            {/* Animated SVG routes — always flowing, subtle */}
+            <svg className="routes-flowing" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: 0.06, zIndex: 0 }} viewBox="0 0 720 600" preserveAspectRatio="xMidYMid slice" fill="none">
+              <defs>
+                <radialGradient id="ssng"><stop offset="0%" stopColor="rgba(0,166,255,0.16)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+                <radialGradient id="sswg"><stop offset="0%" stopColor="rgba(255,255,255,0.14)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+              </defs>
+              <circle cx="60" cy="420" r="4" fill="rgba(0,166,255,0.22)" className="nd nd1" /><circle cx="60" cy="420" r="9" stroke="rgba(0,166,255,0.13)" strokeWidth="1" fill="none" className="node-pulse nd nd1" /><circle cx="60" cy="420" r="30" fill="url(#ssng)" className="nd nd1" />
+              <circle cx="190" cy="180" r="3.5" fill="rgba(255,255,255,0.18)" className="nd nd2" /><circle cx="190" cy="180" r="8" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd2" /><circle cx="190" cy="180" r="25" fill="url(#sswg)" className="nd nd2" />
+              <circle cx="360" cy="80" r="3.5" fill="rgba(0,166,255,0.2)" className="nd nd3" /><circle cx="360" cy="80" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" className="node-pulse nd nd3" /><circle cx="360" cy="80" r="25" fill="url(#ssng)" className="nd nd3" />
+              <circle cx="640" cy="120" r="4" fill="rgba(255,255,255,0.18)" className="nd nd5" /><circle cx="640" cy="120" r="9" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd5" /><circle cx="640" cy="120" r="30" fill="url(#sswg)" className="nd nd5" />
+              <circle cx="490" cy="200" r="3.5" fill="rgba(0,166,255,0.19)" className="nd nd4" /><circle cx="490" cy="200" r="8" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="node-pulse nd nd4" /><circle cx="490" cy="200" r="25" fill="url(#ssng)" className="nd nd4" />
+              <path d="M60 420 C90 300, 150 200, 190 180" stroke="rgba(255,255,255,0.16)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt1 route-main" />
+              <path d="M60 420 C150 280, 250 120, 360 80" stroke="rgba(0,166,255,0.09)" strokeWidth="1.5" strokeDasharray="10 6" className="rt rt1 route-main" />
+              <path d="M190 180 C225 100, 290 60, 360 80" stroke="rgba(255,255,255,0.15)" strokeWidth="1.3" strokeDasharray="8 5" className="rt rt2 route-main" />
+              <path d="M360 80 C400 100, 450 160, 490 200" stroke="rgba(0,166,255,0.09)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt3 route-main" />
+              <path d="M360 80 C450 40, 550 60, 640 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1.3" strokeDasharray="10 6" className="rt rt3 route-main" />
+              <path d="M490 200 C530 150, 590 120, 640 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="6 4" className="rt rt4 route-mid" />
+              <path d="M490 200 C510 250, 550 310, 590 340" stroke="rgba(0,166,255,0.07)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt4 route-sub" />
+              <path d="M140 500 C200 400, 280 200, 360 80" stroke="rgba(0,166,255,0.07)" strokeWidth="0.9" strokeDasharray="8 6" className="rt rt2 route-mid" />
+            </svg>
+
+            {/* Text content */}
+            <div style={{
+              position: "relative", zIndex: 2,
+              animation: textPhase === "exiting"
+                ? "textSlideOut 400ms ease forwards"
+                : textPhase === "entering"
+                ? "textSlideIn 600ms ease 200ms both"
+                : "none",
+            }}>
+              <p style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 12, letterSpacing: 3, fontWeight: 700, color: "#00a6ff", marginBottom: 16, textTransform: "uppercase" }}>{s.tag}</p>
+              <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.4rem, 2.5vw, 2rem)", color: "#ffffff", lineHeight: 1.2, marginBottom: 20 }}>{s.title}</h2>
+              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 36, maxWidth: 440 }}>{s.desc}</p>
+              <div>
+                <p style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 48, fontWeight: 800, color: "#ffffff", lineHeight: 1 }}>{s.statNum}</p>
+                <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "rgba(255,255,255,0.5)", marginTop: 4 }}>{s.statLabel}</p>
+              </div>
+            </div>
+
+            {/* Nav dots */}
+            <div style={{ display: "flex", marginTop: 48, position: "relative", zIndex: 2, alignItems: "center" }}>
+              {slides.map((_, i) => (
+                <button key={i} onClick={() => goTo(i)} style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", background: "none", border: "none", padding: 0, flexShrink: 0 }}>
+                  <div style={{
+                    width: i === current ? 32 : 8,
+                    height: i === current ? 4 : 8,
+                    borderRadius: i === current ? 2 : 4,
+                    background: i === current ? "linear-gradient(90deg, #00a6ff, #1b6fea)" : "rgba(255,255,255,0.3)",
+                    transition: "width 0.4s ease, height 0.4s ease, border-radius 0.4s ease, background 0.4s ease",
+                  }} />
+                </button>
+              ))}
+            </div>
+
+            {/* Progress bars */}
+            <div style={{ display: "flex", gap: 6, marginTop: 8, position: "relative", zIndex: 2 }}>
+              {slides.map((_, i) => (
+                <div key={i} style={{ flex: 1, height: 2, background: "rgba(255,255,255,0.15)", borderRadius: 2, overflow: "hidden" }}>
+                  {i === current && <div key={progressKey} style={{ height: "100%", background: "#00a6ff", animation: "progressFill 7s linear forwards" }} />}
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
   );
@@ -735,6 +931,7 @@ function Process() {
   const [hovCard, setHovCard] = useState(false);
   const ww = useWW();
   const isMobile = ww < 768;
+  const [nodesRef, nodesV] = useInView();
   const steps = [
     { n: 1, t: "Cotiza con nuestro equipo", d: "¿Necesitas mover tu carga? ¡Estamos aquí para ayudarte! Habla con nuestro equipo, recibe asesoría personalizada y cotiza fácil y rápido por WhatsApp o llamada.", img: IMAGES.process.cotiza, icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /><path d="M8 10h8M8 14h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
     { n: 2, t: "Infórmanos tus datos de recolección", d: "Compártenos la información de recolección y nuestro equipo se encargará de coordinar toda la logística de forma rápida, segura y eficiente. ¡Nosotros nos ocupamos del resto!", img: IMAGES.process.datos, icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M8 14h2v2H8z" fill="#00a6ff" stroke="#00a6ff" /></svg> },
@@ -754,29 +951,27 @@ function Process() {
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>Un proceso optimizado para garantizar tu satisfacción en cada etapa del envío.</p>
         </div></R>
         {/* Timeline nodes */}
-        <R delay={200}>
-          <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isMobile ? 28 : 48, padding: isMobile ? "0 12px" : "0 40px" }}>
-            {/* Background line */}
-            <div style={{ position: "absolute", top: "50%", left: isMobile ? "calc(12px + 20px)" : "calc(40px + 30px)", right: isMobile ? "calc(12px + 20px)" : "calc(40px + 30px)", height: 3, background: "rgba(27,111,234,0.08)", borderRadius: 4, transform: "translateY(-50%)" }} />
-            {/* Progress line */}
-            <div style={{ position: "absolute", top: "50%", left: isMobile ? "calc(12px + 20px)" : "calc(40px + 30px)", height: 3, borderRadius: 4, background: "linear-gradient(90deg, #00a6ff, #1b6fea)", transform: "translateY(-50%)", width: active === 0 ? "0%" : `calc(${(active / (steps.length - 1)) * 100}% * (1 - 120px / 100%))`, maxWidth: "calc(100% - 140px)", transition: "width 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }} />
-            {steps.map((s, i) => (
-              <div key={i} onMouseEnter={() => !isMobile && setActive(i)} onClick={() => setActive(i)} style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", cursor: "pointer" }}>
-                <div style={{
-                  width: isMobile ? 42 : 60, height: isMobile ? 42 : 60, borderRadius: isMobile ? 21 : 30,
-                  background: i <= active ? "linear-gradient(135deg, #1b6fea, #00a6ff)" : "#ffffff",
-                  border: i <= active ? "3px solid rgba(255,255,255,0.9)" : "3px solid rgba(27,111,234,0.15)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: i === active ? "0 0 28px rgba(0,166,255,0.4), 0 4px 16px rgba(27,111,234,0.2)" : i < active ? "0 2px 8px rgba(27,111,234,0.15)" : "0 1px 4px rgba(0,0,0,0.05)",
-                  transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-                  transform: i === active ? "scale(1.18)" : "scale(1)",
-                }}>
-                  <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: isMobile ? 16 : 20, color: i <= active ? "#fff" : "#1b6fea", transition: "color 0.3s" }}>{s.n}</span>
-                </div>
+        <div ref={nodesRef} style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isMobile ? 28 : 48, padding: isMobile ? "0 12px" : "0 40px" }}>
+          {/* Background line */}
+          <div style={{ position: "absolute", top: "50%", left: isMobile ? "calc(12px + 20px)" : "calc(40px + 30px)", right: isMobile ? "calc(12px + 20px)" : "calc(40px + 30px)", height: 3, background: "rgba(27,111,234,0.08)", borderRadius: 4, transform: "translateY(-50%)" }} />
+          {/* Progress line */}
+          <div style={{ position: "absolute", top: "50%", left: isMobile ? "calc(12px + 20px)" : "calc(40px + 30px)", height: 3, borderRadius: 4, background: "linear-gradient(90deg, #00a6ff, #1b6fea)", transform: "translateY(-50%)", width: active === 0 ? "0%" : `calc(${(active / (steps.length - 1)) * 100}% * (1 - 120px / 100%))`, maxWidth: "calc(100% - 140px)", transition: "width 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }} />
+          {steps.map((s, i) => (
+            <div key={i} onMouseEnter={() => !isMobile && setActive(i)} onClick={() => setActive(i)} style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", cursor: "pointer", animation: nodesV ? `springScale 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 150}ms both` : "none", opacity: nodesV ? undefined : 0 }}>
+              <div style={{
+                width: isMobile ? 42 : 60, height: isMobile ? 42 : 60, borderRadius: isMobile ? 21 : 30,
+                background: i <= active ? "linear-gradient(135deg, #1b6fea, #00a6ff)" : "#ffffff",
+                border: i <= active ? "3px solid rgba(255,255,255,0.9)" : "3px solid rgba(27,111,234,0.15)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: i === active ? "0 0 28px rgba(0,166,255,0.4), 0 4px 16px rgba(27,111,234,0.2)" : i < active ? "0 2px 8px rgba(27,111,234,0.15)" : "0 1px 4px rgba(0,0,0,0.05)",
+                transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                transform: i === active ? "scale(1.18)" : "scale(1)",
+              }}>
+                <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: isMobile ? 16 : 20, color: i <= active ? "#fff" : "#1b6fea", transition: "color 0.3s" }}>{s.n}</span>
               </div>
-            ))}
-          </div>
-        </R>
+            </div>
+          ))}
+        </div>
         {/* Active step content card */}
         <R delay={300}>
           <div
@@ -1366,4 +1561,4 @@ function WF() {
     <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
   </a>;
 }
-export { Nav, Hero, Services, About, WhyUs, Process, CTA, PaymentMarquee, ContactForm, Footer, WF, VideoCard };
+export { Nav, Hero, Services, About, WhyUs, ShowcaseSlider, Process, CTA, PaymentMarquee, ContactForm, Footer, WF, VideoCard };
