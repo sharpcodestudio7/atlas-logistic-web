@@ -66,6 +66,13 @@ body {
   100% { opacity: 1; transform: scale(1); }
 }
 
+@keyframes logoGlow {
+  0%   { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)); }
+  33%  { filter: drop-shadow(0 0 6px rgba(27,111,234,0.5)) drop-shadow(0 0 14px rgba(27,111,234,0.25)); }
+  66%  { filter: drop-shadow(0 0 6px rgba(29,29,27,0.35)) drop-shadow(0 0 14px rgba(0,166,255,0.3)); }
+  100% { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)); }
+}
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }

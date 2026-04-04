@@ -29,8 +29,23 @@ function Stg({ children, className = "", ms = 100, dirs }) {
   );
 }
 
-function Logo({ h = 52, style = {} }) {
-  return <img src={IMAGES.logo} alt="Atlas Logistic" style={{ height: h, width: "auto", objectFit: "contain", ...style }} />;
+function Logo({ h = 52, style = {}, variant = "light" }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setMounted(true), 50); return () => clearTimeout(t); }, []);
+  return (
+    <img
+      src={IMAGES.logo}
+      alt="Atlas Logistic"
+      style={{
+        height: h, width: "auto", objectFit: "contain",
+        filter: variant === "light" ? "brightness(1.3) contrast(1.1) saturate(1.2)" : "none",
+        opacity: mounted ? 1 : 0,
+        transform: mounted ? "translateY(0)" : "translateY(-10px)",
+        transition: "opacity 800ms ease, transform 800ms ease",
+        ...style,
+      }}
+    />
+  );
 }
 
 function AnimBtn({ href, children, bg, hoverBg, shadow, hoverShadow, external = false, style = {}, onClick }) {
@@ -137,8 +152,15 @@ function Nav() {
       boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.15), inset 0 -1px 0 rgba(255,255,255,0.05)" : "none",
       transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
     }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: scrolled ? 95 : 80, transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }}>
-        <a href="#inicio" onClick={(e) => { e.preventDefault(); const el = document.getElementById('inicio'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}><Logo h={scrolled ? 90 : 60} style={{ transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }} /></a>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: scrolled ? 75 : 120, transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }}>
+        <a href="#inicio" onClick={(e) => { e.preventDefault(); const el = document.getElementById('inicio'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>
+          <div style={scrolled
+            ? { animation: "none", filter: "none", transform: "scale(1)", transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }
+            : { animation: "logoGlow 3s ease-in-out infinite", transform: "scale(1.05)", transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }
+          }>
+            <Logo h={scrolled ? 80 : 108} variant={scrolled ? "dark" : "light"} style={{ transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }} />
+          </div>
+        </a>
         <div className="hidden md:flex" style={{ alignItems: "center", gap: 36 }}>
           {lnk.map(l => <NavLink key={l.h} href={l.h} label={l.l} />)}
         </div>
