@@ -198,12 +198,14 @@ function TypeWriter() {
 
 function Hero() {
   return (
-    <section id="inicio" style={{ position: "relative", minHeight: "75vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${IMAGES.banner})`, backgroundSize: "cover", backgroundPosition: "center 30%" }} />
+    <section id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
+      <video autoPlay loop muted playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}>
+        <source src="/videos/video.mp4" type="video/mp4" />
+      </video>
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(12,35,64,0.9) 0%, rgba(12,35,64,0.72) 40%, rgba(12,35,64,0.55) 100%)" }} />
-      <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "120px 24px 60px", width: "100%" }}>
+      <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "110px 24px 60px", width: "100%" }}>
         <div style={{ maxWidth: 800 }}>
-          <R delay={200}><h1 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)", lineHeight: 1.08, letterSpacing: "-0.02em" }}>¡Desde donde estés<br />hasta donde lo necesites!</h1></R>
+          <R delay={200}><h1 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)", lineHeight: 1.08, letterSpacing: "-0.02em", marginTop: -80 }}>¡Desde donde estés<br />hasta donde lo necesites!</h1></R>
           <R delay={300}><TypeWriter /></R>
 
           <R delay={600}><div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", gap: 14 }}>
@@ -774,12 +776,28 @@ function ShowcaseSlider() {
   const [current, setCurrent] = useState(0);
   const [outgoing, setOutgoing] = useState(null);
   const [entering, setEntering] = useState(false);
-  const [textPhase, setTextPhase] = useState("visible"); // "visible" | "exiting" | "entering"
+  const [textPhase, setTextPhase] = useState("visible");
   const [progressKey, setProgressKey] = useState(0);
+  const [routePhase, setRoutePhase] = useState("hidden");
   const ww = useWW();
   const isMobile = ww < 768;
   const autoTimer = useRef(null);
   const transTimers = useRef([]);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        setRoutePhase("drawing");
+        setTimeout(() => setRoutePhase("flowing"), 3500);
+        obs.unobserve(el);
+      }
+    }, { threshold: 0.2 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const goTo = (idx) => {
     if (idx === current || outgoing !== null) return;
@@ -819,12 +837,46 @@ function ShowcaseSlider() {
   const s = slides[current];
 
   return (
-    <section style={{ background: "#f0f4f8", padding: isMobile ? "40px 0" : "80px 0" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", minHeight: isMobile ? 320 : 420, borderRadius: 24, overflow: "hidden" }}>
+    <section ref={sectionRef} style={{ background: "linear-gradient(135deg, #0c2340 0%, #0a1e38 40%, #112e55 100%)", padding: isMobile ? "60px 0" : "80px 0", position: "relative", overflow: "hidden" }}>
+      {/* Animated SVG routes */}
+      <svg className={`routes-${routePhase}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" fill="none">
+        <defs>
+          <radialGradient id="ssng3"><stop offset="0%" stopColor="rgba(0,166,255,0.16)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+          <radialGradient id="sswg3"><stop offset="0%" stopColor="rgba(255,255,255,0.14)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
+        </defs>
+        <circle cx="120" cy="420" r="4" fill="rgba(0,166,255,0.22)" className="nd nd1" /><circle cx="120" cy="420" r="9" stroke="rgba(0,166,255,0.13)" strokeWidth="1" fill="none" className="node-pulse nd nd1" /><circle cx="120" cy="420" r="30" fill="url(#ssng3)" className="nd nd1" />
+        <circle cx="380" cy="180" r="3.5" fill="rgba(255,255,255,0.18)" className="nd nd2" /><circle cx="380" cy="180" r="8" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd2" /><circle cx="380" cy="180" r="25" fill="url(#sswg3)" className="nd nd2" />
+        <circle cx="720" cy="80" r="3.5" fill="rgba(0,166,255,0.2)" className="nd nd3" /><circle cx="720" cy="80" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" className="node-pulse nd nd3" /><circle cx="720" cy="80" r="25" fill="url(#ssng3)" className="nd nd3" />
+        <circle cx="1280" cy="120" r="4" fill="rgba(255,255,255,0.18)" className="nd nd5" /><circle cx="1280" cy="120" r="9" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd5" /><circle cx="1280" cy="120" r="30" fill="url(#sswg3)" className="nd nd5" />
+        <circle cx="980" cy="200" r="3.5" fill="rgba(0,166,255,0.19)" className="nd nd4" /><circle cx="980" cy="200" r="8" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="node-pulse nd nd4" /><circle cx="980" cy="200" r="25" fill="url(#ssng3)" className="nd nd4" />
+        <circle cx="280" cy="500" r="3" fill="rgba(0,166,255,0.18)" className="nd nd1" /><circle cx="280" cy="500" r="7" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="nd nd1" /><circle cx="280" cy="500" r="22" fill="url(#ssng3)" className="nd nd1" />
+        <circle cx="1350" cy="480" r="3" fill="rgba(255,255,255,0.15)" className="nd nd5" /><circle cx="1350" cy="480" r="7" stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none" className="nd nd5" />
+        <path d="M120 420 C180 300, 300 200, 380 180" stroke="rgba(255,255,255,0.16)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt1 route-main" />
+        <path d="M120 420 C300 280, 500 120, 720 80" stroke="rgba(0,166,255,0.09)" strokeWidth="1.5" strokeDasharray="10 6" className="rt rt1 route-main" />
+        <path d="M380 180 C450 100, 580 60, 720 80" stroke="rgba(255,255,255,0.15)" strokeWidth="1.3" strokeDasharray="8 5" className="rt rt2 route-main" />
+        <path d="M720 80 C800 100, 900 160, 980 200" stroke="rgba(0,166,255,0.09)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt3 route-main" />
+        <path d="M720 80 C900 40, 1100 60, 1280 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1.3" strokeDasharray="10 6" className="rt rt3 route-main" />
+        <path d="M980 200 C1060 150, 1180 120, 1280 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="6 4" className="rt rt4 route-mid" />
+        <path d="M280 500 C400 400, 560 200, 720 80" stroke="rgba(0,166,255,0.07)" strokeWidth="0.9" strokeDasharray="8 6" className="rt rt2 route-mid" />
+        <path d="M1280 120 C1320 250, 1350 380, 1350 480" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="8 5" className="rt rt5 route-mid" />
+      </svg>
+
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
+        {/* Section title */}
+        <R><div style={{ textAlign: "center", marginBottom: 48 }}>
+          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#ffffff" }}>Soluciones que mueven al mundo</h2>
+          <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
+            <span style={{ width: 28, height: 2, background: "rgba(0,166,255,0.3)", borderRadius: 4, display: "inline-block" }} />
+            <span style={{ width: 48, height: 2, background: "#00a6ff", borderRadius: 4, display: "inline-block" }} />
+            <span style={{ width: 28, height: 2, background: "rgba(0,166,255,0.3)", borderRadius: 4, display: "inline-block" }} />
+          </div>
+        </div></R>
+
+        {/* Slider row */}
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 0, alignItems: "center", minHeight: isMobile ? "auto" : 420 }}>
 
           {/* Left — Image */}
-          <div style={{ width: isMobile ? "100%" : "50%", height: isMobile ? 320 : "auto", minHeight: isMobile ? 320 : 420, position: "relative", overflow: "hidden", flexShrink: 0 }}>
+          <div style={{ width: isMobile ? "100%" : "48%", flexShrink: 0, position: "relative", minHeight: isMobile ? 260 : 420, borderRadius: 16, overflow: "hidden", boxShadow: "0 40px 80px rgba(0,0,0,0.5)" }}>
             {images.map((src, i) => (
               <img
                 key={i}
@@ -845,41 +897,12 @@ function ShowcaseSlider() {
             ))}
           </div>
 
+          {/* Separator */}
+          {!isMobile && <div style={{ width: 1, background: "rgba(255,255,255,0.08)", height: "60%", alignSelf: "center", flexShrink: 0, margin: "0 40px" }} />}
+
           {/* Right — Text */}
-          <div style={{
-            width: isMobile ? "100%" : "50%",
-            background: "linear-gradient(135deg, #0c2340 0%, #1b4080 100%)",
-            padding: isMobile ? "32px 24px 40px" : "40px 40px",
-            display: "flex", flexDirection: "column", justifyContent: "center",
-            position: "relative", overflow: "hidden",
-          }}>
-            {/* Decorative circle */}
-            <div style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,166,255,0.08) 0%, transparent 70%)", top: -80, right: -80, pointerEvents: "none", zIndex: 0 }} />
-
-            {/* Animated SVG routes — always flowing, subtle */}
-            <svg className="routes-flowing" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: 0.06, zIndex: 0 }} viewBox="0 0 720 600" preserveAspectRatio="xMidYMid slice" fill="none">
-              <defs>
-                <radialGradient id="ssng"><stop offset="0%" stopColor="rgba(0,166,255,0.16)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
-                <radialGradient id="sswg"><stop offset="0%" stopColor="rgba(255,255,255,0.14)" /><stop offset="100%" stopColor="transparent" /></radialGradient>
-              </defs>
-              <circle cx="60" cy="420" r="4" fill="rgba(0,166,255,0.22)" className="nd nd1" /><circle cx="60" cy="420" r="9" stroke="rgba(0,166,255,0.13)" strokeWidth="1" fill="none" className="node-pulse nd nd1" /><circle cx="60" cy="420" r="30" fill="url(#ssng)" className="nd nd1" />
-              <circle cx="190" cy="180" r="3.5" fill="rgba(255,255,255,0.18)" className="nd nd2" /><circle cx="190" cy="180" r="8" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd2" /><circle cx="190" cy="180" r="25" fill="url(#sswg)" className="nd nd2" />
-              <circle cx="360" cy="80" r="3.5" fill="rgba(0,166,255,0.2)" className="nd nd3" /><circle cx="360" cy="80" r="8" stroke="rgba(0,166,255,0.07)" strokeWidth="1" fill="none" className="node-pulse nd nd3" /><circle cx="360" cy="80" r="25" fill="url(#ssng)" className="nd nd3" />
-              <circle cx="640" cy="120" r="4" fill="rgba(255,255,255,0.18)" className="nd nd5" /><circle cx="640" cy="120" r="9" stroke="rgba(255,255,255,0.16)" strokeWidth="1" fill="none" className="node-pulse nd nd5" /><circle cx="640" cy="120" r="30" fill="url(#sswg)" className="nd nd5" />
-              <circle cx="490" cy="200" r="3.5" fill="rgba(0,166,255,0.19)" className="nd nd4" /><circle cx="490" cy="200" r="8" stroke="rgba(0,166,255,0.06)" strokeWidth="1" fill="none" className="node-pulse nd nd4" /><circle cx="490" cy="200" r="25" fill="url(#ssng)" className="nd nd4" />
-              <path d="M60 420 C90 300, 150 200, 190 180" stroke="rgba(255,255,255,0.16)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt1 route-main" />
-              <path d="M60 420 C150 280, 250 120, 360 80" stroke="rgba(0,166,255,0.09)" strokeWidth="1.5" strokeDasharray="10 6" className="rt rt1 route-main" />
-              <path d="M190 180 C225 100, 290 60, 360 80" stroke="rgba(255,255,255,0.15)" strokeWidth="1.3" strokeDasharray="8 5" className="rt rt2 route-main" />
-              <path d="M360 80 C400 100, 450 160, 490 200" stroke="rgba(0,166,255,0.09)" strokeWidth="1.4" strokeDasharray="8 5" className="rt rt3 route-main" />
-              <path d="M360 80 C450 40, 550 60, 640 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1.3" strokeDasharray="10 6" className="rt rt3 route-main" />
-              <path d="M490 200 C530 150, 590 120, 640 120" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="6 4" className="rt rt4 route-mid" />
-              <path d="M490 200 C510 250, 550 310, 590 340" stroke="rgba(0,166,255,0.07)" strokeWidth="0.8" strokeDasharray="6 4" className="rt rt4 route-sub" />
-              <path d="M140 500 C200 400, 280 200, 360 80" stroke="rgba(0,166,255,0.07)" strokeWidth="0.9" strokeDasharray="8 6" className="rt rt2 route-mid" />
-            </svg>
-
-            {/* Text content */}
+          <div style={{ flex: 1, padding: isMobile ? "32px 0 0" : "0", display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <div style={{
-              position: "relative", zIndex: 2,
               animation: textPhase === "exiting"
                 ? "textSlideOut 400ms ease forwards"
                 : textPhase === "entering"
@@ -896,14 +919,14 @@ function ShowcaseSlider() {
             </div>
 
             {/* Nav dots */}
-            <div style={{ display: "flex", marginTop: 48, position: "relative", zIndex: 2, alignItems: "center" }}>
+            <div style={{ display: "flex", marginTop: 48, alignItems: "center" }}>
               {slides.map((_, i) => (
                 <button key={i} onClick={() => goTo(i)} style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", background: "none", border: "none", padding: 0, flexShrink: 0 }}>
                   <div style={{
                     width: i === current ? 32 : 8,
                     height: i === current ? 4 : 8,
                     borderRadius: i === current ? 2 : 4,
-                    background: i === current ? "linear-gradient(90deg, #00a6ff, #1b6fea)" : "rgba(255,255,255,0.3)",
+                    background: i === current ? "#00a6ff" : "rgba(255,255,255,0.3)",
                     transition: "width 0.4s ease, height 0.4s ease, border-radius 0.4s ease, background 0.4s ease",
                   }} />
                 </button>
@@ -911,7 +934,7 @@ function ShowcaseSlider() {
             </div>
 
             {/* Progress bars */}
-            <div style={{ display: "flex", gap: 6, marginTop: 8, position: "relative", zIndex: 2 }}>
+            <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
               {slides.map((_, i) => (
                 <div key={i} style={{ flex: 1, height: 2, background: "rgba(255,255,255,0.15)", borderRadius: 2, overflow: "hidden" }}>
                   {i === current && <div key={progressKey} style={{ height: "100%", background: "#00a6ff", animation: "progressFill 7s linear forwards" }} />}
