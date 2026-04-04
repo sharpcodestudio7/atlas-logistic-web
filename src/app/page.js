@@ -5,14 +5,14 @@ export default function Home() {
     <main>
       <Nav />
       <Hero />
-      <About />
       <Services />
-      <WhyUs />
       <ShowcaseSlider />
+      <About />
+      <WhyUs />
       <Process />
       <CTA />
-      <PaymentMarquee />
       <ContactForm />
+      <PaymentMarquee />
       <Footer />
       <WF />
     </main>

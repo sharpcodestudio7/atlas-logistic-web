@@ -109,7 +109,7 @@ function NavLink({ href, label }) {
 }
 
 function Nav() {
-  const lnk = [{ l: "Inicio", h: "#inicio" }, { l: "Sobre nosotros", h: "#nosotros" }, { l: "Servicios", h: "#servicios" }, { l: "Contacto", h: "#contacto" }];
+  const lnk = [{ l: "Inicio", h: "#inicio" }, { l: "Servicios", h: "#servicios" }, { l: "Nosotros", h: "#nosotros" }, { l: "Contacto", h: "#contacto" }];
   const [mo, setMo] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
