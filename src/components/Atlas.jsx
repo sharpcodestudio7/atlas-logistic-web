@@ -620,7 +620,26 @@ function About() {
               <p style={{ marginBottom: 16 }}>Gestionamos cada envío con altos estándares de precisión y control, respaldados por un equipo comprometido en ofrecer un servicio personalizado en todas las etapas del proceso logístico.</p>
               <p>Más que transportar mercancías, facilitamos el comercio internacional y generamos oportunidades que impulsan el crecimiento de nuestros clientes a nivel global.</p>
             </div>
-            <AnimBtn href={WA} external bg="linear-gradient(135deg, #1b6fea, #00a6ff)" hoverBg="linear-gradient(135deg, #00a6ff, #1b6fea)" shadow="0 6px 20px rgba(27,111,234,0.25)" hoverShadow="0 12px 28px rgba(0,166,255,0.35)" style={{ marginTop: 28, padding: "12px 24px" }}>Conoce a nuestro equipo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg></AnimBtn>
+            <a
+              href="/equipo"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 10,
+                background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
+                color: "#fff", padding: "12px 24px", borderRadius: 50,
+                fontSize: 15, fontWeight: 700,
+                fontFamily: "'Fira Sans',sans-serif",
+                textTransform: "none", letterSpacing: 0,
+                textDecoration: "none",
+                boxShadow: "0 6px 20px rgba(27,111,234,0.25)",
+                transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+                marginTop: 28,
+              }}
+            >
+              Conoce a nuestro equipo
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
           </div></R>
           <R dir="right" delay={200}>
             <VideoCard />
@@ -1462,7 +1481,7 @@ function ContactForm() {
           <div style={{ marginBottom: 10 }}>
             <label style={checkLabelStyle}>
               <input type="checkbox" name="datosCheck" checked={form.datosCheck} onChange={handleChange} style={{ marginTop: 3, accentColor: "#1b6fea", flexShrink: 0 }} />
-              <span>Acepto la <a href="/tratamiento-de-datos" style={{ color: "#1b6fea", textDecoration: "underline", cursor: "pointer" }}>política de tratamiento de datos</a></span>
+              <span>Acepto la <a href="/tratamiento-de-datos" style={{ color: "#1b6fea", textDecoration: "underline", cursor: "pointer" }}>política de tratamiento de datos</a> y el <a href="/aviso-de-privacidad" style={{ color: "#1b6fea", textDecoration: "underline", cursor: "pointer" }}>aviso de privacidad</a></span>
             </label>
             {datosError && <p style={{ color: "#ef4444", fontSize: 12, marginTop: 4, marginLeft: 24 }}>* Debes aceptar la política de tratamiento de datos para continuar</p>}
           </div>
