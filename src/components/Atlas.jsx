@@ -1248,19 +1248,17 @@ function CTA() {
 
 function PaymentMarquee() {
   const logos = [
-    { n: "PayU", img: IMAGES.payments.payu },
-    { n: "Visa", svg: true },
-    { n: "Mastercard", img: IMAGES.payments.mastercard },
-    { n: "PSE", img: IMAGES.payments.pse },
-    { n: "Nequi", img: IMAGES.payments.nequi },
-    { n: "Daviplata", img: IMAGES.payments.daviplata },
-    { n: "Bancolombia", img: IMAGES.payments.bancolombia },
-    { n: "American Express", img: IMAGES.payments.amex },
-    { n: "Banco de Bogotá", img: IMAGES.payments.bancoBogota },
-    { n: "Efecty", txt: true, c: "#FFD100" },
-    { n: "Diners Club", txt: true, c: "#0079C1" },
-    { n: "Davivienda", txt: true, c: "#ED1C24" },
-    { n: "Gana", txt: true, c: "#E30613" },
+    { n: "American Express", img: "/images/payments/american.png" },
+    { n: "Banco de Bogotá", img: "/images/payments/banco-bogota.png" },
+    { n: "Bancolombia", img: "/images/payments/bancolombia.png" },
+    { n: "Código QR", img: "/images/payments/code.png" },
+    { n: "Daviplata", img: "/images/payments/daviplata.png" },
+    { n: "Efecty", img: "/images/payments/efecty.png" },
+    { n: "Mastercard", img: "/images/payments/mastercard.png" },
+    { n: "Nequi", img: "/images/payments/nequi.png" },
+    { n: "PayU", img: "/images/payments/payu.png" },
+    { n: "PSE", img: "/images/payments/pse.png" },
+    { n: "Visa", img: "/images/payments/visa.png" },
   ];
   const doubled = [...logos, ...logos];
   return (
@@ -1281,25 +1279,15 @@ function PaymentMarquee() {
         <div className="marquee-track">
           {doubled.map((l, i) => (
             <div key={i} className="marquee-item" style={{
-              flexShrink: 0, padding: "10px 20px",
+              flexShrink: 0, padding: "16px 60px",
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              <div style={{
-                background: "rgba(27,111,234,0.03)", border: "1px solid rgba(27,111,234,0.06)",
-                borderRadius: 10, padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "center",
-                transition: "all 0.3s", minWidth: 130, height: 60,
-              }}>
-                {l.img ? (
-                  <img src={l.img} alt={l.n} style={{ height: 32, maxWidth: 120, objectFit: "contain", filter: "grayscale(100%) opacity(0.6)", transition: "filter 0.3s" }} className="marquee-logo" />
-                ) : l.svg ? (
-                  <svg viewBox="0 0 1000 324" style={{ height: 26, filter: "grayscale(100%) opacity(0.6)", transition: "filter 0.3s" }} className="marquee-logo"><path d="M651.2 0.5L426.4 323.1h145.7l224.8-322.6z" fill="#1434CB"/><path d="M0 323.1h152.3L376.1 0.5H223.8z" fill="#1434CB"/><path d="M568.3 0.5L467.7 143.2l-49.2-73.5L325.8 0.5z" fill="#1434CB"/><path d="M325.8 323.1l92.7-139.2 49.2 73.5L568.3 323.1z" fill="#1434CB"/></svg>
-                ) : (
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: 3, background: l.c, flexShrink: 0 }} />
-                    <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 600, fontSize: 12, color: "#9ca3af", whiteSpace: "nowrap" }}>{l.n}</span>
-                  </div>
-                )}
-              </div>
+              <img
+                src={l.img}
+                alt={l.n}
+                style={{ height: 160, maxWidth: 320, objectFit: "contain", filter: "none", transition: "none" }}
+                className="marquee-logo"
+              />
             </div>
           ))}
         </div>
