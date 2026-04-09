@@ -12,7 +12,6 @@ export default function Home() {
       <Process />
       <CTA />
       <ContactForm />
-      <PaymentMarquee />
       <Footer />
       <WF />
     </main>

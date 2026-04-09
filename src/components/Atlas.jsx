@@ -1155,6 +1155,7 @@ function CTA() {
         </div></R>
         <div className="grid lg:grid-cols-2 gap-10" style={{ alignItems: "center" }}>
           {/* Calculator card */}
+
           <R dir="left">
             <div
               style={{
@@ -1241,58 +1242,59 @@ function CTA() {
             </div>
           </R>
         </div>
+
+        {/* Medios de pago */}
+        <div style={{ marginTop: 16, borderTop: "1px solid rgba(27,111,234,0.1)", paddingTop: 12 }}>
+          <p style={{
+            fontFamily: "'Fira Sans',sans-serif", fontSize: 13, fontWeight: 600,
+            color: "#9ca3af", textAlign: "center", marginBottom: 4,
+            textTransform: "uppercase", letterSpacing: 1,
+          }}>
+            Medios de pago aceptados
+          </p>
+          <PaymentMarquee />
+        </div>
       </div>
     </section>
   );
 }
 
+const PAYMENT_LOGOS = [
+  { n: "American Express", img: "/images/payments/american.png" },
+  { n: "Banco de Bogotá", img: "/images/payments/banco-bogota.png" },
+  { n: "Bancolombia", img: "/images/payments/bancolombia.png" },
+  { n: "Código QR", img: "/images/payments/code.png" },
+  { n: "Daviplata", img: "/images/payments/daviplata.png" },
+  { n: "Efecty", img: "/images/payments/efecty.png" },
+  { n: "Mastercard", img: "/images/payments/mastercard.png" },
+  { n: "Nequi", img: "/images/payments/nequi.png" },
+  { n: "PayU", img: "/images/payments/payu.png" },
+  { n: "PSE", img: "/images/payments/pse.png" },
+  { n: "Visa", img: "/images/payments/visa.png" },
+];
+
 function PaymentMarquee() {
-  const logos = [
-    { n: "American Express", img: "/images/payments/american.png" },
-    { n: "Banco de Bogotá", img: "/images/payments/banco-bogota.png" },
-    { n: "Bancolombia", img: "/images/payments/bancolombia.png" },
-    { n: "Código QR", img: "/images/payments/code.png" },
-    { n: "Daviplata", img: "/images/payments/daviplata.png" },
-    { n: "Efecty", img: "/images/payments/efecty.png" },
-    { n: "Mastercard", img: "/images/payments/mastercard.png" },
-    { n: "Nequi", img: "/images/payments/nequi.png" },
-    { n: "PayU", img: "/images/payments/payu.png" },
-    { n: "PSE", img: "/images/payments/pse.png" },
-    { n: "Visa", img: "/images/payments/visa.png" },
-  ];
-  const doubled = [...logos, ...logos];
+  const doubled = [...PAYMENT_LOGOS, ...PAYMENT_LOGOS];
   return (
-    <section style={{ padding: "40px 0", background: "#fff", overflow: "hidden" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-        <R><div style={{ textAlign: "center", marginBottom: 28 }}>
-          <p style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 16, color: "#1d1d1b" }}>Medios de pago</p>
-          <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 10 }}>
-            <span style={{ width: 20, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
-            <span style={{ width: 36, height: 2, background: "#1b6fea", borderRadius: 4, display: "inline-block" }} />
-            <span style={{ width: 20, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
+    <div style={{ overflow: "hidden", position: "relative" }}>
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(90deg, #f0f4f8, transparent)", zIndex: 2, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(270deg, #f0f4f8, transparent)", zIndex: 2, pointerEvents: "none" }} />
+      <div className="marquee-track">
+        {doubled.map((l, i) => (
+          <div key={i} className="marquee-item" style={{
+            flexShrink: 0, padding: "0px 20px",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <img
+              src={l.img}
+              alt={l.n}
+              style={{ height: 120, maxWidth: 260, objectFit: "contain", filter: "none", transition: "none" }}
+              className="marquee-logo"
+            />
           </div>
-        </div></R>
+        ))}
       </div>
-      <div style={{ position: "relative" }}>
-        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(90deg, #fff, transparent)", zIndex: 2 }} />
-        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(270deg, #fff, transparent)", zIndex: 2 }} />
-        <div className="marquee-track">
-          {doubled.map((l, i) => (
-            <div key={i} className="marquee-item" style={{
-              flexShrink: 0, padding: "16px 60px",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <img
-                src={l.img}
-                alt={l.n}
-                style={{ height: 160, maxWidth: 320, objectFit: "contain", filter: "none", transition: "none" }}
-                className="marquee-logo"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }
 
@@ -1342,7 +1344,7 @@ function ContactTypeWriter() {
     return () => clearTimeout(timeout);
   }, [displayed, phase, wordIndex]);
   return (
-    <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 300, fontSize: "clamp(2rem, 4vw, 3rem)", color: "#1d1d1b", lineHeight: 1.15, margin: 0, minHeight: "4.5em" }}>
+    <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 300, fontSize: "clamp(2.5rem, 5vw, 3.8rem)", color: "#1d1d1b", lineHeight: 1.15, margin: 0, minHeight: "4.5em" }}>
       {displayed}<span style={{ animation: "blink 0.5s step-end infinite" }}>|</span>
     </h2>
   );
@@ -1404,7 +1406,7 @@ function ContactForm() {
   const checkLabelStyle = { display: "flex", alignItems: "flex-start", gap: 10, fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#1d1d1b", lineHeight: 1.5, cursor: "pointer" };
 
   if (sent) return (
-    <section id="contacto" style={{ background: "#ffffff", padding: "80px 0" }}>
+    <section id="contacto" style={{ background: "#ffffff", padding: "130px 0" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
         <div style={{ paddingRight: 56 }}>
           <SuccessTypeWriter />
@@ -1428,7 +1430,7 @@ function ContactForm() {
   );
 
   return (
-    <section id="contacto" style={{ background: "#ffffff", padding: "80px 0" }}>
+    <section id="contacto" style={{ background: "#ffffff", padding: "130px 0" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
         {/* Columna izquierda */}
         <div style={{ paddingRight: 80 }}>
@@ -1561,43 +1563,43 @@ function Footer() {
         <path d="M850 350 C950 340, 1080 340, 1180 340" stroke="rgba(0,166,255,0.05)" strokeWidth="0.6" strokeDasharray="4 3" className="rt rt4 route-sub" />
         <path d="M500 450 C550 350, 620 200, 720 80" stroke="rgba(255,255,255,0.05)" strokeWidth="0.6" strokeDasharray="6 5" className="rt rt2 route-mid" />
       </svg>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "56px 24px", position: "relative", zIndex: 2 }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "24px 24px", position: "relative", zIndex: 2 }}>
         <div className="grid lg:grid-cols-2 gap-12" style={{ alignItems: "stretch" }}>
           <R dir="left"><div style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "32px 28px" }}>
-            <Logo h={70} style={{ marginBottom: 20 }} />
-            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#ffffff", lineHeight: 1.75, maxWidth: 420, marginBottom: 28 }}>Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!</p>
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(0,166,255,0.3))" }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ stroke: "url(#gradFoot)" }}>
+            <Logo h={70} style={{ marginBottom: 10 }} />
+            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#ffffff", lineHeight: 1.75, maxWidth: 420, marginBottom: 20 }}>Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!</p>
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 8 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(0,166,255,0.3))" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ stroke: "url(#gradFoot)" }}>
                     <defs><linearGradient id="gradFoot" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#ffffff"/><stop offset="100%" stopColor="#00a6ff"/></linearGradient></defs>
                     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
                   </svg>
                 </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#d1d5db" }}>+57 322 605 5431</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(0,166,255,0.3))" }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ stroke: "url(#gradFoot2)" }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(0,166,255,0.3))" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ stroke: "url(#gradFoot2)" }}>
                     <defs><linearGradient id="gradFoot2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#ffffff"/><stop offset="100%" stopColor="#00a6ff"/></linearGradient></defs>
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
                   </svg>
                 </div><span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#d1d5db" }}>Carrera 31b # 4A-11, Bogotá, Colombia — Barrio Veraguas</span>
               </div>
             </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              {soc.map(s => <a key={s.n} href={s.h} target="_blank" rel="noopener noreferrer" aria-label={s.n} style={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", transition: "opacity 0.3s", textDecoration: "none", opacity: 1 }}
+            <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+              {soc.map(s => <a key={s.n} href={s.h} target="_blank" rel="noopener noreferrer" aria-label={s.n} style={{ width: 32, height: 32, borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "opacity 0.3s", textDecoration: "none", opacity: 1 }}
                 onMouseEnter={e => { e.currentTarget.style.opacity = "0.75"; }}
                 onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
               ><img src={s.img} alt={s.n} style={{ width: s.size, height: s.size, objectFit: "contain" }} /></a>)}
             </div>
           </div></R>
-          <R dir="right" delay={200}><div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", height: "100%", minHeight: 420 }}>
-            <iframe title="Ubicación" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.937!2d-74.094!3d4.601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMzYnMDMuNiJOIDc0wrAwNSczNi4wIlc!5e0!3m2!1ses!2sco!4v1" width="100%" height="100%" style={{ border: 0, minHeight: 420, display: "block" }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+          <R dir="right" delay={200}><div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", height: "100%", minHeight: 200 }}>
+            <iframe title="Ubicación" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.937!2d-74.094!3d4.601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMzYnMDMuNiJOIDc0wrAwNSczNi4wIlc!5e0!3m2!1ses!2sco!4v1" width="100%" height="100%" style={{ border: 0, minHeight: 200, display: "block" }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
           </div></R>
         </div>
       </div>
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", position: "relative", zIndex: 2 }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "18px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "12px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#6b7280" }}>© {new Date().getFullYear()} Atlas Logistic SAS — Todos los derechos reservados.</p>
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#4b5563" }}>Bogotá, Colombia</p>
         </div>
