@@ -1,4 +1,4 @@
-import { Nav, Hero, About, Services, WhyUs, ShowcaseSlider, Process, CTA, PaymentMarquee, ContactForm, Footer, WF } from '@/components/Atlas';
+import { Nav, Hero, About, Services, WhyUs, ShowcaseSlider, Process, CTA, PaymentMarquee, ContactForm, Footer, WF, AccessibilityWidget } from '@/components/Atlas';
 
 export default function Home() {
   return (
@@ -14,6 +14,7 @@ export default function Home() {
       <ContactForm />
       <Footer />
       <WF />
+      <AccessibilityWidget />
     </main>
   );
 }
