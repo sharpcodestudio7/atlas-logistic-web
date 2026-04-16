@@ -8,7 +8,7 @@ const getInitials = (nombre) =>
   nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
 const equipo = [
-  { nombre: "Alejandro Martínez", cargo: "CEO & Fundador", especialidad: "Estrategia logística internacional y desarrollo de negocios globales", experiencia: "12 años", pais: "Colombia" },
+  { nombre: "Alejandro Martínez", cargo: "CEO & Fundador", especialidad: "Estrategia logística internacional y desarrollo de negocios globales", experiencia: "12 años", pais: "Colombia", img: "/images/team/Test.png" },
   { nombre: "Valentina Rodríguez", cargo: "Directora de Operaciones", especialidad: "Gestión de operaciones aduaneras y optimización de procesos", experiencia: "9 años", pais: "Colombia" },
   { nombre: "Carlos Herrera", cargo: "Jefe de Importaciones", especialidad: "Trámites aduaneros y liberación de mercancías internacionales", experiencia: "8 años", pais: "Colombia" },
   { nombre: "María José López", cargo: "Jefa de Exportaciones", especialidad: "Exportaciones por courier y coordinación con operadores globales", experiencia: "7 años", pais: "Colombia" },
@@ -229,86 +229,124 @@ function TeamCard({ persona, visible, delay }) {
   return (
     <div
       style={{
-        background: "#fff",
+        position: "relative",
         borderRadius: 16,
-        border: `1px solid ${hov ? "rgba(27,111,234,0.2)" : "rgba(27,111,234,0.08)"}`,
-        boxShadow: hov ? "0 20px 48px rgba(27,111,234,0.15)" : "0 2px 12px rgba(27,111,234,0.05)",
-        padding: "28px 24px",
-        display: "flex", flexDirection: "column", gap: 0,
-        cursor: "default",
-        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-        transform: hov ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)",
+        overflow: "hidden",
+        height: 340,
+        background: "linear-gradient(135deg, #0c2340 0%, #0a1e38 40%, #112e55 100%)",
+        boxShadow: hov
+          ? "0 20px 40px rgba(0,166,255,0.25), 0 0 0 1px rgba(0,166,255,0.2)"
+          : "0 0 30px rgba(0,166,255,0.1), 0 4px 16px rgba(0,0,0,0.35)",
+        transform: hov ? "translateY(-8px)" : "translateY(0)",
+        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
         animation: visible ? `springUp 0.7s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms both` : "none",
         opacity: visible ? undefined : 0,
+        cursor: "default",
       }}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
     >
-      {/* Avatar */}
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-        <div style={{
-          width: 88, height: 88, borderRadius: "50%",
-          background: hov
-            ? "linear-gradient(135deg, #00a6ff, #1b6fea)"
-            : "linear-gradient(135deg, #1b6fea, #00a6ff)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          boxShadow: hov ? "0 8px 24px rgba(27,111,234,0.35)" : "0 4px 14px rgba(27,111,234,0.2)",
-          transition: "all 0.4s ease",
-        }}>
-          <span style={{
-            color: "#fff", fontSize: 32, fontWeight: 800,
-            fontFamily: "'Fira Sans',sans-serif", letterSpacing: "-1px",
-          }}>{initials}</span>
+      {/* SVG Background Routes */}
+      <svg
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+        viewBox="0 0 240 340" preserveAspectRatio="xMidYMid slice" fill="none"
+      >
+        <path d="M-20 280 C40 200, 80 150, 120 120 C160 90, 200 80, 260 60" stroke={hov ? "rgba(0,166,255,0.15)" : "rgba(0,166,255,0.08)"} strokeWidth="1" strokeDasharray="6 4" style={{ transition: "stroke 0.5s" }} />
+        <path d="M-20 320 C60 260, 140 200, 260 160" stroke={hov ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.06)"} strokeWidth="0.8" strokeDasharray="5 4" style={{ transition: "stroke 0.5s" }} />
+        <path d="M0 80 C60 60, 160 50, 260 70" stroke={hov ? "rgba(0,166,255,0.12)" : "rgba(0,166,255,0.07)"} strokeWidth="1" strokeDasharray="8 5" style={{ transition: "stroke 0.5s" }} />
+        <circle cx="120" cy="120" r="2.5" fill="rgba(0,166,255,0.22)" />
+        <circle cx="120" cy="120" r="6" stroke="rgba(0,166,255,0.13)" strokeWidth="1" fill="none" />
+        <circle cx="200" cy="72" r="2" fill="rgba(255,255,255,0.16)" />
+        <circle cx="200" cy="72" r="5" stroke="rgba(255,255,255,0.1)" strokeWidth="1" fill="none" />
+        <circle cx="55" cy="276" r="2" fill="rgba(0,166,255,0.18)" />
+        <circle cx="55" cy="276" r="5" stroke="rgba(0,166,255,0.1)" strokeWidth="1" fill="none" />
+      </svg>
+
+      {/* Main content — foto o avatar + name + cargo, shifts right on hover */}
+      <div style={{
+        position: "absolute", inset: 0,
+        display: "flex", flexDirection: "column",
+        alignItems: "center",
+        justifyContent: persona.img ? "flex-end" : "center",
+        padding: persona.img ? "0 0 28px" : "24px 16px 32px",
+        transform: hov ? "translateX(42%) scale(0.72)" : "translateX(0) scale(1)",
+        transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+        zIndex: 2,
+      }}>
+        {persona.img ? (
+          <>
+            <img
+              src={persona.img}
+              alt={persona.nombre}
+              style={{
+                position: "absolute", inset: 0,
+                width: "100%", height: "100%",
+                objectFit: "cover", objectPosition: "top center",
+              }}
+            />
+            <div style={{
+              position: "absolute", bottom: 0, left: 0, right: 0, height: "55%",
+              background: "linear-gradient(to top, #0a1e38 0%, rgba(10,30,56,0.85) 50%, transparent 100%)",
+              zIndex: 1,
+            }} />
+            <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 16px" }}>
+              <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 20, color: "#ffffff", marginBottom: 4, lineHeight: 1.2 }}>{persona.nombre}</h3>
+              <p style={{ color: "#00a6ff", fontSize: 14, fontFamily: "'Roboto',sans-serif", fontWeight: 500 }}>{persona.cargo}</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{
+              width: 120, height: 120, borderRadius: "50%",
+              background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 8px 30px rgba(27,111,234,0.4)",
+              marginBottom: 20, flexShrink: 0,
+            }}>
+              <span style={{ color: "#fff", fontSize: 40, fontWeight: 800, fontFamily: "'Fira Sans',sans-serif", letterSpacing: "-1px" }}>{initials}</span>
+            </div>
+            <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 20, color: "#ffffff", textAlign: "center", marginBottom: 6, lineHeight: 1.2 }}>{persona.nombre}</h3>
+            <p style={{ color: "#00a6ff", fontSize: 14, fontFamily: "'Roboto',sans-serif", fontWeight: 500, textAlign: "center" }}>{persona.cargo}</p>
+          </>
+        )}
+      </div>
+
+      {/* Info panel — slides in from left on hover */}
+      <div style={{
+        position: "absolute", inset: 0,
+        display: "flex", flexDirection: "column", justifyContent: "center",
+        padding: "24px 20px",
+        transform: hov ? "translateX(0)" : "translateX(-100%)",
+        transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+        zIndex: 3,
+        background: "linear-gradient(135deg, rgba(10,28,54,0.97) 0%, rgba(8,24,48,0.93) 100%)",
+      }}>
+        <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 3, lineHeight: 1.2 }}>{persona.nombre}</h3>
+        <p style={{ color: "#00a6ff", fontSize: 13, fontFamily: "'Roboto',sans-serif", fontWeight: 500, marginBottom: 14 }}>{persona.cargo}</p>
+        <div style={{ width: 40, height: 3, borderRadius: 2, background: "linear-gradient(90deg, #1b6fea, #00a6ff)", marginBottom: 16 }} />
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 14 }}>
+          <span style={{ fontSize: 15, color: "#9ca3af", flexShrink: 0, marginTop: 1 }}>☆</span>
+          <div>
+            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 10, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 4 }}>Especialidad</p>
+            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#d1d5db", lineHeight: 1.55 }}>{persona.especialidad}</p>
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00a6ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#00a6ff", fontWeight: 700 }}>{persona.experiencia} de experiencia</span>
         </div>
       </div>
 
-      {/* Name */}
-      <h3 style={{
-        fontFamily: "'Fira Sans',sans-serif",
-        fontWeight: 700, fontSize: 17,
-        textAlign: "center", marginBottom: 4,
-        background: hov ? "linear-gradient(135deg, #00a6ff, #1b6fea)" : "none",
-        WebkitBackgroundClip: hov ? "text" : "unset",
-        WebkitTextFillColor: hov ? "transparent" : "#0c2340",
-        color: hov ? "transparent" : "#0c2340",
-        transition: "all 0.3s ease",
-      }}>{persona.nombre}</h3>
-
-      {/* Cargo */}
-      <p style={{
-        color: "#1b6fea", fontSize: 13, fontWeight: 600,
-        fontFamily: "'Fira Sans',sans-serif",
-        textAlign: "center", marginBottom: 16,
-      }}>{persona.cargo}</p>
-
-      {/* Divider */}
-      <div style={{ height: 1, background: "rgba(27,111,234,0.1)", marginBottom: 14 }} />
-
-      {/* Especialidad */}
-      <div style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 4 }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-        <span style={{ color: "#374151", fontSize: 12, fontWeight: 600, fontFamily: "'Fira Sans',sans-serif" }}>Especialidad</span>
-      </div>
-      <p style={{
-        color: "#6b7280", fontSize: 13.5, lineHeight: 1.6,
-        marginBottom: 18, flex: 1,
-      }}>{persona.especialidad}</p>
-
-      {/* Experiencia */}
+      {/* Bottom gradient border */}
       <div style={{
-        display: "flex", alignItems: "center", gap: 6,
-        background: "rgba(27,111,234,0.05)", borderRadius: 50,
-        padding: "6px 12px", alignSelf: "flex-start",
-      }}>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1b6fea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-        </svg>
-        <span style={{ fontSize: 12.5, color: "#1b6fea", fontWeight: 700, fontFamily: "'Fira Sans',sans-serif" }}>
-          {persona.experiencia} de experiencia
-        </span>
-      </div>
+        position: "absolute", bottom: 0, left: 0, right: 0, height: 3,
+        background: "linear-gradient(90deg, #1b6fea, #00a6ff)",
+        boxShadow: hov ? "0 0 14px rgba(0,166,255,0.7)" : "none",
+        transition: "box-shadow 0.5s",
+        zIndex: 5,
+      }} />
     </div>
   );
 }
@@ -455,14 +493,14 @@ function GroupPhoto() {
 function TeamGrid() {
   const [ref, visible] = useInView(0.05);
   return (
-    <section style={{ background: "#ffffff", padding: "80px 0" }}>
+    <section style={{ background: "#0a1628", padding: "80px 0" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
         {/* Section title */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
           <p style={{ color: "#1b6fea", fontSize: 13, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>
             Quiénes somos
           </p>
-          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", color: "#0c2340", marginBottom: 14 }}>
+          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", color: "#ffffff", marginBottom: 14 }}>
             Las personas detrás de cada envío
           </h2>
           <div style={{ display: "flex", justifyContent: "center", gap: 6, alignItems: "center" }}>
@@ -473,14 +511,7 @@ function TeamGrid() {
         </div>
 
         {/* Grid */}
-        <div
-          ref={ref}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-            gap: 24,
-          }}
-        >
+        <div ref={ref} className="team-grid">
           {equipo.map((persona, i) => (
             <TeamCard key={i} persona={persona} visible={visible} delay={i * 80} />
           ))}
@@ -555,6 +586,17 @@ export default function EquipoPage() {
           0%   { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)) brightness(1.3) contrast(1.1) saturate(1.2); }
           50%  { filter: drop-shadow(0 0 10px rgba(27,111,234,0.5)) drop-shadow(0 0 20px rgba(27,111,234,0.25)) brightness(1.3) contrast(1.1) saturate(1.2); }
           100% { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)) brightness(1.3) contrast(1.1) saturate(1.2); }
+        }
+        .team-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+        @media (max-width: 1024px) {
+          .team-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+          .team-grid { grid-template-columns: 1fr; }
         }
       `}</style>
       <div style={{ fontFamily: "'Roboto',sans-serif", overflowX: "hidden" }}>
