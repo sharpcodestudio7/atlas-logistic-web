@@ -1727,7 +1727,7 @@ function AccessibilityWidget() {
         .a11y-focus-outline input,
         .a11y-focus-outline textarea,
         .a11y-focus-outline select,
-        .a11y-focus-outline [role="button"] {
+        .a11y-focus-outline [role=button] {
           outline: 3px solid #00a6ff !important;
           outline-offset: 3px !important;
           border-radius: 4px;
