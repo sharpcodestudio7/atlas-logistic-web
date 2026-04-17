@@ -15,12 +15,12 @@ const getInitials = (nombre) =>
   nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
 const equipo = [
-  { nombre: "Alejandro Martínez", cargo: "CEO & Fundador", especialidad: "Estrategia logística internacional y desarrollo de negocios globales", experiencia: "12 años", pais: "Colombia", img: "/images/team/Test.png" },
-  { nombre: "Valentina Rodríguez", cargo: "Directora de Operaciones", especialidad: "Gestión de operaciones aduaneras y optimización de procesos", experiencia: "9 años", pais: "Colombia" },
+  { nombre: "Alejandro Martínez", cargo: "CEO & Fundador", especialidad: "Estrategia logística internacional y desarrollo de negocios globales", experiencia: "12 años", pais: "Colombia", img: "/images/team/Hombre1.png" },
+  { nombre: "Valentina Rodríguez", cargo: "Directora de Operaciones", especialidad: "Gestión de operaciones aduaneras y optimización de procesos", experiencia: "9 años", pais: "Colombia", img: "/images/team/Ashley.png" },
   { nombre: "Carlos Herrera", cargo: "Jefe de Importaciones", especialidad: "Trámites aduaneros y liberación de mercancías internacionales", experiencia: "8 años", pais: "Colombia" },
-  { nombre: "María José López", cargo: "Jefa de Exportaciones", especialidad: "Exportaciones por courier y coordinación con operadores globales", experiencia: "7 años", pais: "Colombia" },
+  { nombre: "María José López", cargo: "Jefa de Exportaciones", especialidad: "Exportaciones por courier y coordinación con operadores globales", experiencia: "7 años", pais: "Colombia", img: "/images/team/Mujer1.png" },
   { nombre: "Sebastián Torres", cargo: "Especialista en Courier", especialidad: "Gestión de envíos express y seguimiento en tiempo real", experiencia: "6 años", pais: "Colombia" },
-  { nombre: "Daniela Gómez", cargo: "Asesora Comercial Senior", especialidad: "Atención al cliente corporativo y cotizaciones internacionales", experiencia: "5 años", pais: "Colombia" },
+  { nombre: "Marlen Gómez", cargo: "Asesora Comercial Senior", especialidad: "Atención al cliente corporativo y cotizaciones internacionales", experiencia: "5 años", pais: "Colombia", img: "/images/team/Marlen.png" },
   { nombre: "Andrés Vargas", cargo: "Especialista Terrestre Venezuela", especialidad: "Logística terrestre y transporte de mercancías a Venezuela", experiencia: "6 años", pais: "Colombia" },
   { nombre: "Camila Ospina", cargo: "Coordinadora de Casilleros", especialidad: "Gestión de casilleros internacionales en EE.UU., España y China", experiencia: "4 años", pais: "Colombia" },
   { nombre: "Felipe Moreno", cargo: "Analista Aduanero", especialidad: "Cumplimiento normativo y agenciamiento aduanero", experiencia: "5 años", pais: "Colombia" },
