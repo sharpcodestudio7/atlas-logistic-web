@@ -281,4 +281,51 @@ body {
   animation: marqueeScroll 45s linear infinite;
 }
 
+/* ===== EQUIPO PAGE ===== */
+@keyframes eqFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.04); }
+}
 
+@keyframes logoGlowEq {
+  0%   { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)) brightness(1.3) contrast(1.1) saturate(1.2); }
+  50%  { filter: drop-shadow(0 0 10px rgba(27,111,234,0.5)) drop-shadow(0 0 20px rgba(27,111,234,0.25)) brightness(1.3) contrast(1.1) saturate(1.2); }
+  100% { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)) brightness(1.3) contrast(1.1) saturate(1.2); }
+}
+
+@keyframes netLinePulse {
+  0%, 100% { stroke-opacity: 0.12; }
+  50% { stroke-opacity: 0.28; }
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.group-counter-item + .group-counter-item {
+  border-left: 1px solid rgba(0,166,255,0.2);
+  padding-left: 16px;
+}
+
+@media (max-width: 1024px) {
+  .team-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .team-grid { grid-template-columns: 1fr; }
+
+  .stats-banner { flex-direction: column; gap: 12px; border-radius: 20px; padding: 16px 28px; }
+  .stats-num { font-size: 24px !important; }
+  .stats-sep { display: none; }
+
+  .group-counter {
+    grid-template-columns: 1fr 1fr !important;
+    padding: 16px 20px !important;
+    bottom: 12px !important;
+    width: 94% !important;
+    gap: 16px;
+  }
+  .group-counter-item { border-left: none !important; padding-left: 0 !important; }
+}

@@ -1,5 +1,12 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import dynamic from 'next/dynamic';
+import { WF } from '@/components/Atlas';
+
+const AccessibilityWidget = dynamic(
+  () => import('@/components/Atlas').then(mod => ({ default: mod.AccessibilityWidget })),
+  { ssr: false }
+);
 
 const WA = "https://wa.me/573226055431?text=Hola%2C%20quiero%20cotizar%20un%20env%C3%ADo";
 const PH = "tel:+573226055431";
@@ -223,11 +230,12 @@ function FloatingParticle({ size, top, left, delay, duration, opacity }) {
 }
 
 /* ─── TeamCard ─── */
-function TeamCard({ persona, visible, delay }) {
+function TeamCard({ persona, visible, delay, index, onHover, onLeave }) {
   const [hov, setHov] = useState(false);
   const initials = getInitials(persona.nombre);
   return (
     <div
+      data-team-card
       style={{
         position: "relative",
         borderRadius: 16,
@@ -243,8 +251,8 @@ function TeamCard({ persona, visible, delay }) {
         opacity: visible ? undefined : 0,
         cursor: "default",
       }}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
+      onMouseEnter={() => { setHov(true); onHover && onHover(index); }}
+      onMouseLeave={() => { setHov(false); onLeave && onLeave(); }}
     >
       {/* SVG Background Routes */}
       <svg
@@ -369,7 +377,7 @@ function Hero() {
 
   return (
     <section style={{
-      position: "relative", minHeight: "70vh",
+      position: "relative", minHeight: 320, maxHeight: 400,
       display: "flex", alignItems: "center", overflow: "hidden",
       background: "linear-gradient(135deg, #0c2340 0%, #0a1e38 40%, #112e55 100%)",
     }}>
@@ -405,7 +413,7 @@ function Hero() {
       </svg>
 
       {/* Content */}
-      <div style={{ position: "relative", zIndex: 10, width: "100%", maxWidth: 1280, margin: "0 auto", padding: "140px 24px 80px", textAlign: "center" }}>
+      <div style={{ position: "relative", zIndex: 10, width: "100%", maxWidth: 1280, margin: "0 auto", padding: "80px 24px 60px", textAlign: "center" }}>
         <div style={{
           opacity: heroVisible ? 1 : 0,
           transform: heroVisible ? "translateY(0)" : "translateY(40px)",
@@ -414,11 +422,11 @@ function Hero() {
           <h1 style={{
             fontFamily: "'Fira Sans',sans-serif",
             fontWeight: 800,
-            fontSize: "clamp(2.4rem, 6vw, 4.8rem)",
+            fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
             color: "#ffffff",
             lineHeight: 1.08,
             letterSpacing: "-0.02em",
-            marginBottom: 20,
+            marginBottom: 12,
           }}>
             Nuestro{" "}
             <span style={{
@@ -443,12 +451,6 @@ function Hero() {
         </div>
       </div>
 
-      {/* Wave */}
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}>
-        <svg viewBox="0 0 1440 50" style={{ width: "100%", display: "block" }} preserveAspectRatio="none">
-          <path d="M0 50V25C360 0 1080 0 1440 25V50H0Z" fill="#f0f4f8" />
-        </svg>
-      </div>
     </section>
   );
 }
@@ -457,41 +459,324 @@ function Hero() {
 function GroupPhoto() {
   const [ref, visible] = useInView();
   return (
-    <section style={{ background: "#f0f4f8", padding: "60px 0 80px" }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 24px" }}>
-        <div
-          ref={ref}
+    <section style={{ position: "relative", background: "#ffffff", overflow: "hidden" }}>
+      <div
+        ref={ref}
+        style={{
+          position: "relative",
+          width: "100%",
+          minHeight: 480,
+          height: "55vh",
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.9s ease",
+        }}
+      >
+        <img
+          src="/images/team/Grupal.png"
+          alt="Equipo Atlas Logistic"
           style={{
-            height: "clamp(220px, 30vw, 400px)",
-            borderRadius: 20,
-            background: "linear-gradient(135deg, rgba(27,111,234,0.08), rgba(0,166,255,0.06))",
-            border: "2px dashed rgba(27,111,234,0.2)",
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center", gap: 14,
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(30px)",
-            transition: "opacity 0.8s ease, transform 0.8s ease",
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "cover", objectPosition: "center center",
+            display: "block",
           }}
-        >
-          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(27,111,234,0.4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-            <circle cx="12" cy="13" r="4" />
+        />
+        {/* Overlay superior */}
+        <div style={{
+          position: "absolute", top: 0, left: 0, right: 0, height: "25%",
+          background: "linear-gradient(to bottom, rgba(12,35,64,0.55) 0%, transparent 100%)",
+          pointerEvents: "none", zIndex: 1,
+        }} />
+        {/* Overlay inferior sutil */}
+        <div style={{
+          position: "absolute", bottom: 0, left: 0, right: 0, height: "40%",
+          background: "linear-gradient(to bottom, rgba(12,35,64,0) 60%, rgba(12,35,64,0.6) 100%)",
+          pointerEvents: "none",
+        }} />
+        {/* Overlay lateral */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(to right, rgba(12,35,64,0.28), transparent 55%)",
+          pointerEvents: "none",
+        }} />
+        {/* Ola SVG — transición a StatsStrip (#f9fafb) */}
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 4 }}>
+          <svg viewBox="0 0 1440 50" style={{ width: "100%", display: "block" }} preserveAspectRatio="none">
+            <path d="M0 50V25C360 0 1080 0 1440 25V50H0Z" fill="#f9fafb" />
           </svg>
-          <p style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 16, color: "rgba(27,111,234,0.6)", margin: 0 }}>
-            Foto grupal del equipo — Próximamente
-          </p>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "rgba(27,111,234,0.4)", margin: 0 }}>
-            Aquí irá nuestra foto oficial de equipo
-          </p>
         </div>
       </div>
     </section>
   );
 }
 
+/* ─── StatsStrip ─── */
+function StatsStrip() {
+  const [ref, visible] = useInView(0.3);
+  const stats = [
+    { prefix: "", end: 8,   suffix: "",  label: "Profesionales" },
+    { prefix: "+", end: 56,  suffix: "",  label: "Años de experiencia combinada" },
+    { prefix: "", end: 220, suffix: "+", label: "Países con cobertura" },
+    { prefix: "", end: 5,   suffix: "",  label: "Áreas especializadas" },
+  ];
+  return (
+    <section style={{ background: "#f9fafb" }}>
+      <div
+        ref={ref}
+        className="stats-strip-grid"
+        style={{
+          maxWidth: 1100,
+          margin: "0 auto",
+          padding: "40px 24px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(15px)",
+          transition: "opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1)",
+        }}
+      >
+        {stats.map((s, i) => (
+          <div
+            key={i}
+            className={i > 0 ? "strip-item" : undefined}
+            style={{ textAlign: "center", padding: "0 16px" }}
+          >
+            <div style={{
+              fontFamily: "'Fira Sans',sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+              lineHeight: 1,
+              background: "linear-gradient(135deg, #00a6ff, #1b6fea)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>
+              {s.prefix}<AnimCounter end={s.end} duration={1200} />{s.suffix}
+            </div>
+            <p style={{
+              fontFamily: "'Roboto',sans-serif",
+              fontSize: 14,
+              color: "#6b7280",
+              marginTop: 6,
+              lineHeight: 1.3,
+            }}>{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ─── AnimCounter (local) ─── */
+function AnimCounter({ end, duration = 1200, prefix = "" }) {
+  const [count, setCount] = useState(0);
+  const elRef = useRef(null);
+  const started = useRef(false);
+  useEffect(() => {
+    const el = elRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started.current) {
+        started.current = true;
+        const start = performance.now();
+        const step = (now) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          setCount(Math.floor(eased * end));
+          if (progress < 1) requestAnimationFrame(step);
+          else setCount(end);
+        };
+        requestAnimationFrame(step);
+      }
+    }, { threshold: 0.5 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [end, duration]);
+  return <span ref={elRef}>{prefix}{count}</span>;
+}
+
+/* ─── StatsBanner ─── */
+function StatsBanner() {
+  const [ref, visible] = useInView(0.5);
+  const stats = [
+    { prefix: "", end: 8, duration: 800, label: "profesionales" },
+    { prefix: "+", end: 56, duration: 1200, label: "años de experiencia combinada" },
+    { prefix: "", end: 5, duration: 600, label: "áreas especializadas" },
+  ];
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(15px)",
+        transition: "opacity 0.6s ease, transform 0.6s ease",
+        marginBottom: 32,
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        className="stats-banner"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 32,
+          flexWrap: "wrap",
+          background: "rgba(27,111,234,0.04)",
+          border: "1px solid rgba(27,111,234,0.1)",
+          borderRadius: 50,
+          padding: "14px 36px",
+        }}
+      >
+        {stats.map((s, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+              <span className="stats-num" style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 28, color: "#1b6fea", lineHeight: 1 }}>
+                <AnimCounter end={s.end} duration={s.duration} prefix={s.prefix} />
+              </span>
+              <span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#6b7280" }}>{s.label}</span>
+            </div>
+            {i < stats.length - 1 && (
+              <span className="stats-sep" style={{ color: "#d1d5db", fontSize: 18, lineHeight: 1, userSelect: "none" }}>·</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── ConnectionNetwork ─── */
+function ConnectionNetwork({ gridRef, visible, hoveredIndex }) {
+  const [lines, setLines] = useState([]);
+  const [nodes, setNodes] = useState([]);
+  const [drawn, setDrawn] = useState(false);
+
+  const computePositions = useCallback(() => {
+    if (!gridRef.current) return;
+    const gridRect = gridRef.current.getBoundingClientRect();
+    const cardEls = Array.from(gridRef.current.querySelectorAll('[data-team-card]'));
+    if (cardEls.length === 0) return;
+
+    const positions = cardEls.map(el => {
+      const r = el.getBoundingClientRect();
+      return { cx: r.left - gridRect.left + r.width / 2, cy: r.top - gridRect.top + r.height / 2 };
+    });
+
+    // Group into rows by cy proximity
+    const rows = [];
+    positions.forEach((pos, i) => {
+      const row = rows.find(r => Math.abs(positions[r[0]].cy - pos.cy) < 60);
+      if (row) row.push(i);
+      else rows.push([i]);
+    });
+    rows.sort((a, b) => positions[a[0]].cy - positions[b[0]].cy);
+    rows.forEach(row => row.sort((a, b) => positions[a].cx - positions[b].cx));
+
+    // Connections: horizontal within rows + vertical between rows
+    const conns = [];
+    rows.forEach((row, ri) => {
+      for (let i = 0; i < row.length - 1; i++) conns.push([row[i], row[i + 1]]);
+      if (ri < rows.length - 1) {
+        const next = rows[ri + 1];
+        for (let i = 0; i < Math.min(row.length, next.length); i++) conns.push([row[i], next[i]]);
+      }
+    });
+
+    const newLines = conns.map(([a, b]) => {
+      const p1 = positions[a], p2 = positions[b];
+      return { a, b, x1: p1.cx, y1: p1.cy, x2: p2.cx, y2: p2.cy, len: Math.sqrt((p2.cx - p1.cx) ** 2 + (p2.cy - p1.cy) ** 2) };
+    });
+
+    setDrawn(false);
+    setNodes(positions);
+    setLines(newLines);
+  }, [gridRef]);
+
+  // Trigger draw animation after lines are set (double RAF ensures initial state renders first)
+  useEffect(() => {
+    if (lines.length === 0) return;
+    const r1 = requestAnimationFrame(() => {
+      const r2 = requestAnimationFrame(() => setDrawn(true));
+      return () => cancelAnimationFrame(r2);
+    });
+    return () => cancelAnimationFrame(r1);
+  }, [lines]);
+
+  useEffect(() => {
+    if (!visible) return;
+    const t = setTimeout(computePositions, 150);
+    let debounce;
+    const onResize = () => { clearTimeout(debounce); debounce = setTimeout(computePositions, 200); };
+    window.addEventListener('resize', onResize);
+    const ro = new ResizeObserver(onResize);
+    if (gridRef.current) ro.observe(gridRef.current);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(debounce);
+      window.removeEventListener('resize', onResize);
+      ro.disconnect();
+    };
+  }, [visible, computePositions, gridRef]);
+
+  return (
+    <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, overflow: 'visible' }}>
+      {/* Lines */}
+      {lines.map((l, i) => {
+        const connected = hoveredIndex !== null && (l.a === hoveredIndex || l.b === hoveredIndex);
+        const drawDelay = (i * 0.18).toFixed(2);
+        const pulseDelay = (i * 0.18 + 1.6).toFixed(2);
+        const pulseDur = (2.4 + (i % 4) * 0.6).toFixed(1);
+        return (
+          <line
+            key={i}
+            x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
+            stroke="rgba(0,166,255,1)"
+            strokeWidth={connected ? 1.5 : 1}
+            strokeDasharray="6 4"
+            strokeLinecap="round"
+            style={{
+              strokeOpacity: connected ? 0.5 : 0.18,
+              strokeDashoffset: drawn ? 0 : l.len,
+              transition: drawn
+                ? `stroke-dashoffset 1.5s ease-in-out ${drawDelay}s, stroke-opacity 0.35s, stroke-width 0.35s`
+                : 'none',
+              animationName: drawn && !connected ? 'netLinePulse' : 'none',
+              animationDuration: `${pulseDur}s`,
+              animationDelay: `${pulseDelay}s`,
+              animationTimingFunction: 'ease-in-out',
+              animationIterationCount: 'infinite',
+            }}
+          />
+        );
+      })}
+
+      {/* Nodes */}
+      {nodes.map((node, i) => {
+        const isActive = hoveredIndex === i || (hoveredIndex !== null && lines.some(l => (l.a === hoveredIndex || l.b === hoveredIndex) && (l.a === i || l.b === i)));
+        const minLineIdx = lines.reduce((min, l, idx) => (l.a === i || l.b === i) ? Math.min(min, idx) : min, Infinity);
+        const nodeDelay = ((minLineIdx === Infinity ? 0 : minLineIdx) * 0.18 + 1.6).toFixed(2);
+        const scaleStyle = { transform: drawn ? 'scale(1)' : 'scale(0)', transition: `transform 0.45s cubic-bezier(0.34,1.56,0.64,1) ${nodeDelay}s, fill 0.35s` };
+        return (
+          <g key={i}>
+            <circle cx={node.cx} cy={node.cy} r={8} fill={isActive ? "rgba(0,166,255,0.28)" : "rgba(0,166,255,0.07)"}
+              style={{ ...scaleStyle, transformOrigin: `${node.cx}px ${node.cy}px` }} />
+            <circle cx={node.cx} cy={node.cy} r={3.5} fill={isActive ? "rgba(0,166,255,0.75)" : "rgba(0,166,255,0.3)"}
+              style={{ ...scaleStyle, transformOrigin: `${node.cx}px ${node.cy}px` }} />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 /* ─── TeamGrid ─── */
 function TeamGrid() {
   const [ref, visible] = useInView(0.05);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const gridWrapperRef = useRef(null);
+
   return (
     <section style={{ background: "#0a1628", padding: "80px 0" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
@@ -510,11 +795,25 @@ function TeamGrid() {
           </div>
         </div>
 
-        {/* Grid */}
-        <div ref={ref} className="team-grid">
-          {equipo.map((persona, i) => (
-            <TeamCard key={i} persona={persona} visible={visible} delay={i * 80} />
-          ))}
+        {/* Stats banner */}
+        <StatsBanner />
+
+        {/* Grid wrapper — SVG behind + cards in front */}
+        <div ref={gridWrapperRef} style={{ position: "relative" }}>
+          <ConnectionNetwork gridRef={gridWrapperRef} visible={visible} hoveredIndex={hoveredIndex} />
+          <div ref={ref} className="team-grid" style={{ position: "relative", zIndex: 1 }}>
+            {equipo.map((persona, i) => (
+              <TeamCard
+                key={i}
+                persona={persona}
+                visible={visible}
+                delay={i * 80}
+                index={i}
+                onHover={setHoveredIndex}
+                onLeave={() => setHoveredIndex(null)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -572,33 +871,6 @@ function CTA() {
 export default function EquipoPage() {
   return (
     <>
-      <style>{`
-        @keyframes eqFloat {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.04); }
-        }
-        @keyframes springUp {
-          0% { opacity: 0; transform: translateY(60px) scale(0.95); }
-          60% { transform: translateY(-8px) scale(1.02); }
-          100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes logoGlow {
-          0%   { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)) brightness(1.3) contrast(1.1) saturate(1.2); }
-          50%  { filter: drop-shadow(0 0 10px rgba(27,111,234,0.5)) drop-shadow(0 0 20px rgba(27,111,234,0.25)) brightness(1.3) contrast(1.1) saturate(1.2); }
-          100% { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)) brightness(1.3) contrast(1.1) saturate(1.2); }
-        }
-        .team-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 20px;
-        }
-        @media (max-width: 1024px) {
-          .team-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 640px) {
-          .team-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
       <div style={{ fontFamily: "'Roboto',sans-serif", overflowX: "hidden" }}>
         <Nav />
         <Hero />
@@ -606,6 +878,8 @@ export default function EquipoPage() {
         <TeamGrid />
         <CTA />
       </div>
+      <WF />
+      <AccessibilityWidget />
     </>
   );
 }
