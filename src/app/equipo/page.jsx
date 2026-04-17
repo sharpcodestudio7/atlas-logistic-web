@@ -475,8 +475,8 @@ function GroupPhoto() {
         style={{
           position: "relative",
           width: "100%",
-          minHeight: 600,
-          height: "65vh",
+          minHeight: 650,
+          height: "70vh",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.9s ease",
         }}
