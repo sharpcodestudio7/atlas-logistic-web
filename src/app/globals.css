@@ -293,10 +293,6 @@ body {
   100% { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)) brightness(1.3) contrast(1.1) saturate(1.2); }
 }
 
-@keyframes netLinePulse {
-  0%, 100% { stroke-opacity: 0.12; }
-  50% { stroke-opacity: 0.28; }
-}
 
 .team-grid {
   display: grid;
@@ -313,7 +309,19 @@ body {
   .team-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+.strip-item {
+  border-left: 1px solid #e5e7eb;
+}
+
 @media (max-width: 640px) {
+  .stats-strip-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px;
+  }
+  .strip-item {
+    border-left: none;
+  }
+
   .team-grid { grid-template-columns: 1fr; }
 
   .stats-banner { flex-direction: column; gap: 12px; border-radius: 20px; padding: 16px 28px; }

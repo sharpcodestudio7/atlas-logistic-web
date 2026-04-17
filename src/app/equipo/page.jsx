@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { WF } from '@/components/Atlas';
 
@@ -230,7 +230,7 @@ function FloatingParticle({ size, top, left, delay, duration, opacity }) {
 }
 
 /* ─── TeamCard ─── */
-function TeamCard({ persona, visible, delay, index, onHover, onLeave }) {
+function TeamCard({ persona, visible, delay }) {
   const [hov, setHov] = useState(false);
   const initials = getInitials(persona.nombre);
   return (
@@ -251,8 +251,8 @@ function TeamCard({ persona, visible, delay, index, onHover, onLeave }) {
         opacity: visible ? undefined : 0,
         cursor: "default",
       }}
-      onMouseEnter={() => { setHov(true); onHover && onHover(index); }}
-      onMouseLeave={() => { setHov(false); onLeave && onLeave(); }}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
     >
       {/* SVG Background Routes */}
       <svg
@@ -465,7 +465,7 @@ function GroupPhoto() {
         style={{
           position: "relative",
           width: "100%",
-          minHeight: 480,
+          minHeight: 500,
           height: "55vh",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.9s ease",
@@ -477,7 +477,7 @@ function GroupPhoto() {
           style={{
             position: "absolute", inset: 0,
             width: "100%", height: "100%",
-            objectFit: "cover", objectPosition: "center center",
+            objectFit: "cover", objectPosition: "center 15%",
             display: "block",
           }}
         />
@@ -516,7 +516,6 @@ function StatsStrip() {
   const stats = [
     { prefix: "", end: 8,   suffix: "",  label: "Profesionales" },
     { prefix: "+", end: 56,  suffix: "",  label: "Años de experiencia combinada" },
-    { prefix: "", end: 220, suffix: "+", label: "Países con cobertura" },
     { prefix: "", end: 5,   suffix: "",  label: "Áreas especializadas" },
   ];
   return (
@@ -529,7 +528,7 @@ function StatsStrip() {
           margin: "0 auto",
           padding: "40px 24px",
           display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          gridTemplateColumns: "1fr 1fr 1fr",
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : "translateY(15px)",
           transition: "opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1)",
@@ -647,144 +646,16 @@ function StatsBanner() {
   );
 }
 
-/* ─── ConnectionNetwork ─── */
-function ConnectionNetwork({ gridRef, visible, hoveredIndex }) {
-  const [lines, setLines] = useState([]);
-  const [nodes, setNodes] = useState([]);
-  const [drawn, setDrawn] = useState(false);
-
-  const computePositions = useCallback(() => {
-    if (!gridRef.current) return;
-    const gridRect = gridRef.current.getBoundingClientRect();
-    const cardEls = Array.from(gridRef.current.querySelectorAll('[data-team-card]'));
-    if (cardEls.length === 0) return;
-
-    const positions = cardEls.map(el => {
-      const r = el.getBoundingClientRect();
-      return { cx: r.left - gridRect.left + r.width / 2, cy: r.top - gridRect.top + r.height / 2 };
-    });
-
-    // Group into rows by cy proximity
-    const rows = [];
-    positions.forEach((pos, i) => {
-      const row = rows.find(r => Math.abs(positions[r[0]].cy - pos.cy) < 60);
-      if (row) row.push(i);
-      else rows.push([i]);
-    });
-    rows.sort((a, b) => positions[a[0]].cy - positions[b[0]].cy);
-    rows.forEach(row => row.sort((a, b) => positions[a].cx - positions[b].cx));
-
-    // Connections: horizontal within rows + vertical between rows
-    const conns = [];
-    rows.forEach((row, ri) => {
-      for (let i = 0; i < row.length - 1; i++) conns.push([row[i], row[i + 1]]);
-      if (ri < rows.length - 1) {
-        const next = rows[ri + 1];
-        for (let i = 0; i < Math.min(row.length, next.length); i++) conns.push([row[i], next[i]]);
-      }
-    });
-
-    const newLines = conns.map(([a, b]) => {
-      const p1 = positions[a], p2 = positions[b];
-      return { a, b, x1: p1.cx, y1: p1.cy, x2: p2.cx, y2: p2.cy, len: Math.sqrt((p2.cx - p1.cx) ** 2 + (p2.cy - p1.cy) ** 2) };
-    });
-
-    setDrawn(false);
-    setNodes(positions);
-    setLines(newLines);
-  }, [gridRef]);
-
-  // Trigger draw animation after lines are set (double RAF ensures initial state renders first)
-  useEffect(() => {
-    if (lines.length === 0) return;
-    const r1 = requestAnimationFrame(() => {
-      const r2 = requestAnimationFrame(() => setDrawn(true));
-      return () => cancelAnimationFrame(r2);
-    });
-    return () => cancelAnimationFrame(r1);
-  }, [lines]);
-
-  useEffect(() => {
-    if (!visible) return;
-    const t = setTimeout(computePositions, 150);
-    let debounce;
-    const onResize = () => { clearTimeout(debounce); debounce = setTimeout(computePositions, 200); };
-    window.addEventListener('resize', onResize);
-    const ro = new ResizeObserver(onResize);
-    if (gridRef.current) ro.observe(gridRef.current);
-    return () => {
-      clearTimeout(t);
-      clearTimeout(debounce);
-      window.removeEventListener('resize', onResize);
-      ro.disconnect();
-    };
-  }, [visible, computePositions, gridRef]);
-
-  return (
-    <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, overflow: 'visible' }}>
-      {/* Lines */}
-      {lines.map((l, i) => {
-        const connected = hoveredIndex !== null && (l.a === hoveredIndex || l.b === hoveredIndex);
-        const drawDelay = (i * 0.18).toFixed(2);
-        const pulseDelay = (i * 0.18 + 1.6).toFixed(2);
-        const pulseDur = (2.4 + (i % 4) * 0.6).toFixed(1);
-        return (
-          <line
-            key={i}
-            x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
-            stroke="rgba(0,166,255,1)"
-            strokeWidth={connected ? 1.5 : 1}
-            strokeDasharray="6 4"
-            strokeLinecap="round"
-            style={{
-              strokeOpacity: connected ? 0.5 : 0.18,
-              strokeDashoffset: drawn ? 0 : l.len,
-              transition: drawn
-                ? `stroke-dashoffset 1.5s ease-in-out ${drawDelay}s, stroke-opacity 0.35s, stroke-width 0.35s`
-                : 'none',
-              animationName: drawn && !connected ? 'netLinePulse' : 'none',
-              animationDuration: `${pulseDur}s`,
-              animationDelay: `${pulseDelay}s`,
-              animationTimingFunction: 'ease-in-out',
-              animationIterationCount: 'infinite',
-            }}
-          />
-        );
-      })}
-
-      {/* Nodes */}
-      {nodes.map((node, i) => {
-        const isActive = hoveredIndex === i || (hoveredIndex !== null && lines.some(l => (l.a === hoveredIndex || l.b === hoveredIndex) && (l.a === i || l.b === i)));
-        const minLineIdx = lines.reduce((min, l, idx) => (l.a === i || l.b === i) ? Math.min(min, idx) : min, Infinity);
-        const nodeDelay = ((minLineIdx === Infinity ? 0 : minLineIdx) * 0.18 + 1.6).toFixed(2);
-        const scaleStyle = { transform: drawn ? 'scale(1)' : 'scale(0)', transition: `transform 0.45s cubic-bezier(0.34,1.56,0.64,1) ${nodeDelay}s, fill 0.35s` };
-        return (
-          <g key={i}>
-            <circle cx={node.cx} cy={node.cy} r={8} fill={isActive ? "rgba(0,166,255,0.28)" : "rgba(0,166,255,0.07)"}
-              style={{ ...scaleStyle, transformOrigin: `${node.cx}px ${node.cy}px` }} />
-            <circle cx={node.cx} cy={node.cy} r={3.5} fill={isActive ? "rgba(0,166,255,0.75)" : "rgba(0,166,255,0.3)"}
-              style={{ ...scaleStyle, transformOrigin: `${node.cx}px ${node.cy}px` }} />
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
 
 /* ─── TeamGrid ─── */
 function TeamGrid() {
   const [ref, visible] = useInView(0.05);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const gridWrapperRef = useRef(null);
 
   return (
     <section style={{ background: "#0a1628", padding: "80px 0" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
         {/* Section title */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <p style={{ color: "#1b6fea", fontSize: 13, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>
-            Quiénes somos
-          </p>
           <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", color: "#ffffff", marginBottom: 14 }}>
             Las personas detrás de cada envío
           </h2>
@@ -795,25 +666,15 @@ function TeamGrid() {
           </div>
         </div>
 
-        {/* Stats banner */}
-        <StatsBanner />
-
-        {/* Grid wrapper — SVG behind + cards in front */}
-        <div ref={gridWrapperRef} style={{ position: "relative" }}>
-          <ConnectionNetwork gridRef={gridWrapperRef} visible={visible} hoveredIndex={hoveredIndex} />
-          <div ref={ref} className="team-grid" style={{ position: "relative", zIndex: 1 }}>
-            {equipo.map((persona, i) => (
-              <TeamCard
-                key={i}
-                persona={persona}
-                visible={visible}
-                delay={i * 80}
-                index={i}
-                onHover={setHoveredIndex}
-                onLeave={() => setHoveredIndex(null)}
-              />
-            ))}
-          </div>
+        <div ref={ref} className="team-grid">
+          {equipo.map((persona, i) => (
+            <TeamCard
+              key={i}
+              persona={persona}
+              visible={visible}
+              delay={i * 80}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -875,6 +736,7 @@ export default function EquipoPage() {
         <Nav />
         <Hero />
         <GroupPhoto />
+        <StatsStrip />
         <TeamGrid />
         <CTA />
       </div>
