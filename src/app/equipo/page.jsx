@@ -246,8 +246,8 @@ function TeamCard({ persona, visible, delay }) {
           ? "0 20px 40px rgba(0,166,255,0.25), 0 0 0 1px rgba(0,166,255,0.2)"
           : "0 0 30px rgba(0,166,255,0.1), 0 4px 16px rgba(0,0,0,0.35)",
         transform: hov ? "translateY(-8px)" : "translateY(0)",
-        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-        animation: visible ? `springUp 0.7s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms both` : "none",
+        transition: "box-shadow 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1)",
+        animation: visible ? `cardReveal 0.6s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms both` : "none",
         opacity: visible ? undefined : 0,
         cursor: "default",
       }}
@@ -355,6 +355,16 @@ function TeamCard({ persona, visible, delay }) {
         transition: "box-shadow 0.5s",
         zIndex: 5,
       }} />
+
+      {/* Shimmer reveal flash */}
+      {visible && (
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none", zIndex: 20,
+          background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
+          transform: "translateX(-100%)",
+          animation: `shimmerSlide 0.8s ease ${delay + 300}ms forwards`,
+        }} />
+      )}
     </div>
   );
 }
@@ -650,6 +660,13 @@ function StatsBanner() {
 /* ─── TeamGrid ─── */
 function TeamGrid() {
   const [ref, visible] = useInView(0.05);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   return (
     <section style={{ background: "#0a1628", padding: "80px 0" }}>
@@ -672,7 +689,7 @@ function TeamGrid() {
               key={i}
               persona={persona}
               visible={visible}
-              delay={i * 80}
+              delay={i * (isMobile ? 100 : 150)}
             />
           ))}
         </div>

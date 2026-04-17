@@ -282,6 +282,16 @@ body {
 }
 
 /* ===== EQUIPO PAGE ===== */
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(50px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+@keyframes shimmerSlide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%);  }
+}
+
 @keyframes eqFloat {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-20px) scale(1.04); }
