@@ -475,8 +475,8 @@ function GroupPhoto() {
         style={{
           position: "relative",
           width: "100%",
-          minHeight: 500,
-          height: "55vh",
+          minHeight: 600,
+          height: "65vh",
           opacity: visible ? 1 : 0,
           transition: "opacity 0.9s ease",
         }}
@@ -487,7 +487,7 @@ function GroupPhoto() {
           style={{
             position: "absolute", inset: 0,
             width: "100%", height: "100%",
-            objectFit: "cover", objectPosition: "center 15%",
+            objectFit: "cover", objectPosition: "center 20%",
             display: "block",
           }}
         />
