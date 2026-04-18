@@ -11,18 +11,21 @@ const AccessibilityWidget = dynamic(
 const WA = "https://wa.me/573226055431?text=Hola%2C%20quiero%20cotizar%20un%20env%C3%ADo";
 const PH = "tel:+573226055431";
 
-const getInitials = (nombre) =>
-  nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+const getInitials = (nombre) => {
+  const parts = nombre.split(' ');
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return nombre.slice(0, 2).toUpperCase();
+};
 
 const equipo = [
-  { nombre: "Alejandro Martínez", cargo: "CEO & Fundador", especialidad: "Estrategia logística internacional y desarrollo de negocios globales", experiencia: "12 años", pais: "Colombia", img: "/images/team/Hombre1.png" },
-  { nombre: "Valentina Rodríguez", cargo: "Directora de Operaciones", especialidad: "Gestión de operaciones aduaneras y optimización de procesos", experiencia: "9 años", pais: "Colombia", img: "/images/team/Ashley.png" },
-  { nombre: "Carlos Herrera", cargo: "Jefe de Importaciones", especialidad: "Trámites aduaneros y liberación de mercancías internacionales", experiencia: "8 años", pais: "Colombia" },
-  { nombre: "María José López", cargo: "Jefa de Exportaciones", especialidad: "Exportaciones por courier y coordinación con operadores globales", experiencia: "7 años", pais: "Colombia", img: "/images/team/Mujer1.png" },
-  { nombre: "Sebastián Torres", cargo: "Especialista en Courier", especialidad: "Gestión de envíos express y seguimiento en tiempo real", experiencia: "6 años", pais: "Colombia" },
-  { nombre: "Marlen Gómez", cargo: "Asesora Comercial Senior", especialidad: "Atención al cliente corporativo y cotizaciones internacionales", experiencia: "5 años", pais: "Colombia", img: "/images/team/Marlen.png" },
-  { nombre: "Andrés Vargas", cargo: "Especialista Terrestre Venezuela", especialidad: "Logística terrestre y transporte de mercancías a Venezuela", experiencia: "6 años", pais: "Colombia" },
-  { nombre: "Camila Ospina", cargo: "Coordinadora de Casilleros", especialidad: "Gestión de casilleros internacionales en EE.UU., España y China", experiencia: "4 años", pais: "Colombia" },
+  { nombre: "Alejandro", cargo: "CEO & Fundador", especialidad: "Estrategia logística internacional y desarrollo de negocios globales", experiencia: "12 años", pais: "Colombia", img: "/images/team/Hombre1.png" },
+  { nombre: "Valentina", cargo: "Directora de Operaciones", especialidad: "Gestión de operaciones aduaneras y optimización de procesos", experiencia: "9 años", pais: "Colombia", img: "/images/team/Ashley.png" },
+  { nombre: "Carlos", cargo: "Jefe de Importaciones", especialidad: "Trámites aduaneros y liberación de mercancías internacionales", experiencia: "8 años", pais: "Colombia" },
+  { nombre: "María José", cargo: "Jefa de Exportaciones", especialidad: "Exportaciones por courier y coordinación con operadores globales", experiencia: "7 años", pais: "Colombia", img: "/images/team/Mujer1.png" },
+  { nombre: "Sebastián", cargo: "Especialista en Courier", especialidad: "Gestión de envíos express y seguimiento en tiempo real", experiencia: "6 años", pais: "Colombia" },
+  { nombre: "Marlen", cargo: "Asesora Comercial Senior", especialidad: "Atención al cliente corporativo y cotizaciones internacionales", experiencia: "5 años", pais: "Colombia", img: "/images/team/Marlen.png" },
+  { nombre: "Andrés", cargo: "Especialista Terrestre Venezuela", especialidad: "Logística terrestre y transporte de mercancías a Venezuela", experiencia: "6 años", pais: "Colombia" },
+  { nombre: "Camila", cargo: "Coordinadora de Casilleros", especialidad: "Gestión de casilleros internacionales en EE.UU., España y China", experiencia: "4 años", pais: "Colombia" },
   { nombre: "Felipe Moreno", cargo: "Analista Aduanero", especialidad: "Cumplimiento normativo y agenciamiento aduanero", experiencia: "5 años", pais: "Colombia" },
   { nombre: "Laura Jiménez", cargo: "Asesora de Servicio al Cliente", especialidad: "Soporte integral y seguimiento de envíos para clientes", experiencia: "3 años", pais: "Colombia" },
   { nombre: "Miguel Ángel Castro", cargo: "Coordinador de Operaciones Especiales", especialidad: "Manejo de mercancías peligrosas y operaciones de alto valor", experiencia: "7 años", pais: "Colombia" },
