@@ -497,6 +497,13 @@ function GroupPhoto() {
           background: "linear-gradient(to bottom, rgba(12,35,64,0.55) 0%, transparent 100%)",
           pointerEvents: "none", zIndex: 1,
         }} />
+        {/* Ola SVG — dos paths sólidos, sin transparencia */}
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 4 }}>
+          <svg viewBox="0 0 1440 60" style={{ width: "100%", display: "block" }} preserveAspectRatio="none">
+            <path d="M0 0H1440V35C1080 8 360 8 0 35Z" fill="#ffffff" />
+            <path d="M0 60V35C360 8 1080 8 1440 35V60H0Z" fill="#f9fafb" />
+          </svg>
+        </div>
       </div>
     </section>
   );
