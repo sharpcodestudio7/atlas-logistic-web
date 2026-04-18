@@ -319,9 +319,7 @@ body {
   .team-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-.strip-item {
-  border-left: 1px solid #e5e7eb;
-}
+.strip-item {}
 
 @media (max-width: 640px) {
   .stats-strip-grid {
