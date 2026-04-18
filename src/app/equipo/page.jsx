@@ -497,18 +497,6 @@ function GroupPhoto() {
           background: "linear-gradient(to bottom, rgba(12,35,64,0.55) 0%, transparent 100%)",
           pointerEvents: "none", zIndex: 1,
         }} />
-        {/* Overlay inferior sutil */}
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0, height: "40%",
-          background: "linear-gradient(to bottom, rgba(12,35,64,0) 60%, rgba(12,35,64,0.6) 100%)",
-          pointerEvents: "none",
-        }} />
-        {/* Overlay lateral */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(to right, rgba(12,35,64,0.28), transparent 55%)",
-          pointerEvents: "none",
-        }} />
         {/* Ola SVG — transición a StatsStrip (#f9fafb) */}
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 4 }}>
           <svg viewBox="0 0 1440 50" style={{ width: "100%", display: "block" }} preserveAspectRatio="none">
