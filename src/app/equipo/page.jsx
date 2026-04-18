@@ -543,12 +543,15 @@ function StatsStrip() {
               fontWeight: 800,
               fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
               lineHeight: 1,
-              background: "linear-gradient(135deg, #00a6ff, #1b6fea)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
             }}>
-              {s.prefix}<AnimCounter end={s.end} duration={1200} />{s.suffix}
+              <span style={{
+                background: "linear-gradient(135deg, #00a6ff, #1b6fea)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>
+                {s.prefix}<AnimCounter end={s.end} duration={1200} />{s.suffix}
+              </span>
             </div>
             <p style={{
               fontFamily: "'Roboto',sans-serif",
