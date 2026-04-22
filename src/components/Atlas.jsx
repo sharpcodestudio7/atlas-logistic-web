@@ -1351,7 +1351,7 @@ function ContactTypeWriter() {
 }
 
 function ContactForm() {
-  const [form, setForm] = useState({ nombre: "", celular: "", correo: "", servicio: "", mensaje: "", datosCheck: false, novedadesCheck: false });
+  const [form, setForm] = useState({ nombre: "", celular: "", correo: "", ciudad: "", servicio: "", mensaje: "", datosCheck: false, novedadesCheck: false });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [focused, setFocused] = useState(null);
@@ -1382,6 +1382,7 @@ function ContactForm() {
       nombre: form.nombre || "",
       celular: form.celular || "",
       correo: form.correo || "",
+      ciudad: form.ciudad || "",
       servicio: form.servicio || "",
       mensaje: form.mensaje || "",
       newsletter: form.novedadesCheck ? "Sí" : "No",
@@ -1453,6 +1454,11 @@ function ContactForm() {
             <input name="correo" type="email" placeholder="Correo electrónico" required value={form.correo} onChange={handleChange}
               style={{ ...lineInput(), ...focusBorder("correo") }}
               onFocus={() => setFocused("correo")} onBlur={() => setFocused(null)} />
+            <input name="ciudad" placeholder="Ciudad" required value={form.ciudad} onChange={handleChange}
+              style={{ ...lineInput(), ...focusBorder("ciudad") }}
+              onFocus={() => setFocused("ciudad")} onBlur={() => setFocused(null)} />
+          </div>
+          <div style={{ marginBottom: 8 }}>
             <select name="servicio" required value={form.servicio} onChange={handleChange}
               style={{ ...lineInput(), color: form.servicio ? "#1d1d1b" : "#9ca3af", ...focusBorder("servicio") }}
               onFocus={() => setFocused("servicio")} onBlur={() => setFocused(null)}>
