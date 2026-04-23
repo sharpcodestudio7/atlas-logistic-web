@@ -292,10 +292,23 @@ const svcIcons = {
 const serviceData = {
   importacion: {
     title: "Importación por Courier",
-    subtitle: "Recepción de envíos desde el exterior hacia Colombia",
-    queEs: "Próximamente disponible.",
-    pasos: [],
-    idealPara: "Próximamente disponible.",
+    subtitle: "Ingreso ágil de mercancías a Colombia",
+    queEs: "La importación es un servicio de envío internacional diseñado para el ingreso ágil de mercancías a Colombia bajo la modalidad courier. Es ideal para compras en el exterior, envíos urgentes y paquetes de menor volumen, ofreciendo rapidez, trazabilidad y procesos simplificados.",
+    pasos: [
+      { title: "Recepción de documentación", desc: "Validamos la factura comercial y los datos completos del envío." },
+      { title: "Generación de guía internacional", desc: "Emitimos el número de seguimiento (tracking) para control del envío." },
+      { title: "Transporte aéreo", desc: "Movilizamos la mercancía bajo modalidad courier con tiempos optimizados." },
+      { title: "Clasificación aduanera en Colombia", desc: "Realizamos el proceso aduanero conforme a la normativa vigente." },
+      { title: "Gestión de impuestos y tributos", desc: "Calculamos y gestionamos el pago anticipado cuando aplica. Envíos menores a USD $200 desde EE.UU. generalmente exentos por TLC. Envíos superiores: 10% arancel + 19% IVA sobre valor CIF." },
+      { title: "Liberación y entrega final", desc: "Nacionalizamos la mercancía y coordinamos la entrega en destino." },
+    ],
+    idealPara: [
+      "Empresas que requieren reposición rápida de inventario",
+      "Negocios de e-commerce",
+      "Importadores frecuentes de mercancía liviana",
+      "Emprendedores que compran en el exterior",
+      "Envíos urgentes que requieren rapidez y control",
+    ],
   },
   exportacion: {
     title: "Exportación por Courier",
@@ -313,17 +326,33 @@ const serviceData = {
   },
   terrestre: {
     title: "Envíos Terrestres a Venezuela",
-    subtitle: "Transporte terrestre eficiente",
-    queEs: "Próximamente disponible.",
-    pasos: [],
-    idealPara: "Próximamente disponible.",
+    subtitle: "Transporte terrestre optimizando costos sin sacrificar seguridad",
+    queEs: "Un servicio de transporte terrestre diseñado para envíos hacia Venezuela, optimizando costos sin sacrificar seguridad. La carga se consolida durante la semana y el tránsito hacia Venezuela inicia los días sábado.",
+    pasos: [
+      { title: "Consolidación de carga", desc: "La carga se consolida durante la semana y el tránsito hacia Venezuela inicia los días sábado." },
+      { title: "Tránsito internacional", desc: "El tiempo estimado de entrega es de 10 a 15 días hábiles, contados a partir de la salida del transporte." },
+      { title: "Trazabilidad del envío", desc: "La trazabilidad del envío será enviada por su asesor cada dos días durante el tránsito." },
+      { title: "Entrega puerta a puerta", desc: "Servicio puerta a puerta: recogemos y entregamos en la dirección indicada." },
+    ],
+    idealPara: [
+      "Clientes que buscan una alternativa más económica para envíos internacionales",
+    ],
   },
   casillero: {
     title: "Casillero Internacional",
-    subtitle: "Direcciones en países estratégicos",
-    queEs: "Próximamente disponible.",
-    pasos: [],
-    idealPara: "Próximamente disponible.",
+    subtitle: "Direcciones en EE.UU., España y China para tus compras",
+    queEs: "El casillero internacional es un servicio que te permite realizar compras en tiendas del exterior utilizando direcciones físicas en países como Estados Unidos, España y China. Nosotros recibimos tus paquetes y los gestionamos para su envío seguro hasta Colombia.",
+    pasos: [
+      { title: "Asignación de dirección internacional", desc: "Te proporcionamos una dirección física en Estados Unidos, España o China." },
+      { title: "Compra en tiendas online", desc: "Realiza tus compras en cualquier tienda internacional utilizando tu casillero." },
+      { title: "Recepción de paquetes en el exterior", desc: "Recibimos tus productos en nuestras bodegas internacionales." },
+      { title: "Consolidación de envíos", desc: "Agrupamos varios paquetes en un solo envío para optimizar costos (opcional)." },
+      { title: "Importación a Colombia", desc: "Gestionamos el envío bajo modalidad courier, cumpliendo con todos los procesos." },
+      { title: "Entrega final", desc: "Recibes tus productos directamente en la puerta de tu casa u oficina." },
+    ],
+    idealPara: [
+      "Personas y empresas que compran en el exterior y quieren ahorrar en envíos",
+    ],
   },
   aereo: {
     title: "Triangulación de Envíos",
@@ -729,18 +758,40 @@ function ServiceModal({ serviceKey, onClose }) {
                   border: "1px solid rgba(27,111,234,0.1)", padding: "20px",
                   animation: contentReady ? "idealBlockIn 0.4s cubic-bezier(0.4,0,0.2,1) both" : "none",
                 }}>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
-                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#1b6fea" strokeWidth="2.2" strokeLinecap="round"
-                        strokeDasharray="40" strokeDashoffset="40"
-                        style={{ animation: contentReady ? "drawCheck 0.6s ease 0.2s forwards" : "none" }} />
-                      <polyline points="22 4 12 14.01 9 11.01" stroke="#1b6fea" strokeWidth="2.2"
-                        strokeLinecap="round" strokeLinejoin="round" fill="none"
-                        strokeDasharray="24" strokeDashoffset="24"
-                        style={{ animation: contentReady ? "drawCheck 0.4s ease 0.55s forwards" : "none" }} />
-                    </svg>
-                    <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14.5, color: "#4b5563", lineHeight: 1.75, margin: 0 }}>{data.idealPara}</p>
-                  </div>
+                  {Array.isArray(data.idealPara) ? (
+                    <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+                      {data.idealPara.map((item, i) => (
+                        <li key={i} style={{
+                          display: "flex", alignItems: "flex-start", gap: 12,
+                          marginBottom: i < data.idealPara.length - 1 ? 10 : 0,
+                        }}>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#1b6fea" strokeWidth="2.2" strokeLinecap="round"
+                              strokeDasharray="40" strokeDashoffset="40"
+                              style={{ animation: contentReady ? `drawCheck 0.5s ease ${i * 80 + 150}ms forwards` : "none" }} />
+                            <polyline points="22 4 12 14.01 9 11.01" stroke="#1b6fea" strokeWidth="2.2"
+                              strokeLinecap="round" strokeLinejoin="round" fill="none"
+                              strokeDasharray="24" strokeDashoffset="24"
+                              style={{ animation: contentReady ? `drawCheck 0.35s ease ${i * 80 + 360}ms forwards` : "none" }} />
+                          </svg>
+                          <span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#4b5563", lineHeight: 1.65 }}>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#1b6fea" strokeWidth="2.2" strokeLinecap="round"
+                          strokeDasharray="40" strokeDashoffset="40"
+                          style={{ animation: contentReady ? "drawCheck 0.6s ease 0.2s forwards" : "none" }} />
+                        <polyline points="22 4 12 14.01 9 11.01" stroke="#1b6fea" strokeWidth="2.2"
+                          strokeLinecap="round" strokeLinejoin="round" fill="none"
+                          strokeDasharray="24" strokeDashoffset="24"
+                          style={{ animation: contentReady ? "drawCheck 0.4s ease 0.55s forwards" : "none" }} />
+                      </svg>
+                      <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14.5, color: "#4b5563", lineHeight: 1.75, margin: 0 }}>{data.idealPara}</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
