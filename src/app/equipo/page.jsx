@@ -18,17 +18,10 @@ const getInitials = (nombre) => {
 };
 
 const equipo = [
-  { nombre: "Alejandro", cargo: "CEO & Fundador", especialidad: "Estrategia logística internacional y desarrollo de negocios globales", experiencia: "12 años", pais: "Colombia", img: "/images/team/Hombre1.png" },
-  { nombre: "Valentina", cargo: "Directora de Operaciones", especialidad: "Gestión de operaciones aduaneras y optimización de procesos", experiencia: "9 años", pais: "Colombia", img: "/images/team/Ashley.png" },
-  { nombre: "Carlos", cargo: "Jefe de Importaciones", especialidad: "Trámites aduaneros y liberación de mercancías internacionales", experiencia: "8 años", pais: "Colombia" },
-  { nombre: "María José", cargo: "Jefa de Exportaciones", especialidad: "Exportaciones por courier y coordinación con operadores globales", experiencia: "7 años", pais: "Colombia", img: "/images/team/Mujer1.png" },
-  { nombre: "Sebastián", cargo: "Especialista en Courier", especialidad: "Gestión de envíos express y seguimiento en tiempo real", experiencia: "6 años", pais: "Colombia" },
-  { nombre: "Marlen", cargo: "Asesora Comercial Senior", especialidad: "Atención al cliente corporativo y cotizaciones internacionales", experiencia: "5 años", pais: "Colombia", img: "/images/team/Marlen.png" },
-  { nombre: "Andrés", cargo: "Especialista Terrestre Venezuela", especialidad: "Logística terrestre y transporte de mercancías a Venezuela", experiencia: "6 años", pais: "Colombia" },
-  { nombre: "Camila", cargo: "Coordinadora de Casilleros", especialidad: "Gestión de casilleros internacionales en EE.UU., España y China", experiencia: "4 años", pais: "Colombia" },
-  { nombre: "Felipe Moreno", cargo: "Analista Aduanero", especialidad: "Cumplimiento normativo y agenciamiento aduanero", experiencia: "5 años", pais: "Colombia" },
-  { nombre: "Laura Jiménez", cargo: "Asesora de Servicio al Cliente", especialidad: "Soporte integral y seguimiento de envíos para clientes", experiencia: "3 años", pais: "Colombia" },
-  { nombre: "Miguel Ángel Castro", cargo: "Coordinador de Operaciones Especiales", especialidad: "Manejo de mercancías peligrosas y operaciones de alto valor", experiencia: "7 años", pais: "Colombia" },
+  { nombre: "Hidally Soler", cargo: "Gerente Administrativa", especialidad: "Dirección administrativa, control financiero y gestión de procesos internos, asegurando la eficiencia operativa y el cumplimiento estratégico de la compañía.", img: "/images/team/Marlen.png" },
+  { nombre: "Brayan Delgado", cargo: "Coordinador de Operaciones", especialidad: "Gestión y coordinación de operaciones logísticas internacionales bajo modalidad courier, optimizando tiempos de tránsito, procesos aduaneros y trazabilidad de envíos.", img: "/images/team/Hombre1.png" },
+  { nombre: "Viviana Virviescas", cargo: "Directora Comercial Corporativa", especialidad: "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.", img: "/images/team/Mujer 1.png" },
+  { nombre: "Ashlie Pulgarín", cargo: "Ejecutiva Comercial Senior", especialidad: "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.", img: "/images/team/Ashley.png" },
 ];
 
 /* ─── helpers ─── */
