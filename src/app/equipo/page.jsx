@@ -18,10 +18,10 @@ const getInitials = (nombre) => {
 };
 
 const equipo = [
-  { nombre: "Hidally Soler", cargo: "Gerente Administrativa", especialidad: "Dirección administrativa, control financiero y gestión de procesos internos, asegurando la eficiencia operativa y el cumplimiento estratégico de la compañía.", experiencia: "12 años", img: "/images/team/Marlen.png" },
-  { nombre: "Brayan Delgado", cargo: "Coordinador de Operaciones", especialidad: "Gestión y coordinación de operaciones logísticas internacionales bajo modalidad courier, optimizando tiempos de tránsito, procesos aduaneros y trazabilidad de envíos.", experiencia: "4 años", img: "/images/team/Hombre1.png" },
-  { nombre: "Viviana Virviescas", cargo: "Directora Comercial Corporativa", especialidad: "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.", experiencia: "10 años", img: "/images/team/Mujer 1.png" },
-  { nombre: "Ashlie Pulgarín", cargo: "Ejecutiva Comercial Senior", especialidad: "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.", experiencia: "2 años", img: "/images/team/Ashley.png" },
+  { nombre: "Hidally Soler", cargo: "Gerente Administrativa", especialidad: "Dirección administrativa, control financiero y gestión de procesos internos, asegurando la eficiencia operativa y el cumplimiento estratégico de la compañía.", experiencia: "12 años", img: "/images/team/DSC00358.JPG.jpeg", imgPos: "center 15%" },
+  { nombre: "Brayan Delgado", cargo: "Coordinador de Operaciones", especialidad: "Gestión y coordinación de operaciones logísticas internacionales bajo modalidad courier, optimizando tiempos de tránsito, procesos aduaneros y trazabilidad de envíos.", experiencia: "4 años", img: "/images/team/Hombre1.png", imgPos: "center 20%" },
+  { nombre: "Viviana Virviescas", cargo: "Directora Comercial Corporativa", especialidad: "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.", experiencia: "10 años", img: "/images/team/Mujer 1.png", imgPos: "center 20%" },
+  { nombre: "Ashlie Pulgarín", cargo: "Ejecutiva Comercial Senior", especialidad: "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.", experiencia: "2 años", img: "/images/team/Ashley.png", imgPos: "center 20%" },
 ];
 
 /* ─── helpers ─── */
@@ -285,7 +285,7 @@ function TeamCard({ persona, visible, delay }) {
               style={{
                 position: "absolute", inset: 0,
                 width: "100%", height: "100%",
-                objectFit: "cover", objectPosition: "top center",
+                objectFit: "cover", objectPosition: persona.imgPos || "center 20%",
               }}
             />
             <div style={{
