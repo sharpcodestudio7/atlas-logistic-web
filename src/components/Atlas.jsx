@@ -1031,7 +1031,7 @@ function AnimCounter({ end, suffix = "", duration = 1200 }) {
     obs.observe(el);
     return () => obs.disconnect();
   }, [end, duration]);
-  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
+  return <span ref={ref}>{count.toLocaleString("es-CO")}{suffix}</span>;
 }
 
 function StatCard({ icon, value, numEnd, numSuffix, label, color, hoverAnim }) {
@@ -1157,10 +1157,10 @@ function VideoCard() {
 
 function About() {
   const stats = [
-    { v: "220+", numEnd: 220, numSuffix: "+", l: "Países de cobertura global", icon: statIcons.globe.icon, hoverAnim: statIcons.globe.hoverAnim, color: "#1b6fea" },
-    { v: "5,000+", numEnd: 5000, numSuffix: "+", l: "Envíos gestionados exitosamente", icon: statIcons.box.icon, hoverAnim: statIcons.box.hoverAnim, color: "#00a6ff" },
-    { v: "98%", numEnd: 98, numSuffix: "%", l: "Satisfacción del cliente", icon: statIcons.star.icon, hoverAnim: statIcons.star.hoverAnim, color: "#1b6fea" },
-    { v: "3-5 días", numEnd: null, numSuffix: "", l: "Tiempo promedio entrega aérea", icon: statIcons.bolt.icon, hoverAnim: statIcons.bolt.hoverAnim, color: "#00a6ff" },
+    { v: "160+", numEnd: 160, numSuffix: "+", l: "Clientes han confiado en nosotros", icon: statIcons.star.icon, hoverAnim: statIcons.star.hoverAnim, color: "#1b6fea" },
+    { v: "1.200+", numEnd: 1200, numSuffix: "+", l: "Operaciones realizadas", icon: statIcons.box.icon, hoverAnim: statIcons.box.hoverAnim, color: "#00a6ff" },
+    { v: "23.100+ Kg", numEnd: 23100, numSuffix: "+ Kg", l: "Enviados exitosamente", icon: statIcons.globe.icon, hoverAnim: statIcons.globe.hoverAnim, color: "#1b6fea" },
+    { v: "25.700+ Kg", numEnd: 25700, numSuffix: "+ Kg", l: "Transportados en volumen", icon: statIcons.bolt.icon, hoverAnim: statIcons.bolt.hoverAnim, color: "#00a6ff" },
   ];
   return (
     <section id="nosotros" style={{ padding: "80px 0", background: "#fff" }}>
