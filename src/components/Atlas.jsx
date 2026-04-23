@@ -1361,10 +1361,10 @@ function WhyUs() {
 
 function ShowcaseSlider() {
   const images = [
-    "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80",
-    "/images/exportaciones.png",
-    "/images/casillero.png",
-    "/images/redglobal.png",
+    { src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80", fit: "cover", pos: "center 30%" },
+    { src: "/images/exportaciones.png",  fit: "cover", pos: "center center" },
+    { src: "/images/casillero.png",      fit: "cover", pos: "center center" },
+    { src: "/images/redglobal.png",      fit: "cover", pos: "center center" },
   ];
   const slides = [
     { tag: "IMPORTACIONES", title: "Tu mercancía en Colombia, sin complicaciones", desc: "Gestionamos cada importación desde el origen hasta tu puerta. Trámites aduaneros, liberación express y seguimiento en tiempo real para que tú solo te preocupes por vender.", statNum: "3-5 días", statLabel: "Tiempo promedio de entrega aérea" },
@@ -1477,13 +1477,14 @@ function ShowcaseSlider() {
 
           {/* Left — Image */}
           <div style={{ width: isMobile ? "100%" : "48%", flexShrink: 0, position: "relative", minHeight: isMobile ? 260 : 420, borderRadius: 16, overflow: "hidden", boxShadow: "0 40px 80px rgba(0,0,0,0.5)" }}>
-            {images.map((src, i) => (
+            {images.map((img, i) => (
               <img
                 key={i}
-                src={src}
+                src={img.src}
                 alt=""
                 style={{
-                  position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+                  position: "absolute", inset: 0, width: "100%", height: "100%",
+                  objectFit: img.fit, objectPosition: img.pos,
                   pointerEvents: "none",
                   zIndex: outgoing === i ? 3 : current === i ? 2 : 1,
                   opacity: i !== current && i !== outgoing ? 0 : i === current && !entering ? 1 : undefined,
