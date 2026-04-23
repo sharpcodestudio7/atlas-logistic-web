@@ -387,21 +387,70 @@ function StepItem({ paso, index, total }) {
   );
 }
 
+/* ─── HoloStepItem ─── */
+function HoloStepItem({ paso, index, total, trigger }) {
+  const [vis, setVis] = useState(false);
+  const delay = index * 100;
+  useEffect(() => {
+    if (!trigger) return;
+    const t = setTimeout(() => setVis(true), delay + 80);
+    return () => clearTimeout(t);
+  }, [trigger, delay]);
+  const isLast = index === total - 1;
+  return (
+    <div style={{ display: "flex", gap: 12, marginBottom: isLast ? 0 : 4 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+        <div style={{
+          width: 24, height: 24, borderRadius: "50%",
+          background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          transform: vis ? "scale(1)" : "scale(0)",
+          transition: `transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) ${delay}ms`,
+          flexShrink: 0,
+        }}>
+          <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 11, color: "#fff" }}>{index + 1}</span>
+        </div>
+        {!isLast && (
+          <div style={{
+            width: 1, minHeight: 24, marginTop: 3, flex: 1,
+            background: "repeating-linear-gradient(to bottom, rgba(27,111,234,0.35) 0px, rgba(27,111,234,0.35) 4px, transparent 4px, transparent 8px)",
+            transformOrigin: "top",
+            transform: vis ? "scaleY(1)" : "scaleY(0)",
+            transition: `transform 0.4s ease ${delay + 180}ms`,
+          }} />
+        )}
+      </div>
+      <div style={{
+        paddingTop: 2, paddingBottom: isLast ? 0 : 20, flex: 1,
+        opacity: vis ? 1 : 0,
+        transform: vis ? "translateX(0)" : "translateX(14px)",
+        transition: `opacity 0.35s ease ${delay + 60}ms, transform 0.35s ease ${delay + 60}ms`,
+      }}>
+        <h4 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 600, fontSize: 14, color: "#1d1d1b", margin: "0 0 3px" }}>{paso.title}</h4>
+        <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#6b7280", lineHeight: 1.55, margin: 0 }}>{paso.desc}</p>
+      </div>
+    </div>
+  );
+}
+
 /* ─── ServiceModal ─── */
 function ServiceModal({ serviceKey, onClose }) {
   const data = serviceData[serviceKey];
   const [activeTab, setActiveTab] = useState(0);
-  const [contentTab, setContentTab] = useState(0);
-  const [tabPhase, setTabPhase] = useState("visible");
-  const [tabDirection, setTabDirection] = useState(1);
+  const [displayTab, setDisplayTab] = useState(0);
+  const [flipping, setFlipping] = useState(false);
+  const [contentReady, setContentReady] = useState(true);
   const [closing, setClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const tabContainerRef = useRef(null);
-  const tabRefs = useRef([]);
-  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const cardRef = useRef(null);
+  const rafRef = useRef(null);
   const ww = useWW();
   const isMobile = ww < 768;
   const tabs = ["¿Qué es?", "¿Cómo funciona?", "¿Ideal para?"];
+  const tiltRef = useRef({ rx: 0, ry: 0, paused: false });
+  const rainbowRef = useRef(null);
+  const holoRef = useRef(null);
+  const [mouseOver, setMouseOver] = useState(false);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
@@ -419,24 +468,73 @@ function ServiceModal({ serviceKey, onClose }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  useEffect(() => {
-    const el = tabRefs.current[activeTab];
-    const container = tabContainerRef.current;
-    if (!el || !container) return;
-    const cRect = container.getBoundingClientRect();
-    const tRect = el.getBoundingClientRect();
-    setIndicator({ left: tRect.left - cRect.left, width: tRect.width });
-  }, [activeTab, mounted]);
-
   const handleClose = () => { setClosing(true); setTimeout(onClose, 300); };
 
+  const handleMouseMove = (e) => {
+    if (isMobile || tiltRef.current.paused) return;
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      const card = cardRef.current;
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const dx = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+      const dy = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+      const rx = -dy * 8;
+      const ry = dx * 8;
+      tiltRef.current.rx = rx;
+      tiltRef.current.ry = ry;
+      const sx = -ry * 2;
+      const sy = Math.abs(rx) * 1.5 + 20;
+      card.style.transition = "transform 0.1s ease-out, box-shadow 0.1s ease-out";
+      card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+      card.style.boxShadow = `${sx}px ${sy}px 60px rgba(0,166,255,0.22), 0 8px 32px rgba(12,35,64,0.2)`;
+      const ox = ((e.clientX - rect.left) / rect.width) * 100;
+      const oy = ((e.clientY - rect.top) / rect.height) * 100;
+      if (holoRef.current) {
+        holoRef.current.style.backgroundPosition = `${ox}% ${oy}%`;
+        holoRef.current.style.opacity = "0.9";
+      }
+      if (rainbowRef.current) rainbowRef.current.style.opacity = "0.6";
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    tiltRef.current.rx = 0;
+    tiltRef.current.ry = 0;
+    const card = cardRef.current;
+    if (card) {
+      card.style.transition = "transform 0.5s ease, box-shadow 0.5s ease";
+      card.style.transform = "rotateX(0deg) rotateY(0deg)";
+      card.style.boxShadow = "0 24px 60px rgba(12,35,64,0.32), 0 8px 24px rgba(12,35,64,0.12)";
+    }
+    if (holoRef.current) holoRef.current.style.opacity = "0";
+    if (rainbowRef.current) rainbowRef.current.style.opacity = "0";
+    setMouseOver(false);
+  };
+
   const switchTab = (i) => {
-    if (i === contentTab) return;
-    const dir = i > contentTab ? 1 : -1;
-    setTabDirection(dir);
-    setActiveTab(i);
-    setTabPhase("exiting");
-    setTimeout(() => { setContentTab(i); setTabPhase("visible"); }, 230);
+    if (i === activeTab || flipping) return;
+    setFlipping(true);
+    tiltRef.current.paused = true;
+    const card = cardRef.current;
+    if (card) {
+      card.style.transition = "transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s ease";
+      card.style.transform = "rotateX(0deg) rotateY(90deg)";
+      card.style.boxShadow = "0 20px 60px rgba(0,166,255,0.3), 0 8px 24px rgba(12,35,64,0.2)";
+    }
+    setTimeout(() => {
+      setActiveTab(i);
+      setDisplayTab(i);
+      setContentReady(false);
+      if (card) {
+        card.style.transition = "transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s ease";
+        card.style.transform = "rotateX(0deg) rotateY(0deg)";
+        card.style.boxShadow = "0 24px 60px rgba(12,35,64,0.32), 0 8px 24px rgba(12,35,64,0.12)";
+      }
+      requestAnimationFrame(() => setContentReady(true));
+      setTimeout(() => { setFlipping(false); tiltRef.current.paused = false; }, 300);
+    }, 280);
   };
 
   if (!data) return null;
@@ -444,11 +542,12 @@ function ServiceModal({ serviceKey, onClose }) {
   const waMsg = encodeURIComponent(`Hola, me interesa el servicio de ${data.title}. ¿Me pueden dar más información?`);
   const waLink = `https://wa.me/573226055431?text=${waMsg}`;
 
-  const headerParticles = [
-    { size: 80, top: "8%", left: "4%", delay: 0, dur: 7 },
-    { size: 45, top: "55%", right: "6%", delay: 1.5, dur: 9 },
-    { size: 60, bottom: "10%", left: "18%", delay: 0.8, dur: 6 },
-    { size: 28, top: "20%", right: "22%", delay: 2.2, dur: 8 },
+  const particles = [
+    { s: 80, top: "5%", left: "3%", delay: 0, dur: 7 },
+    { s: 44, top: "50%", left: "80%", delay: 1.5, dur: 9 },
+    { s: 56, top: "70%", left: "12%", delay: 0.8, dur: 6 },
+    { s: 26, top: "18%", left: "70%", delay: 2.2, dur: 8 },
+    { s: 18, top: "40%", left: "45%", delay: 1.1, dur: 10 },
   ];
 
   return (
@@ -456,224 +555,231 @@ function ServiceModal({ serviceKey, onClose }) {
       style={{
         position: "fixed", inset: 0, zIndex: 60,
         display: "flex", alignItems: "center", justifyContent: "center",
-        background: (mounted && !closing) ? "rgba(0,0,0,0.65)" : "rgba(0,0,0,0)",
-        transition: closing ? "background 0.2s" : "background 0.3s",
-        padding: isMobile ? 0 : 20,
+        background: (mounted && !closing) ? "rgba(0,0,0,0.7)" : "rgba(0,0,0,0)",
+        backdropFilter: (mounted && !closing) ? "blur(8px)" : "blur(0px)",
+        WebkitBackdropFilter: (mounted && !closing) ? "blur(8px)" : "blur(0px)",
+        transition: "background 0.3s ease, backdrop-filter 0.3s ease",
+        padding: isMobile ? "12px" : "24px",
       }}
       onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
+      {/* Perspective wrapper */}
       <div style={{
-        background: "#fff",
-        borderRadius: isMobile ? 0 : 20,
+        perspective: isMobile ? "800px" : "1200px",
         width: "100%",
-        maxWidth: isMobile ? "100%" : 800,
-        maxHeight: isMobile ? "100dvh" : "85vh",
-        height: isMobile ? "100dvh" : "auto",
-        overflow: "hidden",
-        display: "flex", flexDirection: "column",
-        boxShadow: "0 40px 80px rgba(12,35,64,0.35), 0 8px 24px rgba(12,35,64,0.15)",
+        maxWidth: isMobile ? "92vw" : 520,
         opacity: (mounted && !closing) ? 1 : 0,
-        transform: closing
-          ? "translateY(20px) scale(0.95)"
-          : (mounted ? "translateY(0) scale(1)" : "translateY(30px) scale(0.92)"),
+        transform: (mounted && !closing) ? "scale(1) translateY(0)" : "scale(0.9) translateY(32px)",
         transition: closing
-          ? "opacity 0.25s ease, transform 0.25s ease"
-          : "opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+          ? "opacity 0.28s ease, transform 0.28s ease"
+          : "opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.34,1.56,0.64,1)",
       }}>
+        {/* The holographic card */}
+        <div
+          ref={cardRef}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={() => setMouseOver(true)}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            borderRadius: 20,
+            overflow: "hidden",
+            position: "relative",
+            background: "#fff",
+            willChange: "transform",
+            border: `1px solid rgba(0,166,255,${mouseOver ? 0.38 : 0.14})`,
+            boxShadow: "0 24px 60px rgba(12,35,64,0.32), 0 8px 24px rgba(12,35,64,0.12)",
+            minHeight: 480,
+            display: "flex",
+            flexDirection: "column",
+            transition: "border-color 0.35s ease",
+            transformStyle: "preserve-3d",
+            backfaceVisibility: "hidden",
+          }}
+        >
+          {/* Holographic shine overlay */}
+          <div ref={holoRef} style={{
+            position: "absolute", inset: 0, zIndex: 10, pointerEvents: "none",
+            borderRadius: 20,
+            background: "linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.12) 44%, rgba(0,166,255,0.09) 50%, rgba(27,111,234,0.07) 56%, transparent 62%)",
+            backgroundSize: "220% 220%",
+            backgroundPosition: "50% 50%",
+            opacity: 0,
+            transition: "opacity 0.3s ease",
+          }} />
 
-        {/* ── Header ── */}
-        <div style={{
-          background: "linear-gradient(135deg, #0c2340 0%, #1b6fea 55%, #00a6ff 100%)",
-          padding: isMobile ? "20px" : "28px 32px",
-          display: "flex", alignItems: "center", gap: 20, flexShrink: 0,
-          position: "relative", overflow: "hidden",
-        }}>
-          {/* Floating particles */}
-          {headerParticles.map((p, i) => (
-            <div key={i} style={{
-              position: "absolute",
-              width: p.size, height: p.size, borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%)",
-              top: p.top, left: p.left, right: p.right, bottom: p.bottom,
-              animation: `modalParticleFloat ${p.dur}s ease-in-out ${p.delay}s infinite`,
-              pointerEvents: "none",
-            }} />
-          ))}
+          {/* Rainbow iridescent overlay */}
+          <div ref={rainbowRef} style={{
+            position: "absolute", inset: 0, zIndex: 9, pointerEvents: "none",
+            borderRadius: 20,
+            background: "linear-gradient(125deg, rgba(255,0,0,0.025) 0%, rgba(255,165,0,0.03) 16%, rgba(255,255,0,0.03) 32%, rgba(0,180,0,0.025) 48%, rgba(0,166,255,0.03) 64%, rgba(75,0,130,0.025) 80%, rgba(238,130,238,0.03) 100%)",
+            opacity: 0,
+            transition: "opacity 0.3s ease",
+          }} />
 
-          {/* Icon bubble */}
+          {/* ── Card Header ── */}
           <div style={{
-            width: 56, height: 56, borderRadius: "50%", flexShrink: 0,
-            background: "rgba(255,255,255,0.15)",
-            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,0.25)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            animation: "iconBounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both, iconPulse 2.5s ease-in-out 0.9s infinite",
-            color: "#fff",
-            position: "relative", zIndex: 1,
+            background: "linear-gradient(135deg, #0c2340 0%, #1b6fea 70%, #00a6ff 100%)",
+            padding: "28px 24px 22px",
+            position: "relative",
+            overflow: "hidden",
+            flexShrink: 0,
+            minHeight: 140,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
           }}>
-            <svg className="modal-icon-static" width="36" height="36" viewBox="0 0 32 32" fill="none">
-              {svcIcons[serviceKey]?.icon}
-            </svg>
-          </div>
-
-          {/* Title + subtitle */}
-          <div style={{ flex: 1, minWidth: 0, position: "relative", zIndex: 1 }}>
-            <h2 style={{
-              fontFamily: "'Fira Sans',sans-serif", fontWeight: 700,
-              fontSize: isMobile ? 18 : 24, color: "#fff", margin: 0, lineHeight: 1.2,
-              animation: "headerTextSlide 0.4s ease 0.3s both",
-            }}>{data.title}</h2>
-            <p style={{
-              color: "rgba(255,255,255,0.72)", fontSize: isMobile ? 13 : 14,
-              fontFamily: "'Roboto',sans-serif", margin: "5px 0 0",
-              animation: "headerTextSlide 0.4s ease 0.4s both",
-            }}>{data.subtitle}</p>
-          </div>
-
-          {/* Close button */}
-          <button onClick={handleClose} style={{
-            background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.18)",
-            color: "#fff", width: 36, height: 36, borderRadius: "50%", cursor: "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 20, lineHeight: 1, flexShrink: 0, position: "relative", zIndex: 1,
-            transition: "background 0.2s",
-          }}>×</button>
-        </div>
-
-        {/* ── Tabs ── */}
-        <div style={{ background: "#f9fafb", flexShrink: 0, borderBottom: "1px solid #e5e7eb" }}>
-          <div ref={tabContainerRef} style={{ display: "flex", padding: "0 32px", position: "relative" }}>
-            {tabs.map((tab, i) => (
-              <button
-                key={i}
-                ref={el => tabRefs.current[i] = el}
-                onClick={() => switchTab(i)}
-                style={{
-                  padding: isMobile ? "12px 14px" : "14px 20px",
-                  background: "none", border: "none",
-                  fontFamily: "'Fira Sans',sans-serif",
-                  fontSize: isMobile ? 13 : 14, fontWeight: 600,
-                  color: activeTab === i ? "#1b6fea" : "#6b7280",
-                  cursor: "pointer", transition: "color 0.25s", whiteSpace: "nowrap",
-                }}
-              >{tab}</button>
+            {/* Floating light particles */}
+            {particles.map((p, i) => (
+              <div key={i} style={{
+                position: "absolute",
+                width: p.s, height: p.s, borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
+                top: p.top, left: p.left,
+                animation: `modalParticleFloat ${p.dur}s ease-in-out ${p.delay}s infinite`,
+                pointerEvents: "none",
+              }} />
             ))}
+
+            {/* Close button */}
+            <button onClick={handleClose} style={{
+              position: "absolute", top: 14, right: 14, zIndex: 2,
+              width: 30, height: 30, borderRadius: "50%",
+              background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)",
+              color: "#fff", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 17, lineHeight: 1, transition: "background 0.2s",
+            }}>×</button>
+
+            {/* Icon bubble */}
             <div style={{
-              position: "absolute", bottom: 0,
-              left: indicator.left, width: indicator.width,
-              height: 3, background: "linear-gradient(90deg, #1b6fea, #00a6ff)",
-              borderRadius: "2px 2px 0 0",
-              transition: "left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-            }} />
-          </div>
-        </div>
+              width: 64, height: 64, borderRadius: "50%",
+              background: "rgba(255,255,255,0.13)",
+              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+              border: "1.5px solid rgba(255,255,255,0.28)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              animation: "iconBounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.15s both, iconPulse 3s ease-in-out 0.8s infinite",
+              color: "#fff", position: "relative", zIndex: 1, flexShrink: 0,
+            }}>
+              <svg className="modal-icon-static" width="34" height="34" viewBox="0 0 32 32" fill="none">
+                {svcIcons[serviceKey]?.icon}
+              </svg>
+            </div>
 
-        {/* ── Content ── */}
-        <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "24px 20px" : "32px" }}>
-          <div style={{
-            opacity: tabPhase === "exiting" ? 0 : 1,
-            transform: tabPhase === "exiting"
-              ? `translateX(${tabDirection * -52}px) scale(0.96)`
-              : "translateX(0) scale(1)",
-            filter: tabPhase === "exiting" ? "blur(5px)" : "blur(0px)",
-            transition: tabPhase === "exiting"
-              ? "opacity 0.2s cubic-bezier(0.4,0,1,1), transform 0.22s cubic-bezier(0.4,0,1,1), filter 0.2s ease"
-              : "none",
-            animation: tabPhase === "visible"
-              ? `${tabDirection === 1 ? "tabEnter" : "tabEnterLeft"} 0.38s cubic-bezier(0.2,0,0,1) 0.04s both`
-              : "none",
-          }}>
-
-            {/* Tab 0 — Qué es */}
-            {contentTab === 0 && (
+            {/* Title & subtitle */}
+            <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
+              <h2 style={{
+                fontFamily: "'Fira Sans',sans-serif", fontWeight: 700,
+                fontSize: isMobile ? 18 : 22, color: "#fff", margin: 0, lineHeight: 1.2,
+                animation: "headerTextSlide 0.4s ease 0.25s both",
+              }}>{data.title}</h2>
               <p style={{
-                fontFamily: "'Roboto',sans-serif", fontSize: 15,
-                color: "#4b5563", lineHeight: 1.85, margin: 0,
-                animation: "tabEnter 0.5s ease 0.1s both",
-              }}>{data.queEs}</p>
-            )}
-
-            {/* Tab 1 — Cómo funciona */}
-            {contentTab === 1 && (
-              <div style={{ position: "relative" }}>
-                {data.pasos.length === 0
-                  ? <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#9ca3af" }}>Próximamente disponible.</p>
-                  : <>
-                    {data.pasos.map((paso, i) => (
-                      <StepItem key={i} paso={paso} index={i} total={data.pasos.length} />
-                    ))}
-                    {/* Timeline shimmer after all steps */}
-                    <div style={{
-                      position: "absolute", left: 16, top: 0, width: 1, height: "100%",
-                      overflow: "hidden", pointerEvents: "none",
-                    }}>
-                      <div style={{
-                        position: "absolute", left: 0, width: "100%",
-                        height: "30%",
-                        background: "linear-gradient(to bottom, transparent, rgba(0,166,255,0.6), transparent)",
-                        animation: `timelineShimmer 1.2s ease ${data.pasos.length * 150 + 500}ms both`,
-                      }} />
-                    </div>
-                  </>
-                }
-              </div>
-            )}
-
-            {/* Tab 2 — Ideal para */}
-            {contentTab === 2 && (
-              <div style={{
-                background: "rgba(27,111,234,0.04)", borderRadius: 16,
-                border: "1px solid rgba(27,111,234,0.1)", padding: 24,
-                animation: "idealBlockIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both",
-              }}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
-                    <path
-                      d="M22 11.08V12a10 10 0 11-5.93-9.14"
-                      stroke="#1b6fea" strokeWidth="2.2" strokeLinecap="round"
-                      strokeDasharray="40" strokeDashoffset="40"
-                      style={{ animation: "drawCheck 0.6s ease 0.2s forwards" }}
-                    />
-                    <polyline
-                      points="22 4 12 14.01 9 11.01"
-                      stroke="#1b6fea" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
-                      fill="none"
-                      strokeDasharray="24" strokeDashoffset="24"
-                      style={{ animation: "drawCheck 0.4s ease 0.55s forwards" }}
-                    />
-                  </svg>
-                  <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#4b5563", lineHeight: 1.75, margin: 0 }}>{data.idealPara}</p>
-                </div>
-              </div>
-            )}
+                color: "rgba(255,255,255,0.7)", fontSize: 13,
+                fontFamily: "'Roboto',sans-serif", margin: "5px 0 0",
+                animation: "headerTextSlide 0.4s ease 0.35s both",
+              }}>{data.subtitle}</p>
+            </div>
           </div>
-        </div>
 
-        {/* ── Footer ── */}
-        <div style={{
-          padding: isMobile ? "16px 20px" : "20px 32px",
-          borderTop: "1px solid #f3f4f6",
-          display: "flex", gap: 12, justifyContent: "flex-end",
-          flexShrink: 0, background: "#fff",
-        }}>
-          <button onClick={handleClose} style={{
-            background: "none", border: "none",
-            fontFamily: "'Fira Sans',sans-serif", fontSize: 15,
-            fontWeight: 600, color: "#6b7280", cursor: "pointer", padding: "10px 20px",
-          }}>Cerrar</button>
-          <a href={waLink} target="_blank" rel="noopener noreferrer" style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "10px 24px", borderRadius: 50,
-            background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
-            color: "#fff", fontSize: 15, fontWeight: 700,
-            fontFamily: "'Fira Sans',sans-serif", textDecoration: "none",
-            boxShadow: "0 4px 16px rgba(27,111,234,0.3)",
+          {/* ── Tab buttons ── */}
+          <div style={{
+            display: "flex", gap: 8, padding: "12px 16px",
+            background: "#f9fafb", borderBottom: "1px solid #e5e7eb",
+            flexShrink: 0,
           }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            Cotizar este servicio
-          </a>
+            {tabs.map((tab, i) => (
+              <button key={i} onClick={() => switchTab(i)} style={{
+                flex: 1,
+                padding: isMobile ? "8px 4px" : "10px 10px",
+                borderRadius: 10, cursor: "pointer",
+                fontFamily: "'Fira Sans',sans-serif",
+                fontSize: isMobile ? 11 : 12.5, fontWeight: 600,
+                transition: "all 0.25s ease",
+                background: activeTab === i ? "rgba(27,111,234,0.07)" : "transparent",
+                border: `1.5px solid ${activeTab === i ? "#1b6fea" : "#e5e7eb"}`,
+                color: activeTab === i ? "#1b6fea" : "#6b7280",
+                whiteSpace: "nowrap",
+              }}>{tab}</button>
+            ))}
+          </div>
+
+          {/* ── Content zone ── */}
+          <div style={{
+            flex: 1, overflowY: "auto", padding: isMobile ? "20px 18px" : "24px 26px",
+            background: "#fff",
+          }}>
+            <div style={{
+              opacity: contentReady ? 1 : 0,
+              transform: contentReady ? "translateY(0)" : "translateY(10px)",
+              transition: contentReady ? "opacity 0.38s ease 0.04s, transform 0.38s ease 0.04s" : "none",
+            }}>
+              {/* ¿Qué es? */}
+              {displayTab === 0 && (
+                <p style={{
+                  fontFamily: "'Roboto',sans-serif", fontSize: 14.5,
+                  color: "#4b5563", lineHeight: 1.8, margin: 0,
+                }}>{data.queEs}</p>
+              )}
+
+              {/* ¿Cómo funciona? */}
+              {displayTab === 1 && (
+                <div>
+                  {data.pasos.length === 0
+                    ? <p style={{ color: "#9ca3af", fontFamily: "'Roboto',sans-serif", fontSize: 14 }}>Próximamente disponible.</p>
+                    : data.pasos.map((paso, i) => (
+                      <HoloStepItem key={i} paso={paso} index={i} total={data.pasos.length} trigger={contentReady} />
+                    ))
+                  }
+                </div>
+              )}
+
+              {/* ¿Ideal para? */}
+              {displayTab === 2 && (
+                <div style={{
+                  background: "rgba(27,111,234,0.04)", borderRadius: 12,
+                  border: "1px solid rgba(27,111,234,0.1)", padding: "20px",
+                  animation: contentReady ? "idealBlockIn 0.4s cubic-bezier(0.4,0,0.2,1) both" : "none",
+                }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#1b6fea" strokeWidth="2.2" strokeLinecap="round"
+                        strokeDasharray="40" strokeDashoffset="40"
+                        style={{ animation: contentReady ? "drawCheck 0.6s ease 0.2s forwards" : "none" }} />
+                      <polyline points="22 4 12 14.01 9 11.01" stroke="#1b6fea" strokeWidth="2.2"
+                        strokeLinecap="round" strokeLinejoin="round" fill="none"
+                        strokeDasharray="24" strokeDashoffset="24"
+                        style={{ animation: contentReady ? "drawCheck 0.4s ease 0.55s forwards" : "none" }} />
+                    </svg>
+                    <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14.5, color: "#4b5563", lineHeight: 1.75, margin: 0 }}>{data.idealPara}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* ── Footer inside card ── */}
+            <div style={{ marginTop: 24, paddingTop: 18, borderTop: "1px solid #f3f4f6" }}>
+              <a href={waLink} target="_blank" rel="noopener noreferrer" style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                width: "100%", padding: "13px 20px", borderRadius: 12,
+                background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
+                color: "#fff", fontSize: 15, fontWeight: 700,
+                fontFamily: "'Fira Sans',sans-serif", textDecoration: "none",
+                boxShadow: "0 4px 20px rgba(27,111,234,0.35)",
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Cotizar este servicio
+              </a>
+              <button onClick={handleClose} style={{
+                display: "block", width: "100%", marginTop: 10,
+                background: "none", border: "none",
+                fontFamily: "'Fira Sans',sans-serif", fontSize: 13,
+                color: "#9ca3af", cursor: "pointer", padding: "6px 0",
+              }}>Cerrar</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
