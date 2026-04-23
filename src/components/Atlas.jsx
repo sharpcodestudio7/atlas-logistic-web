@@ -356,17 +356,35 @@ const serviceData = {
   },
   aereo: {
     title: "Triangulación de Envíos",
-    subtitle: "Optimización de cadena de suministro",
-    queEs: "Próximamente disponible.",
-    pasos: [],
-    idealPara: "Próximamente disponible.",
+    subtitle: "Envíos entre países sin pasar por Colombia",
+    queEs: "Un servicio que permite enviar mercancía entre países sin que pase por Colombia, optimizando tiempos y costos.",
+    pasos: [
+      { title: "Recepción de información", desc: "Recibimos la información de origen y destino del envío." },
+      { title: "Coordinación logística", desc: "Coordinamos la logística internacional directa entre los países involucrados." },
+      { title: "Gestión documental", desc: "Gestionamos la documentación y la operación requerida para el tránsito." },
+      { title: "Supervisión del tránsito", desc: "Supervisamos el tránsito del envío en todo momento." },
+      { title: "Confirmación de entrega", desc: "Confirmamos la entrega en destino y cerramos la operación." },
+    ],
+    idealPara: "Empresas que manejan proveedores y clientes en distintos países.",
   },
   especiales: {
     title: "Operaciones Especiales",
-    subtitle: "Soluciones logísticas especializadas",
-    queEs: "Próximamente disponible.",
-    pasos: [],
-    idealPara: "Próximamente disponible.",
+    subtitle: "Soluciones logísticas adaptadas a necesidades técnicas o normativas",
+    queEs: "Soluciones logísticas adaptadas para necesidades específicas que requieren manejo técnico o normativo especial.",
+    queIncluye: [
+      "Exportaciones temporales",
+      "Reembarques",
+      "Mercancías peligrosas",
+      "Equipos para reparación o calibración",
+    ],
+    pasos: [
+      { title: "Análisis del requerimiento", desc: "Analizamos tu necesidad y definimos el enfoque más adecuado." },
+      { title: "Definición de estrategia", desc: "Definimos la mejor estrategia logística para tu operación." },
+      { title: "Gestión de permisos", desc: "Gestionamos permisos y documentación específica requerida." },
+      { title: "Ejecución de la operación", desc: "Ejecutamos la operación con los estándares técnicos y normativos exigidos." },
+      { title: "Acompañamiento integral", desc: "Acompañamos todo el proceso hasta la entrega y cierre de la operación." },
+    ],
+    idealPara: "Empresas con necesidades logísticas más complejas o técnicas.",
   },
 };
 
@@ -710,10 +728,25 @@ function ServiceModal({ serviceKey, onClose }) {
             }}>
               {/* ¿Qué es? */}
               {displayTab === 0 && (
-                <p style={{
-                  fontFamily: "'Roboto',sans-serif", fontSize: 14.5,
-                  color: "#4b5563", lineHeight: 1.8, margin: 0,
-                }}>{data.queEs}</p>
+                <div>
+                  <p style={{
+                    fontFamily: "'Roboto',sans-serif", fontSize: 14.5,
+                    color: "#4b5563", lineHeight: 1.8, margin: 0,
+                  }}>{data.queEs}</p>
+                  {data.queIncluye && (
+                    <div style={{ marginTop: 18 }}>
+                      <p style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 600, fontSize: 13, color: "#1b6fea", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.04em" }}>¿Qué incluye?</p>
+                      <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+                        {data.queIncluye.map((item, i) => (
+                          <li key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: i < data.queIncluye.length - 1 ? 8 : 0 }}>
+                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "linear-gradient(135deg, #1b6fea, #00a6ff)", flexShrink: 0 }} />
+                            <span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#4b5563", lineHeight: 1.6 }}>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* ¿Cómo funciona? */}
