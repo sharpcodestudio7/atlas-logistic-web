@@ -285,9 +285,307 @@ const svcIcons = {
   aereo: { hoverAnim: "whyusPulse", icon: <><path d="M26 12l-10 4-10-4 10-6z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none" className="ai-s1" style={{ strokeDasharray: 50, strokeDashoffset: 50 }} /><path d="M6 12v6l10 6 10-6v-6" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none" className="ai-s2" style={{ strokeDasharray: 60, strokeDashoffset: 60 }} /><path d="M16 16v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="ai-s3" style={{ strokeDasharray: 8, strokeDashoffset: 8 }} /></> },
   casillero: { hoverAnim: "whyusBounce", icon: <><path d="M4 14l12-8 12 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" className="ai-s1" style={{ strokeDasharray: 40, strokeDashoffset: 40 }} /><path d="M7 16v10a1 1 0 001 1h16a1 1 0 001-1V16" stroke="currentColor" strokeWidth="1.5" fill="none" className="ai-s2" style={{ strokeDasharray: 40, strokeDashoffset: 40 }} /><rect x="13" y="19" width="6" height="8" rx="0.5" stroke="currentColor" strokeWidth="1.3" className="ai-s3" style={{ strokeDasharray: 28, strokeDashoffset: 28 }} /><line x1="16" y1="22" x2="16" y2="24" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" className="ai-s3" style={{ strokeDasharray: 2, strokeDashoffset: 2 }} /></> },
   terrestre: { hoverAnim: "whyusBounce", icon: <><rect x="3" y="10" width="18" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.5" className="ai-s1" style={{ strokeDasharray: 60, strokeDashoffset: 60 }} /><path d="M21 14h5l3 4v4h-7V14z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none" className="ai-s2" style={{ strokeDasharray: 30, strokeDashoffset: 30 }} /><circle cx="10" cy="24" r="2.5" stroke="currentColor" strokeWidth="1.5" className="ai-s3" style={{ strokeDasharray: 16, strokeDashoffset: 16 }} /><circle cx="25" cy="24" r="2.5" stroke="currentColor" strokeWidth="1.5" className="ai-s3" style={{ strokeDasharray: 16, strokeDashoffset: 16 }} /></> },
+  especiales: { hoverAnim: "whyusPulse", icon: <><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" className="ai-s1" style={{ strokeDasharray: 80, strokeDashoffset: 80 }} /></> },
 };
 
-function SvcCard({ icon, title, desc, color, hoverAnim }) {
+/* ─── serviceData ─── */
+const serviceData = {
+  importacion: {
+    title: "Importación por Courier",
+    subtitle: "Recepción de envíos desde el exterior hacia Colombia",
+    queEs: "Próximamente disponible.",
+    pasos: [],
+    idealPara: "Próximamente disponible.",
+  },
+  exportacion: {
+    title: "Exportación por Courier",
+    subtitle: "Envíos desde Colombia hacia más de 220 países",
+    queEs: "La exportación por courier es un servicio de envío internacional ágil y seguro que permite enviar documentos y paquetes desde Colombia hacia más de 220 países. Este proceso se caracteriza por su gestión simplificada, cumplimiento normativo y tiempos de tránsito optimizados, garantizando que tu mercancía llegue a destino de forma eficiente.",
+    pasos: [
+      { title: "Recolección de la mercancía", desc: "Recibimos tu paquete en nuestras instalaciones o lo recogemos directamente en tu ubicación." },
+      { title: "Embalaje y verificación", desc: "Realizamos el embalaje adecuado, asegurando la protección del contenido y confirmando peso y dimensiones." },
+      { title: "Generación de guía aérea", desc: "Emitimos la documentación necesaria para el transporte internacional." },
+      { title: "Confirmación y pago del envío", desc: "Se valida la información del envío y se procesa el pago correspondiente." },
+      { title: "Despacho internacional", desc: "Tu paquete es enviado hacia el país de destino a través de nuestra red logística." },
+      { title: "Seguimiento en tiempo real", desc: "Monitoreo 24/7 hasta la entrega final, con visibilidad completa del estado del envío." },
+    ],
+    idealPara: "Empresas, e-commerce y emprendedores que necesitan envíos rápidos y seguros al exterior.",
+  },
+  terrestre: {
+    title: "Envíos Terrestres a Venezuela",
+    subtitle: "Transporte terrestre eficiente",
+    queEs: "Próximamente disponible.",
+    pasos: [],
+    idealPara: "Próximamente disponible.",
+  },
+  casillero: {
+    title: "Casillero Internacional",
+    subtitle: "Direcciones en países estratégicos",
+    queEs: "Próximamente disponible.",
+    pasos: [],
+    idealPara: "Próximamente disponible.",
+  },
+  aereo: {
+    title: "Triangulación de Envíos",
+    subtitle: "Optimización de cadena de suministro",
+    queEs: "Próximamente disponible.",
+    pasos: [],
+    idealPara: "Próximamente disponible.",
+  },
+  especiales: {
+    title: "Operaciones Especiales",
+    subtitle: "Soluciones logísticas especializadas",
+    queEs: "Próximamente disponible.",
+    pasos: [],
+    idealPara: "Próximamente disponible.",
+  },
+};
+
+/* ─── StepItem ─── */
+function StepItem({ paso, index, total }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), index * 120);
+    return () => clearTimeout(t);
+  }, [index]);
+  const isLast = index === total - 1;
+  return (
+    <div style={{
+      display: "flex", gap: 16, marginBottom: isLast ? 0 : 24,
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateX(0)" : "translateX(20px)",
+      transition: "opacity 0.4s ease, transform 0.4s ease",
+    }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+        <div style={{
+          width: 32, height: 32, borderRadius: "50%",
+          background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: visible ? "0 0 12px rgba(27,111,234,0.4)" : "none",
+          transition: "box-shadow 0.4s ease",
+        }}>
+          <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 13, color: "#fff" }}>{index + 1}</span>
+        </div>
+        {!isLast && (
+          <div style={{
+            width: 1, flex: 1, minHeight: 20, marginTop: 4,
+            background: "repeating-linear-gradient(to bottom, rgba(27,111,234,0.3) 0px, rgba(27,111,234,0.3) 4px, transparent 4px, transparent 8px)",
+          }} />
+        )}
+      </div>
+      <div style={{ paddingTop: 4, paddingBottom: isLast ? 0 : 24, flex: 1 }}>
+        <h4 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 600, fontSize: 15, color: "#1d1d1b", margin: "0 0 4px" }}>{paso.title}</h4>
+        <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#6b7280", lineHeight: 1.6, margin: 0 }}>{paso.desc}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ServiceModal ─── */
+function ServiceModal({ serviceKey, onClose }) {
+  const data = serviceData[serviceKey];
+  const [activeTab, setActiveTab] = useState(0);
+  const [closing, setClosing] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [progressKey, setProgressKey] = useState(0);
+  const tabContainerRef = useRef(null);
+  const tabRefs = useRef([]);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const ww = useWW();
+  const isMobile = ww < 768;
+  const tabs = ["Qué es", "Cómo funciona", "Ideal para"];
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") handleClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setActiveTab(t => (t + 1) % 3);
+      setProgressKey(k => k + 1);
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, [activeTab, progressKey]);
+
+  useEffect(() => {
+    const el = tabRefs.current[activeTab];
+    const container = tabContainerRef.current;
+    if (!el || !container) return;
+    const cRect = container.getBoundingClientRect();
+    const tRect = el.getBoundingClientRect();
+    setIndicator({ left: tRect.left - cRect.left, width: tRect.width });
+  }, [activeTab, mounted]);
+
+  const handleClose = () => { setClosing(true); setTimeout(onClose, 300); };
+  const switchTab = (i) => { setActiveTab(i); setProgressKey(k => k + 1); };
+
+  if (!data) return null;
+
+  const waMsg = encodeURIComponent(`Hola, me interesa el servicio de ${data.title}. ¿Me pueden dar más información?`);
+  const waLink = `https://wa.me/573226055431?text=${waMsg}`;
+
+  return (
+    <div
+      style={{
+        position: "fixed", inset: 0, zIndex: 60,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: (mounted && !closing) ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0)",
+        transition: "background 0.3s",
+        padding: isMobile ? 0 : 20,
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
+    >
+      <div style={{
+        background: "#fff",
+        borderRadius: isMobile ? 0 : 20,
+        width: "100%",
+        maxWidth: isMobile ? "100%" : 800,
+        maxHeight: isMobile ? "100dvh" : "85vh",
+        height: isMobile ? "100dvh" : "auto",
+        overflow: "hidden",
+        display: "flex", flexDirection: "column",
+        boxShadow: "0 32px 64px rgba(12,35,64,0.3)",
+        opacity: (mounted && !closing) ? 1 : 0,
+        transform: (mounted && !closing) ? "translateY(0) scale(1)" : "translateY(30px) scale(0.92)",
+        transition: closing
+          ? "opacity 0.3s, transform 0.3s"
+          : "opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+      }}>
+        {/* Header */}
+        <div style={{
+          background: "linear-gradient(135deg, #0c2340 0%, #1b6fea 55%, #00a6ff 100%)",
+          padding: isMobile ? "20px" : "28px 32px",
+          display: "flex", alignItems: "center", gap: 16, flexShrink: 0,
+        }}>
+          <div style={{ color: "#fff", opacity: 0.95, flexShrink: 0 }}>
+            <svg width={isMobile ? 36 : 48} height={isMobile ? 36 : 48} viewBox="0 0 32 32" fill="none">
+              {svcIcons[serviceKey]?.icon}
+            </svg>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: isMobile ? 18 : 24, color: "#fff", margin: 0, lineHeight: 1.2 }}>{data.title}</h2>
+            <p style={{ color: "rgba(255,255,255,0.7)", fontSize: isMobile ? 13 : 14, fontFamily: "'Roboto',sans-serif", margin: "4px 0 0" }}>{data.subtitle}</p>
+          </div>
+          <button onClick={handleClose} style={{
+            background: "rgba(255,255,255,0.12)", border: "none", color: "#fff",
+            width: 36, height: 36, borderRadius: "50%", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 22, lineHeight: 1, flexShrink: 0,
+          }}>×</button>
+        </div>
+
+        {/* Tabs */}
+        <div style={{ background: "#f9fafb", flexShrink: 0 }}>
+          <div ref={tabContainerRef} style={{ display: "flex", padding: "0 32px", position: "relative" }}>
+            {tabs.map((tab, i) => (
+              <button
+                key={i}
+                ref={el => tabRefs.current[i] = el}
+                onClick={() => switchTab(i)}
+                style={{
+                  padding: isMobile ? "12px 14px" : "14px 20px",
+                  background: "none", border: "none",
+                  fontFamily: "'Fira Sans',sans-serif",
+                  fontSize: isMobile ? 13 : 14, fontWeight: 600,
+                  color: activeTab === i ? "#1b6fea" : "#6b7280",
+                  cursor: "pointer", transition: "color 0.25s", whiteSpace: "nowrap",
+                }}
+              >{tab}</button>
+            ))}
+            <div style={{
+              position: "absolute", bottom: 0,
+              left: indicator.left, width: indicator.width,
+              height: 3, background: "linear-gradient(90deg, #1b6fea, #00a6ff)",
+              borderRadius: "2px 2px 0 0",
+              transition: "left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+            }} />
+          </div>
+          <div style={{ height: 2, background: "#e5e7eb", position: "relative", overflow: "hidden" }}>
+            <div key={progressKey} style={{
+              position: "absolute", left: 0, top: 0, height: "100%",
+              background: "linear-gradient(90deg, #1b6fea, #00a6ff)",
+              animation: "progressFill 8s linear forwards",
+            }} />
+          </div>
+        </div>
+
+        {/* Content */}
+        <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "24px 20px" : "32px" }}>
+          {activeTab === 0 && (
+            <div key="tab0" style={{ animation: "tabContentEnter 0.4s ease forwards" }}>
+              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#4b5563", lineHeight: 1.8 }}>{data.queEs}</p>
+            </div>
+          )}
+          {activeTab === 1 && (
+            <div key="tab1" style={{ animation: "tabContentEnter 0.4s ease forwards" }}>
+              {data.pasos.length === 0
+                ? <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#9ca3af" }}>Próximamente disponible.</p>
+                : data.pasos.map((paso, i) => <StepItem key={i} paso={paso} index={i} total={data.pasos.length} />)
+              }
+            </div>
+          )}
+          {activeTab === 2 && (
+            <div key="tab2" style={{ animation: "tabContentEnter 0.4s ease forwards" }}>
+              <div style={{
+                background: "rgba(27,111,234,0.04)", borderRadius: 16,
+                border: "1px solid rgba(27,111,234,0.1)", padding: 24,
+              }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#1b6fea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <polyline points="22 4 12 14.01 9 11.01" stroke="#1b6fea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#4b5563", lineHeight: 1.7, margin: 0 }}>{data.idealPara}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div style={{
+          padding: isMobile ? "16px 20px" : "20px 32px",
+          borderTop: "1px solid #f3f4f6",
+          display: "flex", gap: 12, justifyContent: "flex-end",
+          flexShrink: 0, background: "#fff",
+        }}>
+          <button onClick={handleClose} style={{
+            background: "none", border: "none",
+            fontFamily: "'Fira Sans',sans-serif", fontSize: 15,
+            fontWeight: 600, color: "#6b7280", cursor: "pointer", padding: "10px 20px",
+          }}>Cerrar</button>
+          <a href={waLink} target="_blank" rel="noopener noreferrer" style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            padding: "10px 24px", borderRadius: 50,
+            background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
+            color: "#fff", fontSize: 15, fontWeight: 700,
+            fontFamily: "'Fira Sans',sans-serif", textDecoration: "none",
+            boxShadow: "0 4px 16px rgba(27,111,234,0.3)",
+          }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Cotizar este servicio
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SvcCard({ icon, title, desc, color, hoverAnim, serviceKey, onOpenModal }) {
   const [hov, setHov] = useState(false);
   return (
     <div
@@ -333,11 +631,15 @@ function SvcCard({ icon, title, desc, color, hoverAnim }) {
           transition: "color 0.3s",
         }}>{desc}</p>
       </div>
-      <span style={{
-        fontFamily: "'Fira Sans',sans-serif", fontSize: 14, fontWeight: 600,
-        color: hov ? "#1b6fea" : "#00a6ff",
-        transition: "color 0.3s", display: "inline-flex", alignItems: "center", gap: 4, marginTop: 14,
-      }}>
+      <span
+        onClick={() => onOpenModal && onOpenModal(serviceKey)}
+        style={{
+          fontFamily: "'Fira Sans',sans-serif", fontSize: 14, fontWeight: 600,
+          color: hov ? "#1b6fea" : "#00a6ff",
+          transition: "color 0.3s", display: "inline-flex", alignItems: "center", gap: 4, marginTop: 14,
+          cursor: "pointer",
+        }}
+      >
         Ver más
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "transform 0.3s", transform: hov ? "translateX(3px)" : "translateX(0)" }}><path d="M5 12h14M12 5l7 7-7 7" /></svg>
       </span>
@@ -345,7 +647,7 @@ function SvcCard({ icon, title, desc, color, hoverAnim }) {
   );
 }
 
-function SvcCarousel({ data, gap, visible, pos }) {
+function SvcCarousel({ data, gap, visible, pos, onOpenModal }) {
   const [ref, v] = useInView();
   return (
     <div ref={ref} style={{
@@ -362,7 +664,11 @@ function SvcCarousel({ data, gap, visible, pos }) {
             animation: v ? `${anim} 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 100}ms both` : "none",
             opacity: v ? undefined : 0,
           }}>
-            <SvcCard icon={svcIcons[s.k].icon} title={s.t} desc={s.d} color={s.color} hoverAnim={svcIcons[s.k].hoverAnim} />
+            <SvcCard
+              icon={svcIcons[s.k].icon} title={s.t} desc={s.d}
+              color={s.color} hoverAnim={svcIcons[s.k].hoverAnim}
+              serviceKey={s.k} onOpenModal={onOpenModal}
+            />
           </div>
         );
       })}
@@ -372,6 +678,7 @@ function SvcCarousel({ data, gap, visible, pos }) {
 
 function Services() {
   const [pos, setPos] = useState(0);
+  const [modalKey, setModalKey] = useState(null);
   const ww = useWW();
   const visible = ww < 640 ? 1 : ww < 1024 ? 2 : 4;
   const data = [
@@ -380,7 +687,7 @@ function Services() {
     { k: "terrestre", t: "Envíos Terrestres a Venezuela", d: "Transporte terrestre eficiente y de menor costo con cobertura en distintas ciudades.", color: "#0c2340" },
     { k: "casillero", t: "Casillero Internacional", d: "Direcciones en EE.UU., España y China para consolidar compras y optimizar costos.", color: "#1b6fea" },
     { k: "aereo", t: "Triangulación de Envíos", d: "Envíos directos entre países, reduciendo tiempos de tránsito y evitando procesos intermedios.", color: "#00a6ff" },
-    { k: "importacion", t: "Operaciones Especiales", d: "Exportaciones temporales, reembarques, mercancías peligrosas, calibraciones y reparaciones.", color: "#0c2340" },
+    { k: "especiales", t: "Operaciones Especiales", d: "Exportaciones temporales, reembarques, mercancías peligrosas, calibraciones y reparaciones.", color: "#0c2340" },
   ];
   const maxPos = data.length - visible;
   const canLeft = pos > 0;
@@ -431,7 +738,7 @@ function Services() {
           <ArrowBtn dir={-1} active={canLeft} ww={ww} />
           <ArrowBtn dir={1} active={canRight} ww={ww} />
           <div style={{ overflow: "hidden" }}>
-            <SvcCarousel data={data} gap={gap} visible={visible} pos={pos} />
+            <SvcCarousel data={data} gap={gap} visible={visible} pos={pos} onOpenModal={setModalKey} />
           </div>
           {/* Dots indicator */}
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 24 }}>
@@ -445,6 +752,7 @@ function Services() {
           </div>
         </div>
       </div>
+      {modalKey && <ServiceModal serviceKey={modalKey} onClose={() => setModalKey(null)} />}
     </section>
   );
 }
@@ -1861,4 +2169,4 @@ function AccessibilityWidget() {
   );
 }
 
-export { Nav, Hero, Services, About, WhyUs, ShowcaseSlider, Process, CTA, PaymentMarquee, ContactForm, Footer, WF, VideoCard, AccessibilityWidget };
+export { Nav, Hero, Services, About, WhyUs, ShowcaseSlider, Process, CTA, PaymentMarquee, ContactForm, Footer, WF, VideoCard, AccessibilityWidget, ServiceModal };
