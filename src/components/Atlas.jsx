@@ -479,13 +479,13 @@ function ServiceModal({ serviceKey, onClose }) {
       const rect = card.getBoundingClientRect();
       const dx = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
       const dy = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-      const rx = -dy * 8;
-      const ry = dx * 8;
+      const rx = -dy * 6;
+      const ry = dx * 6;
       tiltRef.current.rx = rx;
       tiltRef.current.ry = ry;
-      const sx = -ry * 2;
-      const sy = Math.abs(rx) * 1.5 + 20;
-      card.style.transition = "transform 0.1s ease-out, box-shadow 0.1s ease-out";
+      const sx = -ry * 1.5;
+      const sy = Math.abs(rx) * 1.2 + 20;
+      card.style.transition = "transform 0.08s linear, box-shadow 0.12s ease-out";
       card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
       card.style.boxShadow = `${sx}px ${sy}px 60px rgba(0,166,255,0.22), 0 8px 32px rgba(12,35,64,0.2)`;
       const ox = ((e.clientX - rect.left) / rect.width) * 100;
@@ -518,23 +518,28 @@ function ServiceModal({ serviceKey, onClose }) {
     setFlipping(true);
     tiltRef.current.paused = true;
     const card = cardRef.current;
+    // Phase 1: collapse horizontally (like a card turning on its edge)
     if (card) {
-      card.style.transition = "transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s ease";
-      card.style.transform = "rotateX(0deg) rotateY(90deg)";
-      card.style.boxShadow = "0 20px 60px rgba(0,166,255,0.3), 0 8px 24px rgba(12,35,64,0.2)";
+      card.style.transition = "transform 0.2s cubic-bezier(0.4,0,1,1), filter 0.15s ease, box-shadow 0.2s ease";
+      card.style.transform = "scaleX(0.015)";
+      card.style.filter = "brightness(1.6) saturate(1.5)";
+      card.style.boxShadow = "0 20px 70px rgba(0,166,255,0.45)";
     }
     setTimeout(() => {
+      // Swap content at the invisible midpoint
       setActiveTab(i);
       setDisplayTab(i);
       setContentReady(false);
+      // Phase 2: expand back with new content
       if (card) {
-        card.style.transition = "transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s ease";
-        card.style.transform = "rotateX(0deg) rotateY(0deg)";
+        card.style.transition = "transform 0.24s cubic-bezier(0,0,0.2,1), filter 0.22s ease, box-shadow 0.3s ease";
+        card.style.transform = "scaleX(1)";
+        card.style.filter = "brightness(1) saturate(1)";
         card.style.boxShadow = "0 24px 60px rgba(12,35,64,0.32), 0 8px 24px rgba(12,35,64,0.12)";
       }
       requestAnimationFrame(() => setContentReady(true));
-      setTimeout(() => { setFlipping(false); tiltRef.current.paused = false; }, 300);
-    }, 280);
+      setTimeout(() => { setFlipping(false); tiltRef.current.paused = false; }, 280);
+    }, 205);
   };
 
   if (!data) return null;
