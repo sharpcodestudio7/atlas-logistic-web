@@ -475,7 +475,6 @@ function ServiceModal({ serviceKey, onClose }) {
   const ww = useWW();
   const isMobile = ww < 768;
   const tabs = ["¿Qué es?", "¿Cómo funciona?", "¿Ideal para?"];
-  const tiltRef = useRef({ rx: 0, ry: 0, paused: false });
   const rainbowRef = useRef(null);
   const holoRef = useRef(null);
   const [mouseOver, setMouseOver] = useState(false);
@@ -499,23 +498,12 @@ function ServiceModal({ serviceKey, onClose }) {
   const handleClose = () => { setClosing(true); setTimeout(onClose, 300); };
 
   const handleMouseMove = (e) => {
-    if (isMobile || tiltRef.current.paused) return;
+    if (isMobile) return;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(() => {
       const card = cardRef.current;
       if (!card) return;
       const rect = card.getBoundingClientRect();
-      const dx = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
-      const dy = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-      const rx = -dy * 6;
-      const ry = dx * 6;
-      tiltRef.current.rx = rx;
-      tiltRef.current.ry = ry;
-      const sx = -ry * 1.5;
-      const sy = Math.abs(rx) * 1.2 + 20;
-      card.style.transition = "transform 0.08s linear, box-shadow 0.12s ease-out";
-      card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-      card.style.boxShadow = `${sx}px ${sy}px 60px rgba(0,166,255,0.22), 0 8px 32px rgba(12,35,64,0.2)`;
       const ox = ((e.clientX - rect.left) / rect.width) * 100;
       const oy = ((e.clientY - rect.top) / rect.height) * 100;
       if (holoRef.current) {
@@ -528,14 +516,6 @@ function ServiceModal({ serviceKey, onClose }) {
 
   const handleMouseLeave = () => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    tiltRef.current.rx = 0;
-    tiltRef.current.ry = 0;
-    const card = cardRef.current;
-    if (card) {
-      card.style.transition = "transform 0.5s ease, box-shadow 0.5s ease";
-      card.style.transform = "rotateX(0deg) rotateY(0deg)";
-      card.style.boxShadow = "0 24px 60px rgba(12,35,64,0.32), 0 8px 24px rgba(12,35,64,0.12)";
-    }
     if (holoRef.current) holoRef.current.style.opacity = "0";
     if (rainbowRef.current) rainbowRef.current.style.opacity = "0";
     setMouseOver(false);
@@ -599,15 +579,12 @@ function ServiceModal({ serviceKey, onClose }) {
             overflow: "hidden",
             position: "relative",
             background: "#fff",
-            willChange: "transform",
             border: `1px solid rgba(0,166,255,${mouseOver ? 0.38 : 0.14})`,
             boxShadow: "0 24px 60px rgba(12,35,64,0.32), 0 8px 24px rgba(12,35,64,0.12)",
             minHeight: 480,
             display: "flex",
             flexDirection: "column",
             transition: "border-color 0.35s ease",
-            transformStyle: "preserve-3d",
-            backfaceVisibility: "hidden",
           }}
         >
           {/* Holographic shine overlay */}
