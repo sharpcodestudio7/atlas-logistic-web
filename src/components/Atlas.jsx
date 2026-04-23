@@ -438,7 +438,6 @@ function ServiceModal({ serviceKey, onClose }) {
   const data = serviceData[serviceKey];
   const [activeTab, setActiveTab] = useState(0);
   const [displayTab, setDisplayTab] = useState(0);
-  const [flipping, setFlipping] = useState(false);
   const [contentReady, setContentReady] = useState(true);
   const [closing, setClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -514,32 +513,13 @@ function ServiceModal({ serviceKey, onClose }) {
   };
 
   const switchTab = (i) => {
-    if (i === activeTab || flipping) return;
-    setFlipping(true);
-    tiltRef.current.paused = true;
-    const card = cardRef.current;
-    // Phase 1: collapse horizontally (like a card turning on its edge)
-    if (card) {
-      card.style.transition = "transform 0.2s cubic-bezier(0.4,0,1,1), filter 0.15s ease, box-shadow 0.2s ease";
-      card.style.transform = "scaleX(0.015)";
-      card.style.filter = "brightness(1.6) saturate(1.5)";
-      card.style.boxShadow = "0 20px 70px rgba(0,166,255,0.45)";
-    }
+    if (i === activeTab) return;
+    setActiveTab(i);
+    setContentReady(false);
     setTimeout(() => {
-      // Swap content at the invisible midpoint
-      setActiveTab(i);
       setDisplayTab(i);
-      setContentReady(false);
-      // Phase 2: expand back with new content
-      if (card) {
-        card.style.transition = "transform 0.24s cubic-bezier(0,0,0.2,1), filter 0.22s ease, box-shadow 0.3s ease";
-        card.style.transform = "scaleX(1)";
-        card.style.filter = "brightness(1) saturate(1)";
-        card.style.boxShadow = "0 24px 60px rgba(12,35,64,0.32), 0 8px 24px rgba(12,35,64,0.12)";
-      }
       requestAnimationFrame(() => setContentReady(true));
-      setTimeout(() => { setFlipping(false); tiltRef.current.paused = false; }, 280);
-    }, 205);
+    }, 170);
   };
 
   if (!data) return null;
@@ -716,8 +696,11 @@ function ServiceModal({ serviceKey, onClose }) {
           }}>
             <div style={{
               opacity: contentReady ? 1 : 0,
-              transform: contentReady ? "translateY(0)" : "translateY(10px)",
-              transition: contentReady ? "opacity 0.38s ease 0.04s, transform 0.38s ease 0.04s" : "none",
+              transform: contentReady ? "translateY(0) scale(1)" : "translateY(14px) scale(0.98)",
+              filter: contentReady ? "blur(0px)" : "blur(4px)",
+              transition: contentReady
+                ? "opacity 0.32s cubic-bezier(0.2,0,0,1), transform 0.35s cubic-bezier(0.2,0,0,1), filter 0.28s ease"
+                : "opacity 0.16s ease, transform 0.16s ease, filter 0.16s ease",
             }}>
               {/* ¿Qué es? */}
               {displayTab === 0 && (
