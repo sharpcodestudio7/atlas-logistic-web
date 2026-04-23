@@ -283,8 +283,20 @@ body {
 
 /* ===== SERVICE MODAL ===== */
 @keyframes tabEnter {
-  from { opacity: 0; transform: translateX(40px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(48px) scale(0.97); filter: blur(5px); }
+  to   { opacity: 1; transform: translateX(0)    scale(1);    filter: blur(0);   }
+}
+@keyframes tabEnterLeft {
+  from { opacity: 0; transform: translateX(-48px) scale(0.97); filter: blur(5px); }
+  to   { opacity: 1; transform: translateX(0)     scale(1);    filter: blur(0);   }
+}
+
+/* Static icon for modal header (bypasses draw-on animation) */
+.modal-icon-static .ai-s1,
+.modal-icon-static .ai-s2,
+.modal-icon-static .ai-s3 {
+  stroke-dashoffset: 0 !important;
+  opacity: 1 !important;
 }
 @keyframes iconBounceIn {
   from { transform: scale(0); }

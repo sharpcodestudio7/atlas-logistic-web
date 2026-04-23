@@ -393,6 +393,7 @@ function ServiceModal({ serviceKey, onClose }) {
   const [activeTab, setActiveTab] = useState(0);
   const [contentTab, setContentTab] = useState(0);
   const [tabPhase, setTabPhase] = useState("visible");
+  const [tabDirection, setTabDirection] = useState(1);
   const [closing, setClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
   const tabContainerRef = useRef(null);
@@ -400,7 +401,7 @@ function ServiceModal({ serviceKey, onClose }) {
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const ww = useWW();
   const isMobile = ww < 768;
-  const tabs = ["Qué es", "Cómo funciona", "Ideal para"];
+  const tabs = ["¿Qué es?", "¿Cómo funciona?", "¿Ideal para?"];
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
@@ -431,9 +432,11 @@ function ServiceModal({ serviceKey, onClose }) {
 
   const switchTab = (i) => {
     if (i === contentTab) return;
+    const dir = i > contentTab ? 1 : -1;
+    setTabDirection(dir);
     setActiveTab(i);
     setTabPhase("exiting");
-    setTimeout(() => { setContentTab(i); setTabPhase("visible"); }, 220);
+    setTimeout(() => { setContentTab(i); setTabPhase("visible"); }, 230);
   };
 
   if (!data) return null;
@@ -468,8 +471,7 @@ function ServiceModal({ serviceKey, onClose }) {
         height: isMobile ? "100dvh" : "auto",
         overflow: "hidden",
         display: "flex", flexDirection: "column",
-        border: "1px solid rgba(27,111,234,0.12)",
-        boxShadow: "0 32px 64px rgba(12,35,64,0.3), 0 0 0 1px rgba(27,111,234,0.08), inset 0 1px 0 rgba(255,255,255,0.6)",
+        boxShadow: "0 40px 80px rgba(12,35,64,0.35), 0 8px 24px rgba(12,35,64,0.15)",
         opacity: (mounted && !closing) ? 1 : 0,
         transform: closing
           ? "translateY(20px) scale(0.95)"
@@ -509,7 +511,7 @@ function ServiceModal({ serviceKey, onClose }) {
             color: "#fff",
             position: "relative", zIndex: 1,
           }}>
-            <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+            <svg className="modal-icon-static" width="36" height="36" viewBox="0 0 32 32" fill="none">
               {svcIcons[serviceKey]?.icon}
             </svg>
           </div>
@@ -570,9 +572,16 @@ function ServiceModal({ serviceKey, onClose }) {
         <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "24px 20px" : "32px" }}>
           <div style={{
             opacity: tabPhase === "exiting" ? 0 : 1,
-            transform: tabPhase === "exiting" ? "translateX(-40px)" : "translateX(0)",
-            transition: tabPhase === "exiting" ? "opacity 0.22s ease, transform 0.22s ease" : "none",
-            animation: tabPhase === "visible" ? "tabEnter 0.35s ease 0.05s both" : "none",
+            transform: tabPhase === "exiting"
+              ? `translateX(${tabDirection * -52}px) scale(0.96)`
+              : "translateX(0) scale(1)",
+            filter: tabPhase === "exiting" ? "blur(5px)" : "blur(0px)",
+            transition: tabPhase === "exiting"
+              ? "opacity 0.2s cubic-bezier(0.4,0,1,1), transform 0.22s cubic-bezier(0.4,0,1,1), filter 0.2s ease"
+              : "none",
+            animation: tabPhase === "visible"
+              ? `${tabDirection === 1 ? "tabEnter" : "tabEnterLeft"} 0.38s cubic-bezier(0.2,0,0,1) 0.04s both`
+              : "none",
           }}>
 
             {/* Tab 0 — Qué es */}
