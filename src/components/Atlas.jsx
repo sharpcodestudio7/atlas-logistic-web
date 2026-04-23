@@ -1791,7 +1791,7 @@ function ContactForm() {
       newsletter: form.novedadesCheck ? "Sí" : "No",
     };
     try {
-      await fetch("https://script.google.com/a/macros/atlaslogistic.com.co/s/AKfycbw3i-8JSWVAz1c0bANxsot5nXaZ0OtKumtUUWt_Ab7W3FDzyyf-m4bB0eaIyv6pGXz_xQ/exec", {
+      await fetch("https://script.google.com/macros/s/AKfycbwHCtH0QYf1nwTgfjiDnzlSk6bM-uXKbr-sqRS0k4lPlyeg6PhxCqlrD6jlj0t5DD7S/exec", {
         method: "POST", mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
