@@ -18,10 +18,10 @@ const getInitials = (nombre) => {
 };
 
 const equipo = [
-  { nombre: "Hidally Soler", cargo: "Gerente Administrativa", especialidad: "Dirección administrativa, control financiero y gestión de procesos internos, asegurando la eficiencia operativa y el cumplimiento estratégico de la compañía.", img: "/images/team/Marlen.png" },
-  { nombre: "Brayan Delgado", cargo: "Coordinador de Operaciones", especialidad: "Gestión y coordinación de operaciones logísticas internacionales bajo modalidad courier, optimizando tiempos de tránsito, procesos aduaneros y trazabilidad de envíos.", img: "/images/team/Hombre1.png" },
-  { nombre: "Viviana Virviescas", cargo: "Directora Comercial Corporativa", especialidad: "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.", img: "/images/team/Mujer 1.png" },
-  { nombre: "Ashlie Pulgarín", cargo: "Ejecutiva Comercial Senior", especialidad: "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.", img: "/images/team/Ashley.png" },
+  { nombre: "Hidally Soler", cargo: "Gerente Administrativa", especialidad: "Dirección administrativa, control financiero y gestión de procesos internos, asegurando la eficiencia operativa y el cumplimiento estratégico de la compañía.", experiencia: "12 años", img: "/images/team/Marlen.png" },
+  { nombre: "Brayan Delgado", cargo: "Coordinador de Operaciones", especialidad: "Gestión y coordinación de operaciones logísticas internacionales bajo modalidad courier, optimizando tiempos de tránsito, procesos aduaneros y trazabilidad de envíos.", experiencia: "4 años", img: "/images/team/Hombre1.png" },
+  { nombre: "Viviana Virviescas", cargo: "Directora Comercial Corporativa", especialidad: "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.", experiencia: "10 años", img: "/images/team/Mujer 1.png" },
+  { nombre: "Ashlie Pulgarín", cargo: "Ejecutiva Comercial Senior", especialidad: "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.", experiencia: "2 años", img: "/images/team/Ashley.png" },
 ];
 
 /* ─── helpers ─── */
@@ -502,8 +502,8 @@ function GroupPhoto() {
 function StatsStrip() {
   const [ref, visible] = useInView(0.3);
   const stats = [
-    { prefix: "", end: 8,   suffix: "",  label: "Profesionales" },
-    { prefix: "+", end: 56,  suffix: "",  label: "Años de experiencia combinada" },
+    { prefix: "", end: 4,   suffix: "",  label: "Profesionales" },
+    { prefix: "+", end: 28,  suffix: "",  label: "Años de experiencia combinada" },
     { prefix: "", end: 5,   suffix: "",  label: "Áreas especializadas" },
   ];
   return (
@@ -589,8 +589,8 @@ function AnimCounter({ end, duration = 1200, prefix = "" }) {
 function StatsBanner() {
   const [ref, visible] = useInView(0.5);
   const stats = [
-    { prefix: "", end: 8, duration: 800, label: "profesionales" },
-    { prefix: "+", end: 56, duration: 1200, label: "años de experiencia combinada" },
+    { prefix: "", end: 4, duration: 800, label: "profesionales" },
+    { prefix: "+", end: 28, duration: 1200, label: "años de experiencia combinada" },
     { prefix: "", end: 5, duration: 600, label: "áreas especializadas" },
   ];
   return (
@@ -655,7 +655,7 @@ function TeamGrid() {
         {/* Section title */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
           <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", color: "#ffffff", marginBottom: 14 }}>
-            Las personas detrás de cada envío
+            Conoce a nuestros líderes de área
           </h2>
           <div style={{ display: "flex", justifyContent: "center", gap: 6, alignItems: "center" }}>
             <div style={{ height: 3, width: 32, background: "#1b6fea", borderRadius: 2 }} />
