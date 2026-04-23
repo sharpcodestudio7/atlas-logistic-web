@@ -1364,7 +1364,7 @@ function ShowcaseSlider() {
     { src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80", fit: "cover", pos: "center 30%" },
     { src: "/images/exportaciones.png",  fit: "cover", pos: "center center" },
     { src: "/images/casillero.png",      fit: "cover", pos: "center center" },
-    { src: "/images/redglobal.png",      fit: "cover", pos: "center center" },
+    { src: "/images/redglobal.png",      fit: "cover", pos: "left top" },
   ];
   const slides = [
     { tag: "IMPORTACIONES", title: "Tu mercancía en Colombia, sin complicaciones", desc: "Gestionamos cada importación desde el origen hasta tu puerta. Trámites aduaneros, liberación express y seguimiento en tiempo real para que tú solo te preocupes por vender.", statNum: "3-5 días", statLabel: "Tiempo promedio de entrega aérea" },
