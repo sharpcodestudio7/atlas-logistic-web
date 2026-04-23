@@ -344,36 +344,42 @@ const serviceData = {
 /* ─── StepItem ─── */
 function StepItem({ paso, index, total }) {
   const [visible, setVisible] = useState(false);
+  const delay = index * 150;
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), index * 120);
+    const t = setTimeout(() => setVisible(true), delay);
     return () => clearTimeout(t);
-  }, [index]);
+  }, [delay]);
   const isLast = index === total - 1;
   return (
-    <div style={{
-      display: "flex", gap: 16, marginBottom: isLast ? 0 : 24,
-      opacity: visible ? 1 : 0,
-      transform: visible ? "translateX(0)" : "translateX(20px)",
-      transition: "opacity 0.4s ease, transform 0.4s ease",
-    }}>
+    <div style={{ display: "flex", gap: 16, marginBottom: isLast ? 0 : 8 }}>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
         <div style={{
           width: 32, height: 32, borderRadius: "50%",
           background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
           display: "flex", alignItems: "center", justifyContent: "center",
           boxShadow: visible ? "0 0 12px rgba(27,111,234,0.4)" : "none",
-          transition: "box-shadow 0.4s ease",
+          transform: visible ? "scale(1)" : "scale(0)",
+          transition: `transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) ${delay}ms, box-shadow 0.4s ease ${delay}ms`,
+          flexShrink: 0,
         }}>
           <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 13, color: "#fff" }}>{index + 1}</span>
         </div>
         {!isLast && (
           <div style={{
-            width: 1, flex: 1, minHeight: 20, marginTop: 4,
+            width: 1, minHeight: 32, marginTop: 4, flex: 1,
             background: "repeating-linear-gradient(to bottom, rgba(27,111,234,0.3) 0px, rgba(27,111,234,0.3) 4px, transparent 4px, transparent 8px)",
+            transformOrigin: "top",
+            transform: visible ? "scaleY(1)" : "scaleY(0)",
+            transition: `transform 0.5s ease ${delay + 200}ms`,
           }} />
         )}
       </div>
-      <div style={{ paddingTop: 4, paddingBottom: isLast ? 0 : 24, flex: 1 }}>
+      <div style={{
+        paddingTop: 4, paddingBottom: isLast ? 0 : 28, flex: 1,
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateX(0)" : "translateX(20px)",
+        transition: `opacity 0.4s ease ${delay + 80}ms, transform 0.4s ease ${delay + 80}ms`,
+      }}>
         <h4 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 600, fontSize: 15, color: "#1d1d1b", margin: "0 0 4px" }}>{paso.title}</h4>
         <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#6b7280", lineHeight: 1.6, margin: 0 }}>{paso.desc}</p>
       </div>
@@ -385,9 +391,10 @@ function StepItem({ paso, index, total }) {
 function ServiceModal({ serviceKey, onClose }) {
   const data = serviceData[serviceKey];
   const [activeTab, setActiveTab] = useState(0);
+  const [contentTab, setContentTab] = useState(0);
+  const [tabPhase, setTabPhase] = useState("visible");
   const [closing, setClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [progressKey, setProgressKey] = useState(0);
   const tabContainerRef = useRef(null);
   const tabRefs = useRef([]);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
@@ -412,14 +419,6 @@ function ServiceModal({ serviceKey, onClose }) {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setActiveTab(t => (t + 1) % 3);
-      setProgressKey(k => k + 1);
-    }, 8000);
-    return () => clearTimeout(timer);
-  }, [activeTab, progressKey]);
-
-  useEffect(() => {
     const el = tabRefs.current[activeTab];
     const container = tabContainerRef.current;
     if (!el || !container) return;
@@ -429,20 +428,33 @@ function ServiceModal({ serviceKey, onClose }) {
   }, [activeTab, mounted]);
 
   const handleClose = () => { setClosing(true); setTimeout(onClose, 300); };
-  const switchTab = (i) => { setActiveTab(i); setProgressKey(k => k + 1); };
+
+  const switchTab = (i) => {
+    if (i === contentTab) return;
+    setActiveTab(i);
+    setTabPhase("exiting");
+    setTimeout(() => { setContentTab(i); setTabPhase("visible"); }, 220);
+  };
 
   if (!data) return null;
 
   const waMsg = encodeURIComponent(`Hola, me interesa el servicio de ${data.title}. ¿Me pueden dar más información?`);
   const waLink = `https://wa.me/573226055431?text=${waMsg}`;
 
+  const headerParticles = [
+    { size: 80, top: "8%", left: "4%", delay: 0, dur: 7 },
+    { size: 45, top: "55%", right: "6%", delay: 1.5, dur: 9 },
+    { size: 60, bottom: "10%", left: "18%", delay: 0.8, dur: 6 },
+    { size: 28, top: "20%", right: "22%", delay: 2.2, dur: 8 },
+  ];
+
   return (
     <div
       style={{
         position: "fixed", inset: 0, zIndex: 60,
         display: "flex", alignItems: "center", justifyContent: "center",
-        background: (mounted && !closing) ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0)",
-        transition: "background 0.3s",
+        background: (mounted && !closing) ? "rgba(0,0,0,0.65)" : "rgba(0,0,0,0)",
+        transition: closing ? "background 0.2s" : "background 0.3s",
         padding: isMobile ? 0 : 20,
       }}
       onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
@@ -456,38 +468,78 @@ function ServiceModal({ serviceKey, onClose }) {
         height: isMobile ? "100dvh" : "auto",
         overflow: "hidden",
         display: "flex", flexDirection: "column",
-        boxShadow: "0 32px 64px rgba(12,35,64,0.3)",
+        border: "1px solid rgba(27,111,234,0.12)",
+        boxShadow: "0 32px 64px rgba(12,35,64,0.3), 0 0 0 1px rgba(27,111,234,0.08), inset 0 1px 0 rgba(255,255,255,0.6)",
         opacity: (mounted && !closing) ? 1 : 0,
-        transform: (mounted && !closing) ? "translateY(0) scale(1)" : "translateY(30px) scale(0.92)",
+        transform: closing
+          ? "translateY(20px) scale(0.95)"
+          : (mounted ? "translateY(0) scale(1)" : "translateY(30px) scale(0.92)"),
         transition: closing
-          ? "opacity 0.3s, transform 0.3s"
+          ? "opacity 0.25s ease, transform 0.25s ease"
           : "opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
       }}>
-        {/* Header */}
+
+        {/* ── Header ── */}
         <div style={{
           background: "linear-gradient(135deg, #0c2340 0%, #1b6fea 55%, #00a6ff 100%)",
           padding: isMobile ? "20px" : "28px 32px",
-          display: "flex", alignItems: "center", gap: 16, flexShrink: 0,
+          display: "flex", alignItems: "center", gap: 20, flexShrink: 0,
+          position: "relative", overflow: "hidden",
         }}>
-          <div style={{ color: "#fff", opacity: 0.95, flexShrink: 0 }}>
-            <svg width={isMobile ? 36 : 48} height={isMobile ? 36 : 48} viewBox="0 0 32 32" fill="none">
+          {/* Floating particles */}
+          {headerParticles.map((p, i) => (
+            <div key={i} style={{
+              position: "absolute",
+              width: p.size, height: p.size, borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%)",
+              top: p.top, left: p.left, right: p.right, bottom: p.bottom,
+              animation: `modalParticleFloat ${p.dur}s ease-in-out ${p.delay}s infinite`,
+              pointerEvents: "none",
+            }} />
+          ))}
+
+          {/* Icon bubble */}
+          <div style={{
+            width: 56, height: 56, borderRadius: "50%", flexShrink: 0,
+            background: "rgba(255,255,255,0.15)",
+            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.25)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            animation: "iconBounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both, iconPulse 2.5s ease-in-out 0.9s infinite",
+            color: "#fff",
+            position: "relative", zIndex: 1,
+          }}>
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
               {svcIcons[serviceKey]?.icon}
             </svg>
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: isMobile ? 18 : 24, color: "#fff", margin: 0, lineHeight: 1.2 }}>{data.title}</h2>
-            <p style={{ color: "rgba(255,255,255,0.7)", fontSize: isMobile ? 13 : 14, fontFamily: "'Roboto',sans-serif", margin: "4px 0 0" }}>{data.subtitle}</p>
+
+          {/* Title + subtitle */}
+          <div style={{ flex: 1, minWidth: 0, position: "relative", zIndex: 1 }}>
+            <h2 style={{
+              fontFamily: "'Fira Sans',sans-serif", fontWeight: 700,
+              fontSize: isMobile ? 18 : 24, color: "#fff", margin: 0, lineHeight: 1.2,
+              animation: "headerTextSlide 0.4s ease 0.3s both",
+            }}>{data.title}</h2>
+            <p style={{
+              color: "rgba(255,255,255,0.72)", fontSize: isMobile ? 13 : 14,
+              fontFamily: "'Roboto',sans-serif", margin: "5px 0 0",
+              animation: "headerTextSlide 0.4s ease 0.4s both",
+            }}>{data.subtitle}</p>
           </div>
+
+          {/* Close button */}
           <button onClick={handleClose} style={{
-            background: "rgba(255,255,255,0.12)", border: "none", color: "#fff",
-            width: 36, height: 36, borderRadius: "50%", cursor: "pointer",
+            background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.18)",
+            color: "#fff", width: 36, height: 36, borderRadius: "50%", cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 22, lineHeight: 1, flexShrink: 0,
+            fontSize: 20, lineHeight: 1, flexShrink: 0, position: "relative", zIndex: 1,
+            transition: "background 0.2s",
           }}>×</button>
         </div>
 
-        {/* Tabs */}
-        <div style={{ background: "#f9fafb", flexShrink: 0 }}>
+        {/* ── Tabs ── */}
+        <div style={{ background: "#f9fafb", flexShrink: 0, borderBottom: "1px solid #e5e7eb" }}>
           <div ref={tabContainerRef} style={{ display: "flex", padding: "0 32px", position: "relative" }}>
             {tabs.map((tab, i) => (
               <button
@@ -509,52 +561,86 @@ function ServiceModal({ serviceKey, onClose }) {
               left: indicator.left, width: indicator.width,
               height: 3, background: "linear-gradient(90deg, #1b6fea, #00a6ff)",
               borderRadius: "2px 2px 0 0",
-              transition: "left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-            }} />
-          </div>
-          <div style={{ height: 2, background: "#e5e7eb", position: "relative", overflow: "hidden" }}>
-            <div key={progressKey} style={{
-              position: "absolute", left: 0, top: 0, height: "100%",
-              background: "linear-gradient(90deg, #1b6fea, #00a6ff)",
-              animation: "progressFill 8s linear forwards",
+              transition: "left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
             }} />
           </div>
         </div>
 
-        {/* Content */}
+        {/* ── Content ── */}
         <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? "24px 20px" : "32px" }}>
-          {activeTab === 0 && (
-            <div key="tab0" style={{ animation: "tabContentEnter 0.4s ease forwards" }}>
-              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#4b5563", lineHeight: 1.8 }}>{data.queEs}</p>
-            </div>
-          )}
-          {activeTab === 1 && (
-            <div key="tab1" style={{ animation: "tabContentEnter 0.4s ease forwards" }}>
-              {data.pasos.length === 0
-                ? <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#9ca3af" }}>Próximamente disponible.</p>
-                : data.pasos.map((paso, i) => <StepItem key={i} paso={paso} index={i} total={data.pasos.length} />)
-              }
-            </div>
-          )}
-          {activeTab === 2 && (
-            <div key="tab2" style={{ animation: "tabContentEnter 0.4s ease forwards" }}>
+          <div style={{
+            opacity: tabPhase === "exiting" ? 0 : 1,
+            transform: tabPhase === "exiting" ? "translateX(-40px)" : "translateX(0)",
+            transition: tabPhase === "exiting" ? "opacity 0.22s ease, transform 0.22s ease" : "none",
+            animation: tabPhase === "visible" ? "tabEnter 0.35s ease 0.05s both" : "none",
+          }}>
+
+            {/* Tab 0 — Qué es */}
+            {contentTab === 0 && (
+              <p style={{
+                fontFamily: "'Roboto',sans-serif", fontSize: 15,
+                color: "#4b5563", lineHeight: 1.85, margin: 0,
+                animation: "tabEnter 0.5s ease 0.1s both",
+              }}>{data.queEs}</p>
+            )}
+
+            {/* Tab 1 — Cómo funciona */}
+            {contentTab === 1 && (
+              <div style={{ position: "relative" }}>
+                {data.pasos.length === 0
+                  ? <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#9ca3af" }}>Próximamente disponible.</p>
+                  : <>
+                    {data.pasos.map((paso, i) => (
+                      <StepItem key={i} paso={paso} index={i} total={data.pasos.length} />
+                    ))}
+                    {/* Timeline shimmer after all steps */}
+                    <div style={{
+                      position: "absolute", left: 16, top: 0, width: 1, height: "100%",
+                      overflow: "hidden", pointerEvents: "none",
+                    }}>
+                      <div style={{
+                        position: "absolute", left: 0, width: "100%",
+                        height: "30%",
+                        background: "linear-gradient(to bottom, transparent, rgba(0,166,255,0.6), transparent)",
+                        animation: `timelineShimmer 1.2s ease ${data.pasos.length * 150 + 500}ms both`,
+                      }} />
+                    </div>
+                  </>
+                }
+              </div>
+            )}
+
+            {/* Tab 2 — Ideal para */}
+            {contentTab === 2 && (
               <div style={{
                 background: "rgba(27,111,234,0.04)", borderRadius: 16,
                 border: "1px solid rgba(27,111,234,0.1)", padding: 24,
+                animation: "idealBlockIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both",
               }}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
-                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#1b6fea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    <polyline points="22 4 12 14.01 9 11.01" stroke="#1b6fea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+                    <path
+                      d="M22 11.08V12a10 10 0 11-5.93-9.14"
+                      stroke="#1b6fea" strokeWidth="2.2" strokeLinecap="round"
+                      strokeDasharray="40" strokeDashoffset="40"
+                      style={{ animation: "drawCheck 0.6s ease 0.2s forwards" }}
+                    />
+                    <polyline
+                      points="22 4 12 14.01 9 11.01"
+                      stroke="#1b6fea" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+                      fill="none"
+                      strokeDasharray="24" strokeDashoffset="24"
+                      style={{ animation: "drawCheck 0.4s ease 0.55s forwards" }}
+                    />
                   </svg>
-                  <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#4b5563", lineHeight: 1.7, margin: 0 }}>{data.idealPara}</p>
+                  <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#4b5563", lineHeight: 1.75, margin: 0 }}>{data.idealPara}</p>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* Footer */}
+        {/* ── Footer ── */}
         <div style={{
           padding: isMobile ? "16px 20px" : "20px 32px",
           borderTop: "1px solid #f3f4f6",
