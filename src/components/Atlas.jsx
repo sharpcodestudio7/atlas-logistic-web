@@ -294,16 +294,16 @@ function Hero() {
     return () => video.removeEventListener('loadeddata', handler);
   }, []);
   return (
-    <section id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", background: "#0c2340" }}>
+    <section id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", backgroundImage: "url('/images/hero-poster.jpg')", backgroundSize: "cover", backgroundPosition: "center center" }}>
       <video
         ref={videoRef}
         autoPlay loop muted playsInline preload="auto"
-        poster="/images/banner.webp"
+        poster="/images/hero-poster.jpg"
         style={{
           position: "absolute", inset: 0, width: "100%", height: "100%",
           objectFit: "cover", objectPosition: "center",
           opacity: videoLoaded ? 1 : 0,
-          transition: "opacity 0.8s ease-in-out",
+          transition: "opacity 0.3s ease-in-out",
         }}
       >
         <source src="/videos/video_light.mp4" type="video/mp4" />
