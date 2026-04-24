@@ -335,6 +335,7 @@ function Hero() {
 function GroupPhoto() {
   const [sectionRef, visible] = useInView(0.1);
   const [phase, setPhase] = useState("hidden");
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -342,6 +343,13 @@ function GroupPhoto() {
     const t2 = setTimeout(() => setPhase("flowing"), 3800);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [visible]);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const glows = [
     { w: 260, l: "4%",  t: "8%",  c: "rgba(0,166,255,0.07)",  d: 0,   dur: 7  },
@@ -473,11 +481,20 @@ function GroupPhoto() {
       </svg>
 
       {/* Group photo — zIndex 2, above routes */}
-      <div style={{ position: "relative", zIndex: 2, width: "100%", minHeight: 650, height: "70vh" }}>
+      <div style={{
+        position: "relative", zIndex: 2, width: "100%",
+        ...(isMobile ? {} : { minHeight: 650, height: "70vh" }),
+      }}>
         <img
           src="/images/team/Grupal.png"
           alt="Equipo Atlas Logistic"
-          style={{
+          style={isMobile ? {
+            display: "block",
+            width: "100%", height: "auto",
+            objectFit: "contain",
+            opacity: visible ? 1 : 0,
+            transition: "opacity 1.2s 0.4s ease",
+          } : {
             position: "absolute", inset: 0,
             width: "100%", height: "100%",
             objectFit: "contain", objectPosition: "center center",
@@ -491,11 +508,13 @@ function GroupPhoto() {
           position: "absolute", inset: 0, pointerEvents: "none",
           background: "linear-gradient(to right, rgba(12,35,64,0.75) 0%, transparent 10%, transparent 90%, rgba(12,35,64,0.75) 100%)",
         }} />
-        {/* Soft top / bottom edge fades */}
-        <div style={{
-          position: "absolute", inset: 0, pointerEvents: "none",
-          background: "linear-gradient(to bottom, rgba(12,35,64,0.65) 0%, transparent 12%, transparent 88%, rgba(12,35,64,0.65) 100%)",
-        }} />
+        {/* Top / bottom edge fades — desktop only; on mobile the bottom fade cuts people's feet */}
+        {!isMobile && (
+          <div style={{
+            position: "absolute", inset: 0, pointerEvents: "none",
+            background: "linear-gradient(to bottom, rgba(12,35,64,0.65) 0%, transparent 12%, transparent 88%, rgba(12,35,64,0.65) 100%)",
+          }} />
+        )}
       </div>
     </section>
   );
