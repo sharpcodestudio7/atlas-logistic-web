@@ -306,7 +306,7 @@ function Hero() {
           transition: "opacity 0.8s ease-in-out",
         }}
       >
-        <source src="/videos/video.mp4" type="video/mp4" />
+        <source src="/videos/video_light.mp4" type="video/mp4" />
       </video>
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(12,35,64,0.9) 0%, rgba(12,35,64,0.72) 40%, rgba(12,35,64,0.55) 100%)" }} />
       <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "110px 24px 60px", width: "100%" }}>
