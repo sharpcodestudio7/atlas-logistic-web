@@ -284,12 +284,21 @@ function TypeWriter() {
 function Hero() {
   const { t } = useContext(LanguageContext);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const videoRef = useRef(null);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.readyState >= 2) { setVideoLoaded(true); return; }
+    const handler = () => setVideoLoaded(true);
+    video.addEventListener('loadeddata', handler);
+    return () => video.removeEventListener('loadeddata', handler);
+  }, []);
   return (
     <section id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", background: "#0c2340" }}>
       <video
+        ref={videoRef}
         autoPlay loop muted playsInline preload="auto"
         poster="/images/banner.webp"
-        onLoadedData={() => setVideoLoaded(true)}
         style={{
           position: "absolute", inset: 0, width: "100%", height: "100%",
           objectFit: "cover", objectPosition: "center",
