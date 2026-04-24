@@ -1977,6 +1977,8 @@ function ContactTypeWriter() {
 }
 
 function ContactForm() {
+  const ww = useWW();
+  const isMobile = ww < 640;
   const [form, setForm] = useState({ nombre: "", celular: "", correo: "", ciudad: "", servicio: "", mensaje: "", datosCheck: false, novedadesCheck: false });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -2033,13 +2035,13 @@ function ContactForm() {
   const checkLabelStyle = { display: "flex", alignItems: "flex-start", gap: 10, fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#1d1d1b", lineHeight: 1.5, cursor: "pointer" };
 
   if (sent) return (
-    <section id="contacto" style={{ background: "#ffffff", padding: "130px 0" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
-        <div style={{ paddingRight: 56 }}>
+    <section id="contacto" style={{ background: "#ffffff", padding: isMobile ? "60px 0" : "130px 0" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
+        <div style={{ paddingRight: isMobile ? 0 : 56 }}>
           <SuccessTypeWriter />
         </div>
-        <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />
-        <div style={{ paddingLeft: 56 }}>
+        {!isMobile && <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />}
+        <div style={{ paddingLeft: isMobile ? 0 : 56, marginTop: isMobile ? 32 : 0 }}>
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", lineHeight: 1.75, marginBottom: 20 }}>
             Tu mensaje ha sido enviado correctamente. Agradecemos tu interés en nuestros servicios. Muy pronto uno de nuestros asesores se comunicará contigo para brindarte la información que necesitas.
           </p>
@@ -2057,18 +2059,18 @@ function ContactForm() {
   );
 
   return (
-    <section id="contacto" style={{ background: "#ffffff", padding: "130px 0" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
+    <section id="contacto" style={{ background: "#ffffff", padding: isMobile ? "60px 0" : "130px 0" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: isMobile ? "0 20px" : "0 24px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1px 1fr", gap: 0, alignItems: "start" }}>
         {/* Columna izquierda */}
-        <div style={{ paddingRight: 80 }}>
+        <div style={{ paddingRight: isMobile ? 0 : 80 }}>
           <ContactTypeWriter />
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", marginTop: 20, maxWidth: 380, lineHeight: 1.75 }}>Nos alegra que estés aquí. Cuéntanos tu necesidad y un asesor de Atlas Logistic te contactará muy pronto.</p>
         </div>
         {/* Línea divisora */}
-        <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />
+        {!isMobile && <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />}
         {/* Columna derecha - formulario */}
-        <form onSubmit={handleSubmit} style={{ paddingLeft: 80, display: "flex", flexDirection: "column", gap: 0 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
+        <form onSubmit={handleSubmit} style={{ paddingLeft: isMobile ? 0 : 80, marginTop: isMobile ? 40 : 0, display: "flex", flexDirection: "column", gap: 0 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
             <input name="nombre" placeholder="Nombre completo" required value={form.nombre} onChange={handleChange}
               style={{ ...lineInput(), ...focusBorder("nombre") }}
               onFocus={() => setFocused("nombre")} onBlur={() => setFocused(null)} />
@@ -2076,7 +2078,7 @@ function ContactForm() {
               style={{ ...lineInput(), ...focusBorder("celular") }}
               onFocus={() => setFocused("celular")} onBlur={() => setFocused(null)} />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
             <input name="correo" type="email" placeholder="Correo electrónico" required value={form.correo} onChange={handleChange}
               style={{ ...lineInput(), ...focusBorder("correo") }}
               onFocus={() => setFocused("correo")} onBlur={() => setFocused(null)} />
@@ -2407,7 +2409,7 @@ function AccessibilityWidget() {
           aria-label="Opciones de accesibilidad"
           style={{
             position: "fixed", bottom: 92, left: 24, zIndex: 9999,
-            width: 360, background: "#fff", borderRadius: 20,
+            width: "min(360px, calc(100vw - 48px))", background: "#fff", borderRadius: 20,
             boxShadow: "0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(27,111,234,0.12)",
             animation: "a11yPanelIn 0.25s cubic-bezier(0.4,0,0.2,1) forwards",
             overflow: "hidden",
