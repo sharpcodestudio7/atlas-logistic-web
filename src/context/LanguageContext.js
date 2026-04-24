@@ -9,6 +9,7 @@ const translations = {
     "nav.nosotros": "Nosotros",
     "nav.contacto": "Contacto",
     "nav.llamar": "Llamar",
+    "nav.contacto.mobile": "Contacto",
     "nav.lang.switch": "Switch to English",
     // Hero
     "hero.titulo.l1": "¡Desde donde estés",
@@ -168,6 +169,7 @@ const translations = {
     "nav.nosotros": "About",
     "nav.contacto": "Contact",
     "nav.llamar": "Call",
+    "nav.contacto.mobile": "Contact",
     "nav.lang.switch": "Cambiar a Español",
     // Hero
     "hero.titulo.l1": "From wherever you are,",
