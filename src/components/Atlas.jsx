@@ -181,14 +181,13 @@ function Nav() {
   useEffect(() => {
     const check = () => {
       const hero = document.getElementById("inicio");
-      if (!hero) return;
+      if (!hero) { setScrolled(true); return; }
       const obs = new IntersectionObserver(([e]) => {
         setScrolled(e.intersectionRatio < 0.3);
       }, { threshold: [0, 0.1, 0.2, 0.3, 0.5, 1] });
       obs.observe(hero);
       return obs;
     };
-    // Small delay to ensure DOM is ready
     const t = setTimeout(() => { check(); }, 100);
     return () => clearTimeout(t);
   }, []);
