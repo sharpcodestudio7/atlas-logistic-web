@@ -1,7 +1,8 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import dynamic from 'next/dynamic';
-import { WF } from '@/components/Atlas';
+import { WF, Nav } from '@/components/Atlas';
+import { LanguageContext, LanguageProvider } from '@/context/LanguageContext';
 
 const AccessibilityWidget = dynamic(
   () => import('@/components/Atlas').then(mod => ({ default: mod.AccessibilityWidget })),
@@ -17,11 +18,11 @@ const getInitials = (nombre) => {
   return nombre.slice(0, 2).toUpperCase();
 };
 
-const equipo = [
-  { nombre: "Hidally Soler", cargo: "Gerente Administrativa", especialidad: "Dirección administrativa, control financiero y gestión de procesos internos, asegurando la eficiencia operativa y el cumplimiento estratégico de la compañía.", experiencia: "12 años", img: "/images/team/DSC00358.JPG.jpeg", imgPos: "center 15%" },
-  { nombre: "Brayan Delgado", cargo: "Coordinador de Operaciones", especialidad: "Gestión y coordinación de operaciones logísticas internacionales bajo modalidad courier, optimizando tiempos de tránsito, procesos aduaneros y trazabilidad de envíos.", experiencia: "4 años", img: "/images/team/Hombre1.png", imgPos: "center 20%" },
-  { nombre: "Viviana Virviescas", cargo: "Directora Comercial Corporativa", especialidad: "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.", experiencia: "10 años", img: "/images/team/Mujer1.png", imgPos: "center 20%" },
-  { nombre: "Ashlie Pulgarín", cargo: "Ejecutiva Comercial Senior", especialidad: "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.", experiencia: "2 años", img: "/images/team/Ashley.png", imgPos: "center 20%" },
+const equipoData = [
+  { key: "hidally", nombre: "Hidally Soler", experiencia: "12 años", img: "/images/team/DSC00358.JPG.jpeg", imgPos: "center 15%" },
+  { key: "brayan",  nombre: "Brayan Delgado",      experiencia: "4 años",  img: "/images/team/Hombre1.png",          imgPos: "center 20%" },
+  { key: "viviana", nombre: "Viviana Virviescas",   experiencia: "10 años", img: "/images/team/Mujer1.png",           imgPos: "center 20%" },
+  { key: "ashlie",  nombre: "Ashlie Pulgarín",      experiencia: "2 años",  img: "/images/team/Ashley.png",           imgPos: "center 20%" },
 ];
 
 /* ─── helpers ─── */
@@ -38,147 +39,6 @@ function useInView(threshold = 0.15) {
     return () => obs.disconnect();
   }, [threshold]);
   return [ref, visible];
-}
-
-/* ─── Logo ─── */
-function Logo({ h = 52, glow = false }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setMounted(true), 50); return () => clearTimeout(t); }, []);
-  return (
-    <img
-      src="/images/logo.svg"
-      alt="Atlas Logistic"
-      style={{
-        height: h, width: "auto", objectFit: "contain",
-        filter: "brightness(1.3) contrast(1.1) saturate(1.2)",
-        opacity: mounted ? 1 : 0,
-        transform: mounted ? "translateY(0)" : "translateY(-10px)",
-        transition: "opacity 800ms ease, transform 800ms ease",
-        animation: glow ? "logoGlow 3s ease-in-out infinite" : "none",
-      }}
-    />
-  );
-}
-
-/* ─── Nav ─── */
-function Nav() {
-  const lnk = [
-    { l: "Inicio", h: "/#inicio" },
-    { l: "Servicios", h: "/#servicios" },
-    { l: "Nosotros", h: "/#nosotros" },
-    { l: "Contacto", h: "/#contacto" },
-  ];
-  const [mo, setMo] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll);
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-      background: scrolled ? "rgba(12,35,64,0.92)" : "transparent",
-      backdropFilter: scrolled ? "blur(16px)" : "none",
-      WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
-      borderBottom: scrolled ? "1px solid rgba(255,255,255,0.08)" : "1px solid transparent",
-      boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.15)" : "none",
-      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-    }}>
-      <div style={{
-        maxWidth: 1280, margin: "0 auto", padding: "0 24px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        height: scrolled ? 75 : 100,
-        transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-      }}>
-        <a href="/" style={{ textDecoration: "none" }}>
-          <div style={{
-            animation: scrolled ? "none" : "logoGlow 3s ease-in-out infinite",
-            transform: scrolled ? "scale(1)" : "scale(1.05)",
-            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-          }}>
-            <Logo h={scrolled ? 72 : 96} />
-          </div>
-        </a>
-
-        {/* Desktop links */}
-        <div style={{ display: "flex", alignItems: "center", gap: 36 }} className="hidden md:flex">
-          {lnk.map(l => <NavLink key={l.h} href={l.h} label={l.l} />)}
-        </div>
-
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setMo(!mo)}
-          className="md:hidden"
-          style={{ padding: 8, background: "none", border: "none", cursor: "pointer" }}
-          aria-label="Menú"
-        >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round">
-            {mo
-              ? <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
-              : <><line x1="4" y1="7" x2="20" y2="7" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="17" x2="20" y2="17" /></>}
-          </svg>
-        </button>
-      </div>
-
-      {mo && (
-        <div style={{
-          background: "rgba(12,35,64,0.97)", backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)", borderTop: "1px solid rgba(255,255,255,0.08)",
-          padding: "12px 24px",
-        }}>
-          {lnk.map(l => (
-            <a key={l.h} href={l.h} onClick={() => setMo(false)} style={{
-              display: "block", padding: "12px 0",
-              color: "rgba(255,255,255,0.8)", fontSize: 16, fontWeight: 500,
-              fontFamily: "'Fira Sans',sans-serif", textDecoration: "none",
-              borderBottom: "1px solid rgba(255,255,255,0.05)",
-            }}>{l.l}</a>
-          ))}
-          <div style={{ paddingTop: 16, paddingBottom: 8, display: "flex", gap: 10 }}>
-            <a href={WA} target="_blank" rel="noopener noreferrer" onClick={() => setMo(false)} style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              padding: "12px 16px", borderRadius: 50, background: "#25D366",
-              color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none",
-            }}>WhatsApp</a>
-            <a href={PH} onClick={() => setMo(false)} style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
-              padding: "12px 16px", borderRadius: 50,
-              background: "linear-gradient(135deg, #1b6fea, #00a6ff)",
-              color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none",
-            }}>Llamar</a>
-          </div>
-        </div>
-      )}
-    </nav>
-  );
-}
-
-function NavLink({ href, label }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <a href={href} style={{
-      color: hov ? "#fff" : "rgba(255,255,255,0.7)",
-      fontSize: 17, fontWeight: 500, fontFamily: "'Fira Sans',sans-serif",
-      textDecoration: "none", transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-      position: "relative", paddingBottom: 8, display: "inline-block",
-      textShadow: hov ? "0 0 12px rgba(0,166,255,0.4)" : "none",
-    }}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-    >
-      {label}
-      <span style={{
-        position: "absolute", bottom: 0, left: "50%",
-        width: hov ? "100%" : "0%", height: 2, borderRadius: 2,
-        background: "linear-gradient(90deg, transparent, #00a6ff, #1b6fea, transparent)",
-        transform: "translateX(-50%)",
-        transition: "width 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-      }} />
-    </a>
-  );
 }
 
 /* ─── AnimBtn ─── */
@@ -227,8 +87,11 @@ function FloatingParticle({ size, top, left, delay, duration, opacity }) {
 
 /* ─── TeamCard ─── */
 function TeamCard({ persona, visible, delay }) {
+  const { t } = useContext(LanguageContext);
   const [hov, setHov] = useState(false);
   const initials = getInitials(persona.nombre);
+  const cargo = t(`equipo.${persona.key}.cargo`);
+  const especialidad = t(`equipo.${persona.key}.esp`);
   return (
     <div
       data-team-card
@@ -295,7 +158,7 @@ function TeamCard({ persona, visible, delay }) {
             }} />
             <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 16px" }}>
               <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 20, color: "#ffffff", marginBottom: 4, lineHeight: 1.2 }}>{persona.nombre}</h3>
-              <p style={{ color: "#00a6ff", fontSize: 14, fontFamily: "'Roboto',sans-serif", fontWeight: 500 }}>{persona.cargo}</p>
+              <p style={{ color: "#00a6ff", fontSize: 14, fontFamily: "'Roboto',sans-serif", fontWeight: 500 }}>{cargo}</p>
             </div>
           </>
         ) : (
@@ -310,7 +173,7 @@ function TeamCard({ persona, visible, delay }) {
               <span style={{ color: "#fff", fontSize: 40, fontWeight: 800, fontFamily: "'Fira Sans',sans-serif", letterSpacing: "-1px" }}>{initials}</span>
             </div>
             <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 20, color: "#ffffff", textAlign: "center", marginBottom: 6, lineHeight: 1.2 }}>{persona.nombre}</h3>
-            <p style={{ color: "#00a6ff", fontSize: 14, fontFamily: "'Roboto',sans-serif", fontWeight: 500, textAlign: "center" }}>{persona.cargo}</p>
+            <p style={{ color: "#00a6ff", fontSize: 14, fontFamily: "'Roboto',sans-serif", fontWeight: 500, textAlign: "center" }}>{cargo}</p>
           </>
         )}
       </div>
@@ -326,13 +189,13 @@ function TeamCard({ persona, visible, delay }) {
         background: "linear-gradient(135deg, rgba(10,28,54,0.97) 0%, rgba(8,24,48,0.93) 100%)",
       }}>
         <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 3, lineHeight: 1.2 }}>{persona.nombre}</h3>
-        <p style={{ color: "#00a6ff", fontSize: 13, fontFamily: "'Roboto',sans-serif", fontWeight: 500, marginBottom: 14 }}>{persona.cargo}</p>
+        <p style={{ color: "#00a6ff", fontSize: 13, fontFamily: "'Roboto',sans-serif", fontWeight: 500, marginBottom: 14 }}>{cargo}</p>
         <div style={{ width: 40, height: 3, borderRadius: 2, background: "linear-gradient(90deg, #1b6fea, #00a6ff)", marginBottom: 16 }} />
         <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 14 }}>
           <span style={{ fontSize: 15, color: "#9ca3af", flexShrink: 0, marginTop: 1 }}>☆</span>
           <div>
             <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 10, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 4 }}>Especialidad</p>
-            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#d1d5db", lineHeight: 1.55 }}>{persona.especialidad}</p>
+            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#d1d5db", lineHeight: 1.55 }}>{especialidad}</p>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -367,12 +230,18 @@ function TeamCard({ persona, visible, delay }) {
 
 /* ─── Hero ─── */
 function Hero() {
+  const { t } = useContext(LanguageContext);
   const [routePhase, setRoutePhase] = useState("flowing");
   const [heroVisible, setHeroVisible] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setHeroVisible(true), 100);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setHeroVisible(true), 100);
+    return () => clearTimeout(timer);
   }, []);
+
+  const titulo = t("equipo.titulo");
+  const lastSpace = titulo.lastIndexOf(" ");
+  const tituloStart = lastSpace > 0 ? titulo.slice(0, lastSpace + 1) : "";
+  const tituloEnd = lastSpace > 0 ? titulo.slice(lastSpace + 1) : titulo;
 
   const particles = [
     { size: 180, top: "10%", left: "5%", delay: 0, duration: 7, opacity: 0.5 },
@@ -434,13 +303,13 @@ function Hero() {
             letterSpacing: "-0.02em",
             marginBottom: 12,
           }}>
-            Nuestro{" "}
+            {tituloStart}
             <span style={{
               background: "linear-gradient(135deg, #00a6ff, #1b6fea)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}>
-              Equipo
+              {tituloEnd}
             </span>
           </h1>
 
@@ -452,7 +321,7 @@ function Hero() {
             margin: "0 auto",
             lineHeight: 1.7,
           }}>
-            Profesionales apasionados por mover el mundo
+            {t("equipo.subtitulo")}
           </p>
         </div>
       </div>
@@ -571,7 +440,7 @@ function GroupPhoto() {
         <circle cx="855"  cy="148" r="3"  fill="rgba(0,166,255,0.28)"  className="nd nd2" />
         <circle cx="855"  cy="148" r="9"  fill="rgba(0,166,255,0.07)"  className="node-pulse nd nd2" />
 
-        {/* ── Main routes (blue, más visibles que el footer) ── */}
+        {/* ── Main routes ── */}
         <path d="M0,200 C240,120 480,80 720,80"        stroke="rgba(0,166,255,0.24)" strokeWidth="1.5" strokeDasharray="8 6"  className="rt rt1 route-main" />
         <path d="M720,80 C960,80 1200,160 1440,220"    stroke="rgba(0,166,255,0.22)" strokeWidth="1.5" strokeDasharray="8 6"  className="rt rt2 route-main" />
         <path d="M0,400 C200,300 460,160 720,80"       stroke="rgba(0,166,255,0.21)" strokeWidth="1.4" strokeDasharray="8 6"  className="rt rt2 route-mid"  />
@@ -581,13 +450,13 @@ function GroupPhoto() {
         <path d="M0,100 C200,60 500,80 720,80"         stroke="rgba(0,166,255,0.18)" strokeWidth="1.3" strokeDasharray="9 7"  className="rt rt4 route-sub"  />
         <path d="M720,210 C1000,225 1200,355 1440,500" stroke="rgba(0,166,255,0.20)" strokeWidth="1.4" strokeDasharray="8 6"  className="rt rt5 route-mid"  />
 
-        {/* ── Depth routes (white, profundidad) ── */}
+        {/* ── Depth routes ── */}
         <path d="M100,650 C400,500 600,400 720,310"   stroke="rgba(255,255,255,0.09)" strokeWidth="1"   strokeDasharray="6 5" className="rt rt5 route-mid" />
         <path d="M720,310 C900,255 1100,405 1440,610" stroke="rgba(255,255,255,0.08)" strokeWidth="1"   strokeDasharray="6 5" className="rt rt5 route-sub" />
         <path d="M0,310 C150,210 355,155 505,185"     stroke="rgba(255,255,255,0.09)" strokeWidth="0.9" strokeDasharray="5 4" className="rt rt4 route-sub" />
         <path d="M990,0 C1100,125 1255,205 1440,305"  stroke="rgba(255,255,255,0.08)" strokeWidth="0.9" strokeDasharray="5 4" className="rt rt5 route-sub" />
 
-        {/* ── Moving planes (animateMotion) ── */}
+        {/* ── Moving planes ── */}
         <circle r="3" fill="#00a6ff" style={{ filter: "drop-shadow(0 0 6px rgba(0,166,255,0.9))", opacity: visible ? 1 : 0, transition: "opacity 1s 1s ease" }}>
           <animateMotion dur="8s" repeatCount="indefinite" path="M0,200 C240,120 480,80 720,80" />
         </circle>
@@ -602,7 +471,7 @@ function GroupPhoto() {
         </circle>
       </svg>
 
-      {/* Group photo — zIndex 2, above routes, colores originales */}
+      {/* Group photo — zIndex 2, above routes */}
       <div style={{ position: "relative", zIndex: 2, width: "100%", minHeight: 650, height: "70vh" }}>
         <img
           src="/images/team/Grupal.png"
@@ -616,7 +485,7 @@ function GroupPhoto() {
             transition: "opacity 1.2s 0.4s ease",
           }}
         />
-        {/* Soft left / right edge fades — solo en los márgenes */}
+        {/* Soft left / right edge fades */}
         <div style={{
           position: "absolute", inset: 0, pointerEvents: "none",
           background: "linear-gradient(to right, rgba(12,35,64,0.75) 0%, transparent 10%, transparent 90%, rgba(12,35,64,0.75) 100%)",
@@ -633,11 +502,12 @@ function GroupPhoto() {
 
 /* ─── StatsStrip ─── */
 function StatsStrip() {
+  const { t } = useContext(LanguageContext);
   const [ref, visible] = useInView(0.3);
   const stats = [
-    { prefix: "", end: 8,   suffix: "",  label: "Profesionales" },
-    { prefix: "+", end: 28,  suffix: "",  label: "Años de experiencia combinada" },
-    { prefix: "", end: 5,   suffix: "",  label: "Áreas especializadas" },
+    { prefix: "", end: 8,  suffix: "", labelKey: "equipo.stats.profesionales" },
+    { prefix: "+", end: 28, suffix: "", labelKey: "equipo.stats.experiencia" },
+    { prefix: "", end: 5,  suffix: "", labelKey: "equipo.stats.areas" },
   ];
   return (
     <section style={{ background: "#f9fafb" }}>
@@ -682,7 +552,7 @@ function StatsStrip() {
               color: "#6b7280",
               marginTop: 6,
               lineHeight: 1.3,
-            }}>{s.label}</p>
+            }}>{t(s.labelKey)}</p>
           </div>
         ))}
       </div>
@@ -718,61 +588,9 @@ function AnimCounter({ end, duration = 1200, prefix = "" }) {
   return <span ref={elRef}>{prefix}{count}</span>;
 }
 
-/* ─── StatsBanner ─── */
-function StatsBanner() {
-  const [ref, visible] = useInView(0.5);
-  const stats = [
-    { prefix: "", end: 8, duration: 800, label: "profesionales" },
-    { prefix: "+", end: 28, duration: 1200, label: "años de experiencia combinada" },
-    { prefix: "", end: 5, duration: 600, label: "áreas especializadas" },
-  ];
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(15px)",
-        transition: "opacity 0.6s ease, transform 0.6s ease",
-        marginBottom: 32,
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        className="stats-banner"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 32,
-          flexWrap: "wrap",
-          background: "rgba(27,111,234,0.04)",
-          border: "1px solid rgba(27,111,234,0.1)",
-          borderRadius: 50,
-          padding: "14px 36px",
-        }}
-      >
-        {stats.map((s, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-              <span className="stats-num" style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 28, color: "#1b6fea", lineHeight: 1 }}>
-                <AnimCounter end={s.end} duration={s.duration} prefix={s.prefix} />
-              </span>
-              <span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#6b7280" }}>{s.label}</span>
-            </div>
-            {i < stats.length - 1 && (
-              <span className="stats-sep" style={{ color: "#d1d5db", fontSize: 18, lineHeight: 1, userSelect: "none" }}>·</span>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-
 /* ─── TeamGrid ─── */
 function TeamGrid() {
+  const { t } = useContext(LanguageContext);
   const [ref, visible] = useInView(0.05);
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -788,7 +606,7 @@ function TeamGrid() {
         {/* Section title */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
           <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", color: "#ffffff", marginBottom: 14 }}>
-            Conoce a nuestros líderes de área
+            {t("equipo.seccion")}
           </h2>
           <div style={{ display: "flex", justifyContent: "center", gap: 6, alignItems: "center" }}>
             <div style={{ height: 3, width: 32, background: "#1b6fea", borderRadius: 2 }} />
@@ -798,7 +616,7 @@ function TeamGrid() {
         </div>
 
         <div ref={ref} className="team-grid">
-          {equipo.map((persona, i) => (
+          {equipoData.map((persona, i) => (
             <TeamCard
               key={i}
               persona={persona}
@@ -860,19 +678,25 @@ function CTA() {
 }
 
 /* ─── Page ─── */
-export default function EquipoPage() {
+function EquipoContent() {
   return (
-    <>
-      <div style={{ fontFamily: "'Roboto',sans-serif", overflowX: "hidden" }}>
-        <Nav />
-        <Hero />
-        <GroupPhoto />
-        <StatsStrip />
-        <TeamGrid />
-        <CTA />
-      </div>
+    <div style={{ fontFamily: "'Roboto',sans-serif", overflowX: "hidden" }}>
+      <Nav />
+      <Hero />
+      <GroupPhoto />
+      <StatsStrip />
+      <TeamGrid />
+      <CTA />
       <WF />
       <AccessibilityWidget />
-    </>
+    </div>
+  );
+}
+
+export default function EquipoPage() {
+  return (
+    <LanguageProvider>
+      <EquipoContent />
+    </LanguageProvider>
   );
 }

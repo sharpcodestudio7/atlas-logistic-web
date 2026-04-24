@@ -145,6 +145,21 @@ const translations = {
     "footer.desc": "Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!",
     "footer.rights": "Todos los derechos reservados.",
     "footer.city": "Bogotá, Colombia",
+    // Equipo page
+    "equipo.titulo": "Nuestro Equipo",
+    "equipo.subtitulo": "Profesionales apasionados por mover el mundo",
+    "equipo.seccion": "Las personas detrás de cada envío",
+    "equipo.stats.profesionales": "Profesionales",
+    "equipo.stats.experiencia": "Años de experiencia combinada",
+    "equipo.stats.areas": "Áreas especializadas",
+    "equipo.hidally.cargo": "Gerente Administrativa",
+    "equipo.hidally.esp": "Dirección administrativa, control financiero y gestión de procesos internos, asegurando la eficiencia operativa y el cumplimiento estratégico de la compañía.",
+    "equipo.brayan.cargo": "Coordinador de Operaciones",
+    "equipo.brayan.esp": "Gestión y coordinación de operaciones logísticas internacionales bajo modalidad courier, optimizando tiempos de tránsito, procesos aduaneros y trazabilidad de envíos.",
+    "equipo.viviana.cargo": "Directora Comercial Corporativa",
+    "equipo.viviana.esp": "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.",
+    "equipo.ashlie.cargo": "Ejecutiva Comercial Senior",
+    "equipo.ashlie.esp": "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.",
   },
   en: {
     // Nav
@@ -289,6 +304,21 @@ const translations = {
     "footer.desc": "Comprehensive Logistics Operator in Colombia. Specialists in international air logistics, imports and exports by courier. From wherever you are, to wherever you need it!",
     "footer.rights": "All rights reserved.",
     "footer.city": "Bogotá, Colombia",
+    // Equipo page
+    "equipo.titulo": "Our Team",
+    "equipo.subtitulo": "Professionals passionate about moving the world",
+    "equipo.seccion": "The people behind every shipment",
+    "equipo.stats.profesionales": "Professionals",
+    "equipo.stats.experiencia": "Years of combined experience",
+    "equipo.stats.areas": "Specialized areas",
+    "equipo.hidally.cargo": "Administrative Manager",
+    "equipo.hidally.esp": "Administrative management, financial control and internal process management, ensuring operational efficiency and strategic compliance of the company.",
+    "equipo.brayan.cargo": "Operations Coordinator",
+    "equipo.brayan.esp": "Management and coordination of international logistics operations under courier modality, optimizing transit times, customs processes and shipment traceability.",
+    "equipo.viviana.cargo": "Corporate Commercial Director",
+    "equipo.viviana.esp": "Strategic leadership of the commercial area, corporate client development and structuring of international logistics solutions, focused on imports and exports by courier.",
+    "equipo.ashlie.cargo": "Senior Commercial Executive",
+    "equipo.ashlie.esp": "Client development and advisory in international logistics solutions, specialized in courier export, offering strategic proposals adapted to each operation.",
   }
 };
 

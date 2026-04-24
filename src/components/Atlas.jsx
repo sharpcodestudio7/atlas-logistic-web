@@ -90,6 +90,8 @@ function NavLink({ href, label }) {
       const offset = 140;
       const top = el.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: 'smooth' });
+    } else {
+      window.location.href = `/${href}`;
     }
   };
   return (
