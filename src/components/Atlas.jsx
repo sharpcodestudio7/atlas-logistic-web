@@ -179,17 +179,23 @@ function Nav() {
   const [mo, setMo] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const check = () => {
+    let teardown = null;
+    const t = setTimeout(() => {
       const hero = document.getElementById("inicio");
-      if (!hero) { setScrolled(true); return; }
-      const obs = new IntersectionObserver(([e]) => {
-        setScrolled(e.intersectionRatio < 0.3);
-      }, { threshold: [0, 0.1, 0.2, 0.3, 0.5, 1] });
-      obs.observe(hero);
-      return obs;
-    };
-    const t = setTimeout(() => { check(); }, 100);
-    return () => clearTimeout(t);
+      if (!hero) {
+        const onScroll = () => setScrolled(window.scrollY > 40);
+        onScroll();
+        window.addEventListener('scroll', onScroll);
+        teardown = () => window.removeEventListener('scroll', onScroll);
+      } else {
+        const obs = new IntersectionObserver(([e]) => {
+          setScrolled(e.intersectionRatio < 0.3);
+        }, { threshold: [0, 0.1, 0.2, 0.3, 0.5, 1] });
+        obs.observe(hero);
+        teardown = () => obs.disconnect();
+      }
+    }, 100);
+    return () => { clearTimeout(t); if (teardown) teardown(); };
   }, []);
   return (
     <nav style={{

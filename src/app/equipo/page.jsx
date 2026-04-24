@@ -254,7 +254,7 @@ function Hero() {
     <section style={{
       position: "relative", minHeight: 320, maxHeight: 400,
       display: "flex", alignItems: "center", overflow: "hidden",
-      paddingTop: 75,
+      paddingTop: 120,
       background: "linear-gradient(135deg, #0c2340 0%, #0a1e38 40%, #112e55 100%)",
     }}>
       {/* Particles */}
