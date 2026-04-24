@@ -73,6 +73,11 @@ body {
   100% { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)); }
 }
 
+@keyframes logoGlowNav {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(0,166,255,0.4)) drop-shadow(0 0 14px rgba(0,166,255,0.2)); }
+  50%       { filter: drop-shadow(0 0 10px rgba(27,111,234,0.5)) drop-shadow(0 0 20px rgba(27,111,234,0.25)); }
+}
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }

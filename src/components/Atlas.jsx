@@ -209,10 +209,7 @@ function Nav() {
     }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: scrolled ? 75 : 120, transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }}>
         <a href="#inicio" onClick={(e) => { e.preventDefault(); const el = document.getElementById('inicio'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); else window.location.href = '/'; }}>
-          <div style={scrolled
-            ? { animation: "none", filter: "none", transform: "scale(1)", transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }
-            : { animation: "logoGlow 3s ease-in-out infinite", transform: "scale(1.05)", transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }
-          }>
+          <div style={{ animation: "logoGlowNav 3s ease-in-out infinite", transform: scrolled ? "scale(1)" : "scale(1.05)", transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }}>
             <Logo h={scrolled ? 80 : 108} variant={scrolled ? "dark" : "light"} style={{ transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)" }} />
           </div>
         </a>
