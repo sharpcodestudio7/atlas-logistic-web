@@ -20,7 +20,7 @@ const getInitials = (nombre) => {
 const equipo = [
   { nombre: "Hidally Soler", cargo: "Gerente Administrativa", especialidad: "Dirección administrativa, control financiero y gestión de procesos internos, asegurando la eficiencia operativa y el cumplimiento estratégico de la compañía.", experiencia: "12 años", img: "/images/team/DSC00358.JPG.jpeg", imgPos: "center 15%" },
   { nombre: "Brayan Delgado", cargo: "Coordinador de Operaciones", especialidad: "Gestión y coordinación de operaciones logísticas internacionales bajo modalidad courier, optimizando tiempos de tránsito, procesos aduaneros y trazabilidad de envíos.", experiencia: "4 años", img: "/images/team/Hombre1.png", imgPos: "center 20%" },
-  { nombre: "Viviana Virviescas", cargo: "Directora Comercial Corporativa", especialidad: "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.", experiencia: "10 años", img: "/images/team/Mujer 1.png", imgPos: "center 20%" },
+  { nombre: "Viviana Virviescas", cargo: "Directora Comercial Corporativa", especialidad: "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.", experiencia: "10 años", img: "/images/team/Mujer1.png", imgPos: "center 20%" },
   { nombre: "Ashlie Pulgarín", cargo: "Ejecutiva Comercial Senior", especialidad: "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.", experiencia: "2 años", img: "/images/team/Ashley.png", imgPos: "center 20%" },
 ];
 
@@ -463,20 +463,147 @@ function Hero() {
 
 /* ─── GroupPhoto ─── */
 function GroupPhoto() {
-  const [ref, visible] = useInView();
+  const [sectionRef, visible] = useInView(0.1);
+  const [phase, setPhase] = useState("hidden");
+
+  useEffect(() => {
+    if (!visible) return;
+    const t1 = setTimeout(() => setPhase("drawing"), 300);
+    const t2 = setTimeout(() => setPhase("flowing"), 3800);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [visible]);
+
+  const glows = [
+    { w: 260, l: "4%",  t: "8%",  c: "rgba(0,166,255,0.07)",  d: 0,   dur: 7  },
+    { w: 200, l: "84%", t: "52%", c: "rgba(27,111,234,0.07)", d: 2,   dur: 9  },
+    { w: 170, l: "42%", t: "4%",  c: "rgba(0,166,255,0.05)",  d: 1,   dur: 8  },
+    { w: 220, l: "66%", t: "68%", c: "rgba(27,111,234,0.06)", d: 3,   dur: 6  },
+    { w: 140, l: "18%", t: "70%", c: "rgba(0,166,255,0.05)",  d: 1.5, dur: 10 },
+  ];
+
   return (
-    <section style={{ position: "relative", background: "#ffffff", overflow: "hidden" }}>
-      <div
-        ref={ref}
-        style={{
-          position: "relative",
-          width: "100%",
-          minHeight: 650,
-          height: "70vh",
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.9s ease",
-        }}
+    <section
+      ref={sectionRef}
+      style={{
+        position: "relative", overflow: "hidden",
+        background: "linear-gradient(135deg, #0c2340 0%, #0a1e38 40%, #112e55 100%)",
+      }}
+    >
+      {/* Ambient glow orbs */}
+      {glows.map((g, i) => (
+        <div key={i} style={{
+          position: "absolute", left: g.l, top: g.t,
+          width: g.w, height: g.w, borderRadius: "50%",
+          background: `radial-gradient(circle, ${g.c} 0%, transparent 70%)`,
+          animation: `eqFloat ${g.dur}s ease-in-out ${g.d}s infinite`,
+          pointerEvents: "none",
+        }} />
+      ))}
+
+      {/* Corner radial ambiance */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: "radial-gradient(circle at 10% 20%, rgba(0,166,255,0.07), transparent 50%), radial-gradient(circle at 90% 80%, rgba(27,111,234,0.07), transparent 50%)",
+      }} />
+
+      {/* Dense animated routes SVG — zIndex 1, behind photo */}
+      <svg
+        className={`routes-${phase}`}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 1 }}
+        viewBox="0 0 1440 650" preserveAspectRatio="xMidYMid slice" fill="none"
       >
+        <defs>
+          <radialGradient id="gpBlue" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(0,166,255,0.32)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          <radialGradient id="gpWhite" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.14)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+        </defs>
+
+        {/* ── Nodes ── */}
+        <circle cx="720" cy="80"  r="5"  fill="rgba(0,166,255,0.42)"  className="nd nd1" />
+        <circle cx="720" cy="80"  r="14" fill="rgba(0,166,255,0.11)"  className="node-pulse nd nd1" />
+        <circle cx="720" cy="80"  r="32" fill="url(#gpBlue)"          className="nd nd1" />
+
+        <circle cx="720" cy="210" r="5"  fill="rgba(0,166,255,0.40)"  className="nd nd2" />
+        <circle cx="720" cy="210" r="14" fill="rgba(0,166,255,0.10)"  className="node-pulse nd nd2" />
+        <circle cx="720" cy="210" r="30" fill="url(#gpBlue)"          className="nd nd2" />
+
+        <circle cx="0"    cy="200" r="4"  fill="rgba(0,166,255,0.36)"  className="nd nd1" />
+        <circle cx="0"    cy="200" r="12" fill="rgba(0,166,255,0.09)"  className="node-pulse nd nd1" />
+
+        <circle cx="1440" cy="220" r="4"  fill="rgba(0,166,255,0.36)"  className="nd nd3" />
+        <circle cx="1440" cy="220" r="12" fill="rgba(0,166,255,0.09)"  className="node-pulse nd nd3" />
+
+        <circle cx="0"    cy="400" r="4"  fill="rgba(255,255,255,0.26)" className="nd nd2" />
+        <circle cx="0"    cy="400" r="12" fill="rgba(255,255,255,0.07)" className="node-pulse nd nd2" />
+
+        <circle cx="1440" cy="100" r="4"  fill="rgba(0,166,255,0.36)"  className="nd nd4" />
+        <circle cx="1440" cy="100" r="12" fill="rgba(0,166,255,0.09)"  className="node-pulse nd nd4" />
+
+        <circle cx="0"    cy="580" r="3.5" fill="rgba(0,166,255,0.32)"  className="nd nd3" />
+        <circle cx="0"    cy="580" r="10"  fill="rgba(0,166,255,0.08)"  className="node-pulse nd nd3" />
+
+        <circle cx="1440" cy="380" r="4"  fill="rgba(0,166,255,0.36)"  className="nd nd5" />
+        <circle cx="1440" cy="380" r="12" fill="rgba(0,166,255,0.09)"  className="node-pulse nd nd5" />
+
+        <circle cx="0"    cy="100" r="3.5" fill="rgba(255,255,255,0.22)" className="nd nd4" />
+        <circle cx="0"    cy="100" r="10"  fill="rgba(255,255,255,0.06)" className="node-pulse nd nd4" />
+
+        <circle cx="1440" cy="500" r="3.5" fill="rgba(0,166,255,0.30)"  className="nd nd2" />
+        <circle cx="1440" cy="500" r="10"  fill="rgba(0,166,255,0.08)"  className="node-pulse nd nd2" />
+
+        <circle cx="380"  cy="138" r="3"  fill="rgba(0,166,255,0.32)"  className="nd nd1" />
+        <circle cx="380"  cy="138" r="9"  fill="rgba(0,166,255,0.08)"  className="node-pulse nd nd1" />
+
+        <circle cx="1060" cy="118" r="3"  fill="rgba(0,166,255,0.30)"  className="nd nd3" />
+        <circle cx="1060" cy="118" r="9"  fill="rgba(0,166,255,0.08)"  className="node-pulse nd nd3" />
+
+        <circle cx="280"  cy="478" r="3"  fill="rgba(255,255,255,0.20)" className="nd nd5" />
+        <circle cx="280"  cy="478" r="9"  fill="rgba(255,255,255,0.06)" className="node-pulse nd nd5" />
+
+        <circle cx="1100" cy="338" r="3"  fill="rgba(0,166,255,0.30)"  className="nd nd4" />
+        <circle cx="1100" cy="338" r="9"  fill="rgba(0,166,255,0.08)"  className="node-pulse nd nd4" />
+
+        <circle cx="855"  cy="148" r="3"  fill="rgba(0,166,255,0.28)"  className="nd nd2" />
+        <circle cx="855"  cy="148" r="9"  fill="rgba(0,166,255,0.07)"  className="node-pulse nd nd2" />
+
+        {/* ── Main routes (blue, más visibles que el footer) ── */}
+        <path d="M0,200 C240,120 480,80 720,80"        stroke="rgba(0,166,255,0.24)" strokeWidth="1.5" strokeDasharray="8 6"  className="rt rt1 route-main" />
+        <path d="M720,80 C960,80 1200,160 1440,220"    stroke="rgba(0,166,255,0.22)" strokeWidth="1.5" strokeDasharray="8 6"  className="rt rt2 route-main" />
+        <path d="M0,400 C200,300 460,160 720,80"       stroke="rgba(0,166,255,0.21)" strokeWidth="1.4" strokeDasharray="8 6"  className="rt rt2 route-mid"  />
+        <path d="M720,80 C900,60 1100,80 1440,100"     stroke="rgba(0,166,255,0.23)" strokeWidth="1.5" strokeDasharray="8 6"  className="rt rt3 route-main" />
+        <path d="M0,580 C300,450 520,300 720,210"      stroke="rgba(0,166,255,0.20)" strokeWidth="1.4" strokeDasharray="8 6"  className="rt rt3 route-mid"  />
+        <path d="M720,210 C900,155 1100,280 1440,380"  stroke="rgba(0,166,255,0.22)" strokeWidth="1.5" strokeDasharray="8 6"  className="rt rt4 route-main" />
+        <path d="M0,100 C200,60 500,80 720,80"         stroke="rgba(0,166,255,0.18)" strokeWidth="1.3" strokeDasharray="9 7"  className="rt rt4 route-sub"  />
+        <path d="M720,210 C1000,225 1200,355 1440,500" stroke="rgba(0,166,255,0.20)" strokeWidth="1.4" strokeDasharray="8 6"  className="rt rt5 route-mid"  />
+
+        {/* ── Depth routes (white, profundidad) ── */}
+        <path d="M100,650 C400,500 600,400 720,310"   stroke="rgba(255,255,255,0.09)" strokeWidth="1"   strokeDasharray="6 5" className="rt rt5 route-mid" />
+        <path d="M720,310 C900,255 1100,405 1440,610" stroke="rgba(255,255,255,0.08)" strokeWidth="1"   strokeDasharray="6 5" className="rt rt5 route-sub" />
+        <path d="M0,310 C150,210 355,155 505,185"     stroke="rgba(255,255,255,0.09)" strokeWidth="0.9" strokeDasharray="5 4" className="rt rt4 route-sub" />
+        <path d="M990,0 C1100,125 1255,205 1440,305"  stroke="rgba(255,255,255,0.08)" strokeWidth="0.9" strokeDasharray="5 4" className="rt rt5 route-sub" />
+
+        {/* ── Moving planes (animateMotion) ── */}
+        <circle r="3" fill="#00a6ff" style={{ filter: "drop-shadow(0 0 6px rgba(0,166,255,0.9))", opacity: visible ? 1 : 0, transition: "opacity 1s 1s ease" }}>
+          <animateMotion dur="8s" repeatCount="indefinite" path="M0,200 C240,120 480,80 720,80" />
+        </circle>
+        <circle r="3" fill="rgba(255,255,255,0.88)" style={{ filter: "drop-shadow(0 0 5px rgba(255,255,255,0.7))", opacity: visible ? 1 : 0, transition: "opacity 1s 1.8s ease" }}>
+          <animateMotion dur="11s" repeatCount="indefinite" path="M1440,220 C1200,160 960,80 720,80" />
+        </circle>
+        <circle r="2.5" fill="#00a6ff" style={{ filter: "drop-shadow(0 0 5px rgba(0,166,255,0.8))", opacity: visible ? 1 : 0, transition: "opacity 1s 2.5s ease" }}>
+          <animateMotion dur="14s" repeatCount="indefinite" path="M0,580 C300,450 520,300 720,210" />
+        </circle>
+        <circle r="3" fill="#1b6fea" style={{ filter: "drop-shadow(0 0 7px rgba(27,111,234,0.95))", opacity: visible ? 1 : 0, transition: "opacity 1s 3.2s ease" }}>
+          <animateMotion dur="9.5s" repeatCount="indefinite" path="M720,210 C900,155 1100,280 1440,380" />
+        </circle>
+      </svg>
+
+      {/* Group photo — zIndex 2, above routes, colores originales */}
+      <div style={{ position: "relative", zIndex: 2, width: "100%", minHeight: 650, height: "70vh" }}>
         <img
           src="/images/team/Grupal.png"
           alt="Equipo Atlas Logistic"
@@ -485,13 +612,19 @@ function GroupPhoto() {
             width: "100%", height: "100%",
             objectFit: "contain", objectPosition: "center center",
             display: "block",
+            opacity: visible ? 1 : 0,
+            transition: "opacity 1.2s 0.4s ease",
           }}
         />
-        {/* Overlay superior */}
+        {/* Soft left / right edge fades — solo en los márgenes */}
         <div style={{
-          position: "absolute", top: 0, left: 0, right: 0, height: "25%",
-          background: "linear-gradient(to bottom, rgba(12,35,64,0.55) 0%, transparent 100%)",
-          pointerEvents: "none", zIndex: 1,
+          position: "absolute", inset: 0, pointerEvents: "none",
+          background: "linear-gradient(to right, rgba(12,35,64,0.75) 0%, transparent 10%, transparent 90%, rgba(12,35,64,0.75) 100%)",
+        }} />
+        {/* Soft top / bottom edge fades */}
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none",
+          background: "linear-gradient(to bottom, rgba(12,35,64,0.65) 0%, transparent 12%, transparent 88%, rgba(12,35,64,0.65) 100%)",
         }} />
       </div>
     </section>
@@ -502,7 +635,7 @@ function GroupPhoto() {
 function StatsStrip() {
   const [ref, visible] = useInView(0.3);
   const stats = [
-    { prefix: "", end: 4,   suffix: "",  label: "Profesionales" },
+    { prefix: "", end: 8,   suffix: "",  label: "Profesionales" },
     { prefix: "+", end: 28,  suffix: "",  label: "Años de experiencia combinada" },
     { prefix: "", end: 5,   suffix: "",  label: "Áreas especializadas" },
   ];
@@ -589,7 +722,7 @@ function AnimCounter({ end, duration = 1200, prefix = "" }) {
 function StatsBanner() {
   const [ref, visible] = useInView(0.5);
   const stats = [
-    { prefix: "", end: 4, duration: 800, label: "profesionales" },
+    { prefix: "", end: 8, duration: 800, label: "profesionales" },
     { prefix: "+", end: 28, duration: 1200, label: "años de experiencia combinada" },
     { prefix: "", end: 5, duration: 600, label: "áreas especializadas" },
   ];

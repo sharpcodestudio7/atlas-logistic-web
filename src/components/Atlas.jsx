@@ -1088,68 +1088,129 @@ const statIcons = {
   bolt: { hoverAnim: "whyusGlow", icon: <><path d="M18 4L8 18h7l-1 10 10-14h-7z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none" className="ai-s1" style={{ strokeDasharray: 60, strokeDashoffset: 60 }} /></> },
 };
 
-function VideoCard() {
-  const [hov, setHov] = useState(false);
+const teamPhotos = [
+  "/images/team/DSC00358.JPG.jpeg",
+  "/images/team/DSC00360.JPG.jpeg",
+  "/images/team/DSC00362.JPG.jpeg",
+  "/images/team/DSC00364.JPG.jpeg",
+  "/images/team/DSC00371.JPG.jpeg",
+  "/images/team/DSC00374.JPG.jpeg",
+  "/images/team/DSC00376.JPG.jpeg",
+  "/images/team/DSC00378.JPG.jpeg",
+];
+
+const kbOrigins = ["center center", "top left", "center right", "bottom center", "top right", "center left", "bottom right", "top center"];
+
+function TeamCinematic() {
   const ww = useWW();
+  const isMobile = ww < 768;
+  const [hov, setHov] = useState(false);
+
+  // Two img slots for ping-pong crossfade
+  const [slots, setSlots] = useState([
+    { src: teamPhotos[0], dir: 0 },
+    { src: teamPhotos[1], dir: 1 },
+  ]);
+  const [ops, setOps] = useState([1, 0]);       // opacities per slot
+  const [curIdx, setCurIdx] = useState(0);       // photo index currently shown
+  const [phaseKey, setPhaseKey] = useState(0);  // forces progress bar restart
+
+  const activeRef = useRef(0);   // which slot is currently visible
+  const idxRef   = useRef(0);    // current photo index
+  const transRef = useRef(false);
+  const timerRef = useRef(null);
+  const advRef   = useRef(null);
+
+  const advance = () => {
+    if (transRef.current) return;
+    transRef.current = true;
+    const nextIdx  = (idxRef.current + 1) % teamPhotos.length;
+    const inactive = 1 - activeRef.current;
+
+    // Load next photo into the hidden slot (invisible swap)
+    setSlots(prev => {
+      const n = [...prev];
+      n[inactive] = { src: teamPhotos[nextIdx], dir: nextIdx };
+      return n;
+    });
+
+    // Brief tick so the src commits, then crossfade
+    setTimeout(() => {
+      setOps(() => { const n = [0, 0]; n[inactive] = 1; return n; });
+      setCurIdx(nextIdx);
+      setPhaseKey(k => k + 1);
+      setTimeout(() => {
+        activeRef.current = inactive;
+        idxRef.current    = nextIdx;
+        transRef.current  = false;
+      }, 1000);
+    }, 50);
+  };
+  advRef.current = advance;
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => advRef.current(), 5000);
+    return () => clearInterval(timerRef.current);
+  }, []);
+
   return (
     <div
-      style={{ position: "relative", borderRadius: 20, overflow: "hidden", height: ww < 768 ? 260 : 380 }}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
+      style={{
+        width: "100%", height: isMobile ? 280 : 400,
+        borderRadius: 16, overflow: "hidden",
+        position: "relative", background: "#0c2340",
+        border: "1px solid rgba(27,111,234,0.15)",
+        boxShadow: hov ? "0 12px 40px rgba(27,111,234,0.15)" : "none",
+        transition: "box-shadow 0.4s",
+      }}
     >
-      {/* Animated border trace SVG */}
-      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 3, pointerEvents: "none", overflow: "visible" }}>
-        <rect
-          x="1" y="1" rx="20" ry="20"
-          width="99.5%" height="99.5%"
-          fill="none"
-          stroke="url(#borderGrad)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          className={hov ? "border-trace-active" : "border-trace-idle"}
+      {/* Ping-pong photo layers */}
+      {[0, 1].map(s => (
+        <img
+          key={`${slots[s].src}-${slots[s].dir}`}
+          src={slots[s].src}
+          alt=""
+          style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "cover", objectPosition: "center 30%",
+            opacity: ops[s],
+            transition: "opacity 1s ease-in-out",
+            transformOrigin: kbOrigins[slots[s].dir % 8],
+            animation: `${slots[s].dir % 2 === 0 ? "kenBurns" : "kenBurnsReverse"} 6s linear forwards`,
+          }}
         />
-        <defs>
-          <linearGradient id="borderGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="380">
-            <stop offset="0%" stopColor="#00a6ff" stopOpacity="0.5" />
-            <stop offset="25%" stopColor="#1b6fea" stopOpacity="0.9" />
-            <stop offset="50%" stopColor="#00a6ff" />
-            <stop offset="75%" stopColor="#1b6fea" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#00a6ff" stopOpacity="0.5" />
-          </linearGradient>
-        </defs>
-      </svg>
-      {/* Card background */}
+      ))}
+
+      {/* Cinematic overlay — gradient + vignette */}
       <div style={{
-        width: "100%", height: "100%",
-        background: hov ? "rgba(27,111,234,0.07)" : "rgba(27,111,234,0.03)",
-        border: "1px solid " + (hov ? "transparent" : "rgba(27,111,234,0.08)"),
-        borderRadius: 20,
-        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        boxShadow: hov
-          ? "0 16px 40px rgba(27,111,234,0.12), inset 0 1px 0 rgba(27,111,234,0.06)"
-          : "0 4px 20px rgba(27,111,234,0.06), inset 0 1px 0 rgba(255,255,255,0.8)",
-        transform: hov ? "scale(1.01)" : "scale(1)",
-        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+        position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
+        background: "linear-gradient(to top, rgba(12,35,64,0.5) 0%, transparent 40%)",
+        boxShadow: "inset 0 0 80px rgba(0,0,0,0.15)",
+      }} />
+
+      {/* Progress bar indicators */}
+      <div style={{
+        position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)",
+        zIndex: 3, display: "flex", gap: 6, alignItems: "center",
       }}>
-        {/* Play button */}
-        <div style={{
-          width: 72, height: 72, borderRadius: 36,
-          background: hov ? "linear-gradient(135deg, #1b6fea, #00a6ff)" : "rgba(27,111,234,0.08)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          boxShadow: hov ? "0 8px 30px rgba(27,111,234,0.3)" : "none",
-          transform: hov ? "scale(1.1)" : "scale(1)",
-          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-          cursor: "pointer", marginBottom: 18,
-        }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill={hov ? "white" : "#1b6fea"} style={{ marginLeft: 3 }}>
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        </div>
-        <p style={{
-          fontFamily: "'Fira Sans',sans-serif", fontSize: 15, fontWeight: 600,
-          color: hov ? "#1b6fea" : "#9ca3af",
-          transition: "color 0.3s",
-        }}>Video institucional</p>
+        {teamPhotos.map((_, i) => (
+          <div key={i} style={{
+            width: isMobile ? 16 : 24, height: 3, borderRadius: 2, flexShrink: 0,
+            background: i < curIdx ? "#00a6ff" : "rgba(255,255,255,0.3)",
+            overflow: "hidden", position: "relative",
+          }}>
+            {i === curIdx && (
+              <div key={phaseKey} style={{
+                position: "absolute", top: 0, left: 0, height: "100%",
+                background: "#00a6ff",
+                animation: "progressFill 5s linear forwards",
+              }} />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -1200,7 +1261,7 @@ function About() {
             </a>
           </div></R>
           <R dir="right" delay={200}>
-            <VideoCard />
+            <TeamCinematic />
           </R>
         </div>
         {/* Stats row - 4 columns */}
@@ -1367,10 +1428,10 @@ function ShowcaseSlider() {
     { src: "/images/redglobal.png",      fit: "cover", pos: "left top" },
   ];
   const slides = [
-    { tag: "IMPORTACIONES", title: "Tu mercancía en Colombia, sin complicaciones", desc: "Gestionamos cada importación desde el origen hasta tu puerta. Trámites aduaneros, liberación express y seguimiento en tiempo real para que tú solo te preocupes por vender.", statNum: "3-5 días", statLabel: "Tiempo promedio de entrega aérea" },
+    { tag: "IMPORTACIONES", title: "Tu mercancía en Colombia, sin complicaciones", desc: "Gestionamos cada importación desde el origen hasta tu puerta. Trámites aduaneros, liberación express y seguimiento en tiempo real para que tú solo te preocupes por vender.", statLines: ["EE.UU · España", "Costa Rica · R. Dominicana"], statFontSize: 32, statLabel: "Destinos con mayor volumen de envío" },
     { tag: "EXPORTACIONES", title: "Colombia al mundo, con rapidez y confianza", desc: "Exporta tus productos a más de 220 países con procesos aduaneros simplificados. Somos tu aliado estratégico para conquistar mercados internacionales.", statNum: "220+", statLabel: "Países de cobertura global" },
     { tag: "CASILLERO INTERNACIONAL", title: "Compra en el exterior como si estuvieras allá", desc: "Tenemos direcciones en EE.UU., España y China para que compres en cualquier tienda internacional y recibas tus productos directamente en Colombia.", statNum: "3 países", statLabel: "Con direcciones disponibles" },
-    { tag: "RED GLOBAL", title: "Una red logística que no tiene fronteras", desc: "Operamos con aliados estratégicos en los principales hubs logísticos del mundo. Tu carga siempre estará en manos expertas, sin importar el destino.", statNum: "5,000+", statLabel: "Envíos gestionados exitosamente" },
+    { tag: "RED GLOBAL", title: "Una red logística que no tiene fronteras", desc: "Operamos con aliados estratégicos en los principales hubs logísticos del mundo. Tu carga siempre estará en manos expertas, sin importar el destino.", statNum: "1.400+", statLabel: "Paquetes despachados en 2025 y 2026" },
   ];
 
   const [current, setCurrent] = useState(0);
@@ -1514,7 +1575,13 @@ function ShowcaseSlider() {
               <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.4rem, 2.5vw, 2rem)", color: "#ffffff", lineHeight: 1.2, marginBottom: 20 }}>{s.title}</h2>
               <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 36, maxWidth: 440 }}>{s.desc}</p>
               <div>
-                <p style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 48, fontWeight: 800, color: "#ffffff", lineHeight: 1 }}>{s.statNum}</p>
+                {s.statLines ? (
+                  s.statLines.map((line, i) => (
+                    <p key={i} style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: s.statFontSize || 32, fontWeight: 800, color: "#ffffff", lineHeight: 1.25 }}>{line}</p>
+                  ))
+                ) : (
+                  <p style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 48, fontWeight: 800, color: "#ffffff", lineHeight: 1 }}>{s.statNum}</p>
+                )}
                 <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "rgba(255,255,255,0.5)", marginTop: 4 }}>{s.statLabel}</p>
               </div>
             </div>
@@ -1557,10 +1624,10 @@ function Process() {
   const isMobile = ww < 768;
   const [nodesRef, nodesV] = useInView();
   const steps = [
-    { n: 1, t: "Cotiza con nuestro equipo", d: "¿Necesitas mover tu carga? ¡Estamos aquí para ayudarte! Habla con nuestro equipo, recibe asesoría personalizada y cotiza fácil y rápido por WhatsApp o llamada.", img: IMAGES.process.cotiza, icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /><path d="M8 10h8M8 14h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
-    { n: 2, t: "Infórmanos tus datos de recolección", d: "Compártenos la información de recolección y nuestro equipo se encargará de coordinar toda la logística de forma rápida, segura y eficiente. ¡Nosotros nos ocupamos del resto!", img: IMAGES.process.datos, icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M8 14h2v2H8z" fill="#00a6ff" stroke="#00a6ff" /></svg> },
-    { n: 3, t: "Paga tu envío de manera ágil", d: "Te ofrecemos varios métodos de pago para tu comodidad: transferencia bancaria, tarjeta de crédito o billeteras virtuales. ¡Rápido, seguro y sin complicaciones!", img: IMAGES.process.paga, icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" /><path d="M6 16h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
-    { n: 4, t: "Recibe seguimiento en tiempo real", d: "Te mantenemos informado en todo momento. Recibe actualizaciones de tu envío, desde la recolección hasta la entrega, directamente en tu correo o WhatsApp.", img: IMAGES.process.seguimiento, icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" stroke="#00a6ff" strokeWidth="1.8" /></svg> },
+    { n: 1, t: "Cotiza con nuestro equipo", d: "¿Necesitas mover tu carga? ¡Estamos aquí para ayudarte! Habla con nuestro equipo, recibe asesoría personalizada y cotiza fácil y rápido por WhatsApp o llamada.", img: IMAGES.process.cotiza, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /><path d="M8 10h8M8 14h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
+    { n: 2, t: "Infórmanos tus datos de recolección", d: "Compártenos la información de recolección y nuestro equipo se encargará de coordinar toda la logística de forma rápida, segura y eficiente. ¡Nosotros nos ocupamos del resto!", img: IMAGES.process.datos, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M8 14h2v2H8z" fill="#00a6ff" stroke="#00a6ff" /></svg> },
+    { n: 3, t: "Paga tu envío de manera ágil", d: "Te ofrecemos varios métodos de pago para tu comodidad: transferencia bancaria, tarjeta de crédito o billeteras virtuales. ¡Rápido, seguro y sin complicaciones!", img: IMAGES.process.paga, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" /><path d="M6 16h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
+    { n: 4, t: "Recibe seguimiento en tiempo real", d: "Te mantenemos informado en todo momento. Recibe actualizaciones de tu envío, desde la recolección hasta la entrega, directamente en tu correo o WhatsApp.", img: IMAGES.process.seguimiento, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" stroke="#00a6ff" strokeWidth="1.8" /></svg> },
   ];
   return (
     <section style={{ padding: "80px 0", background: "#fff" }}>
@@ -1604,7 +1671,7 @@ function Process() {
               borderRadius: 16,
               border: "1px solid " + (hovCard ? "rgba(27,111,234,0.18)" : "rgba(27,111,234,0.08)"),
               padding: isMobile ? "28px 20px" : "44px 40px", position: "relative", overflow: "hidden",
-              minHeight: isMobile ? "auto" : 360,
+              minHeight: isMobile ? "auto" : 460,
               boxShadow: hovCard
                 ? "0 16px 40px rgba(27,111,234,0.1), inset 0 1px 0 rgba(27,111,234,0.06)"
                 : "0 4px 20px rgba(27,111,234,0.05), inset 0 1px 0 rgba(255,255,255,0.8)",
@@ -1656,7 +1723,7 @@ function Process() {
                 borderRadius: "0 16px 16px 0", overflow: "hidden",
                 animation: "fadeSlideIn 0.6s ease forwards",
               }}>
-                <img src={s.img} alt={s.t} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
+                <img src={s.img} alt={s.t} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: s.imgPos || "center center" }} />
               </div>
             ))}
           </div>
@@ -2420,4 +2487,4 @@ function AccessibilityWidget() {
   );
 }
 
-export { Nav, Hero, Services, About, WhyUs, ShowcaseSlider, Process, CTA, PaymentMarquee, ContactForm, Footer, WF, VideoCard, AccessibilityWidget, ServiceModal };
+export { Nav, Hero, Services, About, WhyUs, ShowcaseSlider, Process, CTA, PaymentMarquee, ContactForm, Footer, WF, TeamCinematic, AccessibilityWidget, ServiceModal };

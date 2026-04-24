@@ -18,10 +18,10 @@ export const IMAGES = {
   logo: "/images/logo.svg",
   logoWhite: "/images/logo-white.png",
   process: {
-    cotiza: "/images/process/cotiza.webp",
-    datos: "/images/process/datos.webp",
-    paga: "/images/process/paga.webp",
-    seguimiento: "/images/process/seguimiento.webp",
+    cotiza: "/images/team/cotiza.png",
+    datos: "/images/team/comparte.png",
+    paga: "/images/team/pagatu.png",
+    seguimiento: "/images/team/seguimientoen.png",
   },
   payments: {
     payu: "/images/payments/payu.webp",
