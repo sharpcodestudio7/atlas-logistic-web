@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { LanguageContext } from '@/context/LanguageContext';
 import { useInView } from '@/hooks/useInView';
 import { useWindowWidth as useWW } from '@/hooks/useWindowWidth';
 import { WA_LINK as WA, PHONE_LINK as PH, IMAGES } from '@/lib/constants';
@@ -124,8 +125,55 @@ function NavLink({ href, label }) {
   );
 }
 
+function LangBtn({ toggleLang, lang, mobile = false }) {
+  const [pressed, setPressed] = useState(false);
+  if (mobile) return (
+    <button onClick={() => toggleLang()} style={{
+      display: "flex", alignItems: "center", gap: 8, padding: "12px 0",
+      background: "none", border: "none", cursor: "pointer",
+      color: "rgba(255,255,255,0.8)", fontSize: 15, fontWeight: 600,
+      fontFamily: "'Fira Sans',sans-serif", width: "100%",
+    }}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" strokeLinecap="round" style={{ animation: "globeSpin 8s linear infinite", transformOrigin: "center", flexShrink: 0 }}>
+        <circle cx="12" cy="12" r="10" /><ellipse cx="12" cy="12" rx="4" ry="10" /><line x1="2" y1="9" x2="22" y2="9" /><line x1="2" y1="15" x2="22" y2="15" />
+      </svg>
+      {lang === "es" ? "Switch to English" : "Cambiar a Español"}
+    </button>
+  );
+  return (
+    <button
+      onClick={() => { setPressed(true); toggleLang(); setTimeout(() => setPressed(false), 200); }}
+      style={{
+        display: "flex", alignItems: "center", gap: 6,
+        padding: "6px 12px", borderRadius: 20,
+        border: "1px solid rgba(27,111,234,0.3)",
+        background: pressed ? "rgba(27,111,234,0.18)" : "rgba(27,111,234,0.06)",
+        cursor: "pointer",
+        transform: pressed ? "scale(0.92)" : "scale(1)",
+        transition: "transform 0.2s, background 0.2s, border-color 0.2s",
+        outline: "none",
+      }}
+      onMouseEnter={e => { e.currentTarget.style.background = "rgba(27,111,234,0.12)"; e.currentTarget.style.borderColor = "#1b6fea"; }}
+      onMouseLeave={e => { e.currentTarget.style.background = pressed ? "rgba(27,111,234,0.18)" : "rgba(27,111,234,0.06)"; e.currentTarget.style.borderColor = "rgba(27,111,234,0.3)"; }}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5" strokeLinecap="round" style={{ animation: "globeSpin 8s linear infinite", transformOrigin: "center" }}>
+        <circle cx="12" cy="12" r="10" /><ellipse cx="12" cy="12" rx="4" ry="10" /><line x1="2" y1="9" x2="22" y2="9" /><line x1="2" y1="15" x2="22" y2="15" />
+      </svg>
+      <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 13, color: "rgba(255,255,255,0.85)" }}>
+        {lang.toUpperCase()}
+      </span>
+    </button>
+  );
+}
+
 function Nav() {
-  const lnk = [{ l: "Inicio", h: "#inicio" }, { l: "Servicios", h: "#servicios" }, { l: "Nosotros", h: "#nosotros" }, { l: "Contacto", h: "#contacto" }];
+  const { t, lang, toggleLang } = useContext(LanguageContext);
+  const lnk = [
+    { l: t("nav.inicio"),    h: "#inicio" },
+    { l: t("nav.servicios"), h: "#servicios" },
+    { l: t("nav.nosotros"),  h: "#nosotros" },
+    { l: t("nav.contacto"),  h: "#contacto" },
+  ];
   const [mo, setMo] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -163,6 +211,7 @@ function Nav() {
         </a>
         <div className="hidden md:flex" style={{ alignItems: "center", gap: 36 }}>
           {lnk.map(l => <NavLink key={l.h} href={l.h} label={l.l} />)}
+          <LangBtn toggleLang={toggleLang} lang={lang} />
         </div>
         <button onClick={() => setMo(!mo)} className="md:hidden" style={{ padding: 8, background: "none", border: "none", cursor: "pointer" }} aria-label="Menú">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round">{mo ? <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></> : <><line x1="4" y1="7" x2="20" y2="7" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="17" x2="20" y2="17" /></>}</svg>
@@ -170,6 +219,9 @@ function Nav() {
       </div>
       {mo && <div style={{ background: scrolled ? "rgba(12,35,64,0.95)" : "rgba(12,35,64,0.97)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderTop: "1px solid rgba(255,255,255,0.08)", padding: "12px 24px" }}>
         {lnk.map(l => <a key={l.h} href={l.h} onClick={(e) => { e.preventDefault(); setMo(false); const el = document.getElementById(l.h.replace('#','')); if (el) { const top = el.getBoundingClientRect().top + window.scrollY - 140; window.scrollTo({ top, behavior: 'smooth' }); } }} style={{ display: "block", padding: "12px 0", color: "rgba(255,255,255,0.8)", fontSize: 16, fontWeight: 500, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>{l.l}</a>)}
+        <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <LangBtn toggleLang={() => { toggleLang(); setMo(false); }} lang={lang} mobile />
+        </div>
         <div style={{ paddingTop: 16, paddingBottom: 8, display: "flex", gap: 10 }}>
           <a href={WA} target="_blank" rel="noopener noreferrer" onClick={() => setMo(false)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "12px 16px", borderRadius: 50, background: "#25D366", color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
@@ -177,7 +229,7 @@ function Nav() {
           </a>
           <a href={PH} onClick={() => setMo(false)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "12px 16px", borderRadius: 50, background: "linear-gradient(135deg, #1b6fea, #00a6ff)", color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: "'Fira Sans',sans-serif", textDecoration: "none" }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
-            Llamar
+            {t("nav.llamar")}
           </a>
         </div>
       </div>}
@@ -186,12 +238,15 @@ function Nav() {
 }
 
 function TypeWriter() {
-  const words = ["Importaciones", "Exportaciones", "Courier", "Agenciamiento Aduanero", "Logística Internacional"];
+  const { t } = useContext(LanguageContext);
+  const words = t("hero.words").split("|");
   const [displayed, setDisplayed] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
-  const [phase, setPhase] = useState("typing"); // "typing" | "waiting" | "deleting"
+  const [phase, setPhase] = useState("typing");
+  const wordsKey = words.join(",");
+  useEffect(() => { setDisplayed(""); setWordIndex(0); setPhase("typing"); }, [wordsKey]);
   useEffect(() => {
-    const word = words[wordIndex];
+    const word = words[wordIndex % words.length];
     let timeout;
     if (phase === "typing") {
       if (displayed.length < word.length) {
@@ -213,13 +268,14 @@ function TypeWriter() {
   }, [displayed, phase, wordIndex]);
   return (
     <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-      <span style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)", color: "rgba(255,255,255,0.75)", fontWeight: 400 }}>Especialistas en</span>
+      <span style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)", color: "rgba(255,255,255,0.75)", fontWeight: 400 }}>{t("hero.subtitulo")}</span>
       <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)", color: "#ffffff" }}>{displayed}<span style={{ animation: "blink 0.5s step-end infinite", marginLeft: 1 }}>|</span></span>
     </div>
   );
 }
 
 function Hero() {
+  const { t } = useContext(LanguageContext);
   return (
     <section id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
       <video autoPlay loop muted playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}>
@@ -228,17 +284,17 @@ function Hero() {
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(12,35,64,0.9) 0%, rgba(12,35,64,0.72) 40%, rgba(12,35,64,0.55) 100%)" }} />
       <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "110px 24px 60px", width: "100%" }}>
         <div style={{ maxWidth: 800 }}>
-          <R delay={200}><h1 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)", lineHeight: 1.08, letterSpacing: "-0.02em", marginTop: -80 }}>¡Desde donde estés<br />hasta donde lo necesites!</h1></R>
+          <R delay={200}><h1 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, color: "#fff", fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)", lineHeight: 1.08, letterSpacing: "-0.02em", marginTop: -80 }}>{t("hero.titulo.l1")}<br />{t("hero.titulo.l2")}</h1></R>
           <R delay={300}><TypeWriter /></R>
 
           <R delay={600}><div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", gap: 14 }}>
             <AnimBtn href={WA} external bg="#00a6ff" hoverBg="#1b6fea" shadow="0 8px 24px rgba(0,166,255,0.35)" hoverShadow="0 14px 32px rgba(27,111,234,0.4)">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
-              Cotizar mi envío
+              {t("hero.cta1")}
             </AnimBtn>
             <AnimBtn href="#contacto" onClick={(e) => { e.preventDefault(); const el = document.getElementById('contacto'); if (el) { const top = el.getBoundingClientRect().top + window.scrollY - 140; window.scrollTo({ top, behavior: 'smooth' }); } }} bg="linear-gradient(135deg, #1b6fea, #00a6ff)" hoverBg="linear-gradient(135deg, #00a6ff, #1b6fea)" shadow="0 8px 24px rgba(27,111,234,0.3)" hoverShadow="0 14px 32px rgba(0,166,255,0.4)">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /></svg>
-              Contáctanos
+              {t("hero.cta2")}
             </AnimBtn>
           </div></R>
         </div>
@@ -482,6 +538,7 @@ function HoloStepItem({ paso, index, total, trigger }) {
 
 /* ─── ServiceModal ─── */
 function ServiceModal({ serviceKey, onClose }) {
+  const { t } = useContext(LanguageContext);
   const data = serviceData[serviceKey];
   const [activeTab, setActiveTab] = useState(0);
   const [displayTab, setDisplayTab] = useState(0);
@@ -492,7 +549,7 @@ function ServiceModal({ serviceKey, onClose }) {
   const rafRef = useRef(null);
   const ww = useWW();
   const isMobile = ww < 768;
-  const tabs = ["¿Qué es?", "¿Cómo funciona?", "¿Ideal para?"];
+  const tabs = [t("modal.tab0"), t("modal.tab1"), t("modal.tab2")];
   const rainbowRef = useRef(null);
   const holoRef = useRef(null);
   const [mouseOver, setMouseOver] = useState(false);
@@ -551,7 +608,7 @@ function ServiceModal({ serviceKey, onClose }) {
 
   if (!data) return null;
 
-  const waMsg = encodeURIComponent(`Hola, me interesa el servicio de ${data.title}. ¿Me pueden dar más información?`);
+  const waMsg = encodeURIComponent(`${t("modal.wamsg")} ${data.title}. ¿Me pueden dar más información?`);
   const waLink = `https://wa.me/573226055431?text=${waMsg}`;
 
   const particles = [
@@ -735,7 +792,7 @@ function ServiceModal({ serviceKey, onClose }) {
                   }}>{data.queEs}</p>
                   {data.queIncluye && (
                     <div style={{ marginTop: 18 }}>
-                      <p style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 600, fontSize: 13, color: "#1b6fea", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.04em" }}>¿Qué incluye?</p>
+                      <p style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 600, fontSize: 13, color: "#1b6fea", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.04em" }}>{t("modal.queincluye")}</p>
                       <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                         {data.queIncluye.map((item, i) => (
                           <li key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: i < data.queIncluye.length - 1 ? 8 : 0 }}>
@@ -753,7 +810,7 @@ function ServiceModal({ serviceKey, onClose }) {
               {displayTab === 1 && (
                 <div>
                   {data.pasos.length === 0
-                    ? <p style={{ color: "#9ca3af", fontFamily: "'Roboto',sans-serif", fontSize: 14 }}>Próximamente disponible.</p>
+                    ? <p style={{ color: "#9ca3af", fontFamily: "'Roboto',sans-serif", fontSize: 14 }}>{t("modal.proximamente")}</p>
                     : data.pasos.map((paso, i) => (
                       <HoloStepItem key={i} paso={paso} index={i} total={data.pasos.length} trigger={contentReady} />
                     ))
@@ -819,14 +876,14 @@ function ServiceModal({ serviceKey, onClose }) {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
-                Cotizar este servicio
+                {t("modal.cotizar")}
               </a>
               <button onClick={handleClose} style={{
                 display: "block", width: "100%", marginTop: 10,
                 background: "none", border: "none",
                 fontFamily: "'Fira Sans',sans-serif", fontSize: 13,
                 color: "#9ca3af", cursor: "pointer", padding: "6px 0",
-              }}>Cerrar</button>
+              }}>{t("modal.cerrar")}</button>
             </div>
           </div>
         </div>
@@ -836,6 +893,7 @@ function ServiceModal({ serviceKey, onClose }) {
 }
 
 function SvcCard({ icon, title, desc, color, hoverAnim, serviceKey, onOpenModal }) {
+  const { t } = useContext(LanguageContext);
   const [hov, setHov] = useState(false);
   return (
     <div
@@ -890,7 +948,7 @@ function SvcCard({ icon, title, desc, color, hoverAnim, serviceKey, onOpenModal 
           cursor: "pointer",
         }}
       >
-        Ver más
+        {t("services.vermas")}
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "transform 0.3s", transform: hov ? "translateX(3px)" : "translateX(0)" }}><path d="M5 12h14M12 5l7 7-7 7" /></svg>
       </span>
     </div>
@@ -915,7 +973,7 @@ function SvcCarousel({ data, gap, visible, pos, onOpenModal }) {
             opacity: v ? undefined : 0,
           }}>
             <SvcCard
-              icon={svcIcons[s.k].icon} title={s.t} desc={s.d}
+              icon={svcIcons[s.k].icon} title={s.title} desc={s.desc}
               color={s.color} hoverAnim={svcIcons[s.k].hoverAnim}
               serviceKey={s.k} onOpenModal={onOpenModal}
             />
@@ -927,17 +985,18 @@ function SvcCarousel({ data, gap, visible, pos, onOpenModal }) {
 }
 
 function Services() {
+  const { t } = useContext(LanguageContext);
   const [pos, setPos] = useState(0);
   const [modalKey, setModalKey] = useState(null);
   const ww = useWW();
   const visible = ww < 640 ? 1 : ww < 1024 ? 2 : 4;
   const data = [
-    { k: "importacion", t: "Importación por Courier", d: "Recepción de envíos desde el exterior hacia Colombia con liberación rápida puerta a puerta.", color: "#1b6fea" },
-    { k: "exportacion", t: "Exportación por Courier", d: "Envíos desde Colombia hacia más de 220 países con trámites simplificados y tránsito express.", color: "#00a6ff" },
-    { k: "terrestre", t: "Envíos Terrestres a Venezuela", d: "Transporte terrestre eficiente y de menor costo con cobertura en distintas ciudades.", color: "#0c2340" },
-    { k: "casillero", t: "Casillero Internacional", d: "Direcciones en EE.UU., España y China para consolidar compras y optimizar costos.", color: "#1b6fea" },
-    { k: "aereo", t: "Triangulación de Envíos", d: "Envíos directos entre países, reduciendo tiempos de tránsito y evitando procesos intermedios.", color: "#00a6ff" },
-    { k: "especiales", t: "Operaciones Especiales", d: "Exportaciones temporales, reembarques, mercancías peligrosas, calibraciones y reparaciones.", color: "#0c2340" },
+    { k: "importacion", title: t("services.importacion"), desc: t("services.importacion.desc"), color: "#1b6fea" },
+    { k: "exportacion", title: t("services.exportacion"), desc: t("services.exportacion.desc"), color: "#00a6ff" },
+    { k: "terrestre", title: t("services.terrestre"), desc: t("services.terrestre.desc"), color: "#0c2340" },
+    { k: "casillero", title: t("services.casillero"), desc: t("services.casillero.desc"), color: "#1b6fea" },
+    { k: "aereo", title: t("services.triangulacion"), desc: t("services.triangulacion.desc"), color: "#00a6ff" },
+    { k: "especiales", title: t("services.especiales"), desc: t("services.especiales.desc"), color: "#0c2340" },
   ];
   const maxPos = data.length - visible;
   const canLeft = pos > 0;
@@ -977,7 +1036,7 @@ function Services() {
       </svg>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: ww < 768 ? "0 32px" : "0 64px", position: "relative", zIndex: 2 }}>
         <R><div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#1d1d1b" }}>Servicios Logísticos</h2>
+          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#1d1d1b" }}>{t("services.titulo")}</h2>
           <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
             <span style={{ width: 28, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 48, height: 2, background: "#1b6fea", borderRadius: 4, display: "inline-block" }} />
@@ -1217,11 +1276,12 @@ function TeamCinematic() {
 }
 
 function About() {
+  const { t } = useContext(LanguageContext);
   const stats = [
-    { v: "160+", numEnd: 160, numSuffix: "+", l: "Clientes han confiado en nosotros", icon: statIcons.star.icon, hoverAnim: statIcons.star.hoverAnim, color: "#1b6fea" },
-    { v: "1.200+", numEnd: 1200, numSuffix: "+", l: "Operaciones realizadas", icon: statIcons.box.icon, hoverAnim: statIcons.box.hoverAnim, color: "#00a6ff" },
-    { v: "23.100+ Kg", numEnd: 23100, numSuffix: "+ Kg", l: "Enviados exitosamente", icon: statIcons.globe.icon, hoverAnim: statIcons.globe.hoverAnim, color: "#1b6fea" },
-    { v: "25.700+ Kg", numEnd: 25700, numSuffix: "+ Kg", l: "Transportados en volumen", icon: statIcons.bolt.icon, hoverAnim: statIcons.bolt.hoverAnim, color: "#00a6ff" },
+    { v: "160+", numEnd: 160, numSuffix: "+", l: t("stats.clientes"), icon: statIcons.star.icon, hoverAnim: statIcons.star.hoverAnim, color: "#1b6fea" },
+    { v: "1.200+", numEnd: 1200, numSuffix: "+", l: t("stats.operaciones"), icon: statIcons.box.icon, hoverAnim: statIcons.box.hoverAnim, color: "#00a6ff" },
+    { v: "23.100+ Kg", numEnd: 23100, numSuffix: "+ Kg", l: t("stats.kg"), icon: statIcons.globe.icon, hoverAnim: statIcons.globe.hoverAnim, color: "#1b6fea" },
+    { v: "25.700+ Kg", numEnd: 25700, numSuffix: "+ Kg", l: t("stats.volumen"), icon: statIcons.bolt.icon, hoverAnim: statIcons.bolt.hoverAnim, color: "#00a6ff" },
   ];
   return (
     <section id="nosotros" style={{ padding: "80px 0", background: "#fff" }}>
@@ -1229,15 +1289,15 @@ function About() {
         {/* Top: text left + image right */}
         <div className="grid lg:grid-cols-2 gap-12" style={{ alignItems: "center", marginBottom: 56 }}>
           <R dir="left"><div>
-            <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#1d1d1b", marginBottom: 8 }}>Sobre Nosotros</h2>
+            <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#1d1d1b", marginBottom: 8 }}>{t("about.titulo")}</h2>
             <div style={{ display: "flex", gap: 6, marginBottom: 28 }}>
               <span style={{ width: 44, height: 3, background: "#1b6fea", borderRadius: 4, display: "inline-block" }} />
               <span style={{ width: 18, height: 3, background: "#00a6ff", borderRadius: 4, display: "inline-block" }} />
             </div>
             <div style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#4b5563", lineHeight: 1.8 }}>
-              <p style={{ marginBottom: 16 }}>En <strong style={{ color: "#1d1d1b" }}>ATLAS LOGISTIC</strong> somos especialistas en logística internacional aérea, brindando soluciones integrales en importaciones y exportaciones, garantizando rapidez, seguridad y confiabilidad en cada operación.</p>
-              <p style={{ marginBottom: 16 }}>Gestionamos cada envío con altos estándares de precisión y control, respaldados por un equipo comprometido en ofrecer un servicio personalizado en todas las etapas del proceso logístico.</p>
-              <p>Más que transportar mercancías, facilitamos el comercio internacional y generamos oportunidades que impulsan el crecimiento de nuestros clientes a nivel global.</p>
+              <p style={{ marginBottom: 16 }}>{t("about.p1a")}<strong style={{ color: "#1d1d1b" }}>ATLAS LOGISTIC</strong>{t("about.p1b")}</p>
+              <p style={{ marginBottom: 16 }}>{t("about.p2")}</p>
+              <p>{t("about.p3")}</p>
             </div>
             <a
               href="/equipo"
@@ -1254,7 +1314,7 @@ function About() {
                 marginTop: 28,
               }}
             >
-              Conoce a nuestro equipo
+              {t("about.cta")}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
@@ -1320,6 +1380,7 @@ function WhyUsCard({ icon, title, desc, color, hoverAnim }) {
 }
 
 function WhyUs() {
+  const { t } = useContext(LanguageContext);
   const [routePhase, setRoutePhase] = useState("hidden"); // hidden → drawing → flowing
   const sectionRef = useRef(null);
   useEffect(() => {
@@ -1336,16 +1397,16 @@ function WhyUs() {
     return () => obs.disconnect();
   }, []);
   const items = [
-    { t: "Experiencia", d: "Amplia experiencia en logística internacional, gestionando envíos de forma segura, eficiente y sin contratiempos.", color: "#1b6fea", hoverAnim: "whyusPulse",
+    { t: t("whyus.exp.t"), d: t("whyus.exp.d"), color: "#1b6fea", hoverAnim: "whyusPulse",
       icon: <><path d="M16 28s10-5 10-13V7l-10-4L6 7v8c0 8 10 13 10 13z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="ai-s1" style={{ strokeDasharray: 120, strokeDashoffset: 120 }} /><path d="M11 16l3 3 6-6" stroke="#00a6ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="ai-s2" style={{ strokeDasharray: 20, strokeDashoffset: 20 }} /></>
     },
-    { t: "Red Global", d: "Aliados estratégicos en más de 220 países, garantizando cobertura global y soluciones confiables.", color: "#00a6ff", hoverAnim: "whyusSpin",
+    { t: t("whyus.red.t"), d: t("whyus.red.d"), color: "#00a6ff", hoverAnim: "whyusSpin",
       icon: <><circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1.3" className="ai-s1" style={{ strokeDasharray: 76, strokeDashoffset: 76 }} /><ellipse cx="16" cy="16" rx="6" ry="12" stroke="currentColor" strokeWidth="1" className="ai-s2" style={{ strokeDasharray: 60, strokeDashoffset: 60 }} /><line x1="4" y1="12" x2="28" y2="12" stroke="currentColor" strokeWidth="0.8" className="ai-s3" style={{ strokeDasharray: 24, strokeDashoffset: 24 }} /><line x1="4" y1="20" x2="28" y2="20" stroke="currentColor" strokeWidth="0.8" className="ai-s3" style={{ strokeDasharray: 24, strokeDashoffset: 24 }} /></>
     },
-    { t: "Atención Personalizada", d: "Acompañamiento en todo el proceso con soluciones adaptadas a las necesidades de tu negocio.", color: "#1b6fea", hoverAnim: "whyusBounce",
+    { t: t("whyus.aten.t"), d: t("whyus.aten.d"), color: "#1b6fea", hoverAnim: "whyusBounce",
       icon: <><path d="M26 27v-2.5a5 5 0 00-5-5H11a5 5 0 00-5 5V27" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="ai-s1" style={{ strokeDasharray: 50, strokeDashoffset: 50 }} /><circle cx="16" cy="10" r="5" stroke="currentColor" strokeWidth="1.3" className="ai-s2" style={{ strokeDasharray: 32, strokeDashoffset: 32 }} /><path d="M21 5.16a5 5 0 010 9.68" stroke="#00a6ff" strokeWidth="1.3" strokeLinecap="round" className="ai-s3" style={{ strokeDasharray: 16, strokeDashoffset: 16 }} /></>
     },
-    { t: "Innovación", d: "Tecnología avanzada para el seguimiento y gestión de envíos, brindando transparencia y control total.", color: "#00a6ff", hoverAnim: "whyusGlow",
+    { t: t("whyus.inno.t"), d: t("whyus.inno.d"), color: "#00a6ff", hoverAnim: "whyusGlow",
       icon: <><path d="M12 27h8M13 27v-3a7 7 0 01-2.5-5.5C10.5 14.5 13 11 16 11s5.5 3.5 5.5 7.5A7 7 0 0119 24v3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="ai-s1" style={{ strokeDasharray: 80, strokeDashoffset: 80 }} /><line x1="16" y1="5" x2="16" y2="8" stroke="#00a6ff" strokeWidth="1.3" strokeLinecap="round" className="ai-s2" style={{ strokeDasharray: 4, strokeDashoffset: 4 }} /><line x1="24" y1="10" x2="22" y2="12" stroke="#00a6ff" strokeWidth="1.3" strokeLinecap="round" className="ai-s2" style={{ strokeDasharray: 4, strokeDashoffset: 4 }} /><line x1="8" y1="10" x2="10" y2="12" stroke="#00a6ff" strokeWidth="1.3" strokeLinecap="round" className="ai-s2" style={{ strokeDasharray: 4, strokeDashoffset: 4 }} /><circle cx="16" cy="19" r="2" stroke="#00a6ff" strokeWidth="1" className="ai-s3" style={{ strokeDasharray: 13, strokeDashoffset: 13 }} /><path d="M16 17v-2" stroke="#00a6ff" strokeWidth="1" strokeLinecap="round" className="ai-s3" style={{ strokeDasharray: 4, strokeDashoffset: 4 }} /></>
     },
   ];
@@ -1403,7 +1464,7 @@ function WhyUs() {
       </svg>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
         <R><div style={{ textAlign: "center", marginBottom: 48 }}>
-          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#ffffff" }}>¿Por qué elegirnos?</h2>
+          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#ffffff" }}>{t("whyus.titulo")}</h2>
           <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
             <span style={{ width: 28, height: 2, background: "rgba(0,166,255,0.3)", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 48, height: 2, background: "#00a6ff", borderRadius: 4, display: "inline-block" }} />
@@ -1421,6 +1482,7 @@ function WhyUs() {
 }
 
 function ShowcaseSlider() {
+  const { t } = useContext(LanguageContext);
   const images = [
     { src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80", fit: "cover", pos: "center 30%" },
     { src: "/images/exportaciones.png",  fit: "cover", pos: "center center" },
@@ -1428,10 +1490,10 @@ function ShowcaseSlider() {
     { src: "/images/redglobal.png",      fit: "cover", pos: "left top" },
   ];
   const slides = [
-    { tag: "IMPORTACIONES", title: "Tu mercancía en Colombia, sin complicaciones", desc: "Gestionamos cada importación desde el origen hasta tu puerta. Trámites aduaneros, liberación express y seguimiento en tiempo real para que tú solo te preocupes por vender.", statLines: ["EE.UU · España", "Costa Rica · R. Dominicana"], statFontSize: 32, statLabel: "Destinos con mayor volumen de envío" },
-    { tag: "EXPORTACIONES", title: "Colombia al mundo, con rapidez y confianza", desc: "Exporta tus productos a más de 220 países con procesos aduaneros simplificados. Somos tu aliado estratégico para conquistar mercados internacionales.", statNum: "220+", statLabel: "Países de cobertura global" },
-    { tag: "CASILLERO INTERNACIONAL", title: "Compra en el exterior como si estuvieras allá", desc: "Tenemos direcciones en EE.UU., España y China para que compres en cualquier tienda internacional y recibas tus productos directamente en Colombia.", statNum: "3 países", statLabel: "Con direcciones disponibles" },
-    { tag: "RED GLOBAL", title: "Una red logística que no tiene fronteras", desc: "Operamos con aliados estratégicos en los principales hubs logísticos del mundo. Tu carga siempre estará en manos expertas, sin importar el destino.", statNum: "1.400+", statLabel: "Paquetes despachados en 2025 y 2026" },
+    { tag: t("showcase.s0.tag"), title: t("showcase.s0.title"), desc: t("showcase.s0.desc"), statLines: [t("showcase.s0.statLine1"), t("showcase.s0.statLine2")], statFontSize: 32, statLabel: t("showcase.s0.statlabel") },
+    { tag: t("showcase.s1.tag"), title: t("showcase.s1.title"), desc: t("showcase.s1.desc"), statNum: "220+", statLabel: t("showcase.s1.statlabel") },
+    { tag: t("showcase.s2.tag"), title: t("showcase.s2.title"), desc: t("showcase.s2.desc"), statNum: t("showcase.s2.statNum"), statLabel: t("showcase.s2.statlabel") },
+    { tag: t("showcase.s3.tag"), title: t("showcase.s3.title"), desc: t("showcase.s3.desc"), statNum: "1.400+", statLabel: t("showcase.s3.statlabel") },
   ];
 
   const [current, setCurrent] = useState(0);
@@ -1525,7 +1587,7 @@ function ShowcaseSlider() {
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
         {/* Section title */}
         <R><div style={{ textAlign: "center", marginBottom: 48 }}>
-          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#ffffff" }}>Soluciones que mueven al mundo</h2>
+          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#ffffff" }}>{t("showcase.titulo")}</h2>
           <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
             <span style={{ width: 28, height: 2, background: "rgba(0,166,255,0.3)", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 48, height: 2, background: "#00a6ff", borderRadius: 4, display: "inline-block" }} />
@@ -1618,28 +1680,29 @@ function ShowcaseSlider() {
 }
 
 function Process() {
+  const { t } = useContext(LanguageContext);
   const [active, setActive] = useState(0);
   const [hovCard, setHovCard] = useState(false);
   const ww = useWW();
   const isMobile = ww < 768;
   const [nodesRef, nodesV] = useInView();
   const steps = [
-    { n: 1, t: "Cotiza con nuestro equipo", d: "¿Necesitas mover tu carga? ¡Estamos aquí para ayudarte! Habla con nuestro equipo, recibe asesoría personalizada y cotiza fácil y rápido por WhatsApp o llamada.", img: IMAGES.process.cotiza, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /><path d="M8 10h8M8 14h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
-    { n: 2, t: "Infórmanos tus datos de recolección", d: "Compártenos la información de recolección y nuestro equipo se encargará de coordinar toda la logística de forma rápida, segura y eficiente. ¡Nosotros nos ocupamos del resto!", img: IMAGES.process.datos, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M8 14h2v2H8z" fill="#00a6ff" stroke="#00a6ff" /></svg> },
-    { n: 3, t: "Paga tu envío de manera ágil", d: "Te ofrecemos varios métodos de pago para tu comodidad: transferencia bancaria, tarjeta de crédito o billeteras virtuales. ¡Rápido, seguro y sin complicaciones!", img: IMAGES.process.paga, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" /><path d="M6 16h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
-    { n: 4, t: "Recibe seguimiento en tiempo real", d: "Te mantenemos informado en todo momento. Recibe actualizaciones de tu envío, desde la recolección hasta la entrega, directamente en tu correo o WhatsApp.", img: IMAGES.process.seguimiento, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" stroke="#00a6ff" strokeWidth="1.8" /></svg> },
+    { n: 1, t: t("process.s1.t"), d: t("process.s1.d"), img: IMAGES.process.cotiza, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /><path d="M8 10h8M8 14h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
+    { n: 2, t: t("process.s2.t"), d: t("process.s2.d"), img: IMAGES.process.datos, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M8 14h2v2H8z" fill="#00a6ff" stroke="#00a6ff" /></svg> },
+    { n: 3, t: t("process.s3.t"), d: t("process.s3.d"), img: IMAGES.process.paga, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" /><path d="M6 16h4" stroke="#00a6ff" strokeWidth="1.5" /></svg> },
+    { n: 4, t: t("process.s4.t"), d: t("process.s4.d"), img: IMAGES.process.seguimiento, imgPos: "center center", icon: <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" stroke="#00a6ff" strokeWidth="1.8" /></svg> },
   ];
   return (
     <section style={{ padding: "80px 0", background: "#fff" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
         <R><div style={{ textAlign: "center", marginBottom: 56 }}>
-          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#1d1d1b" }}>Nuestro Proceso</h2>
+          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#1d1d1b" }}>{t("process.titulo")}</h2>
           <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
             <span style={{ width: 28, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 48, height: 2, background: "#1b6fea", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 28, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
           </div>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>Un proceso optimizado para garantizar tu satisfacción en cada etapa del envío.</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>{t("process.subtitulo")}</p>
         </div></R>
         {/* Timeline nodes */}
         <div ref={nodesRef} style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isMobile ? 28 : 48, padding: isMobile ? "0 12px" : "0 40px" }}>
@@ -1744,6 +1807,7 @@ function Process() {
 }
 
 function CTA() {
+  const { t } = useContext(LanguageContext);
   const [dims, setDims] = useState({ largo: "", ancho: "", alto: "" });
   const [peso, setPeso] = useState("");
   const [calcHov, setCalcHov] = useState(false);
@@ -1771,13 +1835,13 @@ function CTA() {
       </svg>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
         <R><div style={{ textAlign: "center", marginBottom: 36 }}>
-          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#1d1d1b" }}>¿Listo para enviar tu mercancía?</h2>
+          <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: "clamp(1.7rem, 3.5vw, 2.2rem)", color: "#1d1d1b" }}>{t("cta.titulo")}</h2>
           <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
             <span style={{ width: 28, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 48, height: 2, background: "#1b6fea", borderRadius: 4, display: "inline-block" }} />
             <span style={{ width: 28, height: 2, background: "rgba(27,111,234,0.3)", borderRadius: 4, display: "inline-block" }} />
           </div>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>Calcula el peso volumétrico de tu envío y cotiza en minutos.</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>{t("cta.subtitulo")}</p>
         </div></R>
         <div className="grid lg:grid-cols-2 gap-10" style={{ alignItems: "center" }}>
           {/* Calculator card */}
@@ -1811,10 +1875,10 @@ function CTA() {
                 WebkitBackgroundClip: calcHov ? "text" : "unset",
                 backgroundClip: calcHov ? "text" : "unset",
                 transition: "color 0.3s",
-              }}>Calculadora de peso volumétrico</h3>
-              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#6b7280", marginBottom: 20, lineHeight: 1.5 }}>Tu paquete se factura por el peso mayor entre el físico y el volumétrico.</p>
+              }}>{t("cta.calc.titulo")}</h3>
+              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#6b7280", marginBottom: 20, lineHeight: 1.5 }}>{t("cta.calc.desc")}</p>
               <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 12, marginBottom: 14 }}>
-                {[["largo", "Largo (cm)"], ["ancho", "Ancho (cm)"], ["alto", "Alto (cm)"]].map(([k, label]) => (
+                {[["largo", t("cta.largo")], ["ancho", t("cta.ancho")], ["alto", t("cta.alto")]].map(([k, label]) => (
                   <div key={k}>
                     <label style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</label>
                     <input type="text" inputMode="decimal" placeholder="0" value={dims[k]} onChange={e => handleDim(k, e.target.value)}
@@ -1825,7 +1889,7 @@ function CTA() {
                 ))}
               </div>
               <div style={{ marginBottom: 20 }}>
-                <label style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>Peso físico (kg) — opcional</label>
+                <label style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 12, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{t("cta.peso")}</label>
                 <input type="text" inputMode="decimal" placeholder="0" value={peso} onChange={e => { if (e.target.value === "" || /^\d*\.?\d*$/.test(e.target.value)) setPeso(e.target.value); }}
                   onFocus={e => { e.target.style.borderColor = "rgba(27,111,234,0.3)"; e.target.style.boxShadow = "0 0 0 3px rgba(0,166,255,0.1)"; }}
                   onBlur={e => { e.target.style.borderColor = "rgba(27,111,234,0.1)"; e.target.style.boxShadow = "none"; }}
@@ -1837,7 +1901,7 @@ function CTA() {
                 border: vol !== null ? "1px solid rgba(27,111,234,0.15)" : "1px solid rgba(27,111,234,0.06)",
                 transition: "all 0.4s",
               }}>
-                <p style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>Peso volumétrico</p>
+                <p style={{ fontFamily: "'Fira Sans',sans-serif", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{t("cta.vol.label")}</p>
                 <span style={{
                   fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: vol !== null ? 36 : 24,
                   background: vol !== null ? "linear-gradient(135deg, #00a6ff, #1b6fea)" : "none",
@@ -1846,9 +1910,9 @@ function CTA() {
                 }}>{vol !== null ? vol.toFixed(2) + " kg" : "— kg"}</span>
                 {pesoFisico !== null && vol !== null && (
                   <div style={{ marginTop: 10, padding: "8px 14px", borderRadius: 8, background: "rgba(27,111,234,0.06)" }}>
-                    <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 12, color: "#6b7280", marginBottom: 4 }}>Peso facturable (el mayor):</p>
+                    <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 12, color: "#6b7280", marginBottom: 4 }}>{t("cta.facturable")}</p>
                     <span style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: 22, color: "#1b6fea" }}>{pesoFacturable.toFixed(2)} kg</span>
-                    <span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 11, color: "#9ca3af", marginLeft: 8 }}>({pesoFacturable === vol ? "volumétrico" : "físico"})</span>
+                    <span style={{ fontFamily: "'Roboto',sans-serif", fontSize: 11, color: "#9ca3af", marginLeft: 8 }}>({pesoFacturable === vol ? t("cta.vol.unidad") : t("cta.fis.unidad")})</span>
                   </div>
                 )}
               </div>
@@ -1857,12 +1921,12 @@ function CTA() {
           {/* CTA side */}
           <R dir="right" delay={200}>
             <div style={{ textAlign: "center", padding: "20px 0" }}>
-              <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 22, color: "#1d1d1b", marginBottom: 12 }}>¿Necesitas una cotización?</h3>
-              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", maxWidth: 400, margin: "0 auto 28px", lineHeight: 1.7 }}>Nuestro equipo te asesora sin compromiso. Escríbenos por WhatsApp o llámanos directamente.</p>
+              <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 22, color: "#1d1d1b", marginBottom: 12 }}>{t("cta.cta.titulo")}</h3>
+              <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", maxWidth: 400, margin: "0 auto 28px", lineHeight: 1.7 }}>{t("cta.cta.desc")}</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center" }}>
                 <AnimBtn href={WA} external bg="#25D366" hoverBg="#1ea855" shadow="0 6px 20px rgba(37,211,102,0.25)" hoverShadow="0 14px 32px rgba(37,211,102,0.35)">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
-                  Cotizar por WhatsApp
+                  {t("cta.wa")}
                 </AnimBtn>
               </div>
             </div>
@@ -1876,7 +1940,7 @@ function CTA() {
             color: "#9ca3af", textAlign: "center", marginBottom: 4,
             textTransform: "uppercase", letterSpacing: 1,
           }}>
-            Medios de pago aceptados
+            {t("cta.pagos")}
           </p>
           <PaymentMarquee />
         </div>
@@ -1925,14 +1989,18 @@ function PaymentMarquee() {
 }
 
 function SuccessTypeWriter() {
-  const full = "¡Gracias por contactarte con Atlas!";
-  const blueStart = full.indexOf("Atlas!");
+  const { t } = useContext(LanguageContext);
+  const part1 = t("contact.success.titulo1");
+  const part2 = t("contact.success.titulo2");
+  const full = part1 + part2;
+  const blueStart = part1.length;
   const [displayed, setDisplayed] = useState("");
+  useEffect(() => { setDisplayed(""); }, [full]);
   useEffect(() => {
     if (displayed.length >= full.length) return;
-    const t = setTimeout(() => setDisplayed(full.slice(0, displayed.length + 1)), 70);
-    return () => clearTimeout(t);
-  }, [displayed]);
+    const timer = setTimeout(() => setDisplayed(full.slice(0, displayed.length + 1)), 70);
+    return () => clearTimeout(timer);
+  }, [displayed, full]);
   const before = displayed.slice(0, Math.min(displayed.length, blueStart));
   const blue = displayed.length > blueStart ? displayed.slice(blueStart) : "";
   return (
@@ -1944,12 +2012,15 @@ function SuccessTypeWriter() {
 }
 
 function ContactTypeWriter() {
-  const words = ["¿Listo para tu próximo envío internacional?", "¿Necesitas importar o exportar?", "¿Buscas un aliado logístico confiable?"];
+  const { t } = useContext(LanguageContext);
+  const words = t("contact.words").split("|");
   const [displayed, setDisplayed] = useState("");
   const [wordIndex, setWordIndex] = useState(0);
   const [phase, setPhase] = useState("typing");
+  const wordsKey = words.join(",");
+  useEffect(() => { setDisplayed(""); setWordIndex(0); setPhase("typing"); }, [wordsKey]);
   useEffect(() => {
-    const word = words[wordIndex];
+    const word = words[wordIndex % words.length];
     let timeout;
     if (phase === "typing") {
       if (displayed.length < word.length) {
@@ -1977,6 +2048,7 @@ function ContactTypeWriter() {
 }
 
 function ContactForm() {
+  const { t } = useContext(LanguageContext);
   const ww = useWW();
   const isMobile = ww < 640;
   const [form, setForm] = useState({ nombre: "", celular: "", correo: "", ciudad: "", servicio: "", mensaje: "", datosCheck: false, novedadesCheck: false });
@@ -2043,15 +2115,15 @@ function ContactForm() {
         {!isMobile && <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />}
         <div style={{ paddingLeft: isMobile ? 0 : 56, marginTop: isMobile ? 32 : 0 }}>
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", lineHeight: 1.75, marginBottom: 20 }}>
-            Tu mensaje ha sido enviado correctamente. Agradecemos tu interés en nuestros servicios. Muy pronto uno de nuestros asesores se comunicará contigo para brindarte la información que necesitas.
+            {t("contact.success.p1")}
           </p>
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", lineHeight: 1.75, marginBottom: 24 }}>
-            Mientras tanto, te invitamos a conocer todos nuestros servicios logísticos.
+            {t("contact.success.p2")}
           </p>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <button onClick={() => scrollTo("servicios")} style={{ background: "none", border: "none", padding: 0, color: "#1b6fea", fontSize: 15, fontWeight: 600, fontFamily: "'Fira Sans',sans-serif", cursor: "pointer" }}>Ver servicios</button>
+            <button onClick={() => scrollTo("servicios")} style={{ background: "none", border: "none", padding: 0, color: "#1b6fea", fontSize: 15, fontWeight: 600, fontFamily: "'Fira Sans',sans-serif", cursor: "pointer" }}>{t("contact.success.ver")}</button>
             <span style={{ color: "#d1d5db" }}>|</span>
-            <button onClick={() => scrollTo("inicio")} style={{ background: "none", border: "none", padding: 0, color: "#1b6fea", fontSize: 15, fontWeight: 600, fontFamily: "'Fira Sans',sans-serif", cursor: "pointer" }}>Volver al inicio</button>
+            <button onClick={() => scrollTo("inicio")} style={{ background: "none", border: "none", padding: 0, color: "#1b6fea", fontSize: 15, fontWeight: 600, fontFamily: "'Fira Sans',sans-serif", cursor: "pointer" }}>{t("contact.success.inicio")}</button>
           </div>
         </div>
       </div>
@@ -2064,25 +2136,25 @@ function ContactForm() {
         {/* Columna izquierda */}
         <div style={{ paddingRight: isMobile ? 0 : 80 }}>
           <ContactTypeWriter />
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", marginTop: 20, maxWidth: 380, lineHeight: 1.75 }}>Nos alegra que estés aquí. Cuéntanos tu necesidad y un asesor de Atlas Logistic te contactará muy pronto.</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 15, color: "#6b7280", marginTop: 20, maxWidth: 380, lineHeight: 1.75 }}>{t("contact.subtitulo")}</p>
         </div>
         {/* Línea divisora */}
         {!isMobile && <div style={{ background: "#e5e7eb", width: 1, alignSelf: "stretch" }} />}
         {/* Columna derecha - formulario */}
         <form onSubmit={handleSubmit} style={{ paddingLeft: isMobile ? 0 : 80, marginTop: isMobile ? 40 : 0, display: "flex", flexDirection: "column", gap: 0 }}>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
-            <input name="nombre" placeholder="Nombre completo" required value={form.nombre} onChange={handleChange}
+            <input name="nombre" placeholder={t("contact.nombre")} required value={form.nombre} onChange={handleChange}
               style={{ ...lineInput(), ...focusBorder("nombre") }}
               onFocus={() => setFocused("nombre")} onBlur={() => setFocused(null)} />
-            <input name="celular" placeholder="Celular" required value={form.celular} onChange={handleChange}
+            <input name="celular" placeholder={t("contact.celular")} required value={form.celular} onChange={handleChange}
               style={{ ...lineInput(), ...focusBorder("celular") }}
               onFocus={() => setFocused("celular")} onBlur={() => setFocused(null)} />
           </div>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0 24px", marginBottom: 8 }}>
-            <input name="correo" type="email" placeholder="Correo electrónico" required value={form.correo} onChange={handleChange}
+            <input name="correo" type="email" placeholder={t("contact.correo")} required value={form.correo} onChange={handleChange}
               style={{ ...lineInput(), ...focusBorder("correo") }}
               onFocus={() => setFocused("correo")} onBlur={() => setFocused(null)} />
-            <input name="ciudad" placeholder="Ciudad" required value={form.ciudad} onChange={handleChange}
+            <input name="ciudad" placeholder={t("contact.ciudad")} required value={form.ciudad} onChange={handleChange}
               style={{ ...lineInput(), ...focusBorder("ciudad") }}
               onFocus={() => setFocused("ciudad")} onBlur={() => setFocused(null)} />
           </div>
@@ -2090,34 +2162,34 @@ function ContactForm() {
             <select name="servicio" required value={form.servicio} onChange={handleChange}
               style={{ ...lineInput(), color: form.servicio ? "#1d1d1b" : "#9ca3af", ...focusBorder("servicio") }}
               onFocus={() => setFocused("servicio")} onBlur={() => setFocused(null)}>
-              <option value="" disabled>Servicio de interés</option>
-              <option value="Importación por Courier">Importación por Courier</option>
-              <option value="Exportación por Courier">Exportación por Courier</option>
-              <option value="Envíos Terrestres a Venezuela">Envíos Terrestres a Venezuela</option>
-              <option value="Casillero Internacional">Casillero Internacional</option>
-              <option value="Triangulación de Envíos">Triangulación de Envíos</option>
-              <option value="Operaciones Especiales">Operaciones Especiales</option>
+              <option value="" disabled>{t("contact.servicio")}</option>
+              <option value="Importación por Courier">{t("contact.svc1")}</option>
+              <option value="Exportación por Courier">{t("contact.svc2")}</option>
+              <option value="Envíos Terrestres a Venezuela">{t("contact.svc3")}</option>
+              <option value="Casillero Internacional">{t("contact.svc4")}</option>
+              <option value="Triangulación de Envíos">{t("contact.svc5")}</option>
+              <option value="Operaciones Especiales">{t("contact.svc6")}</option>
             </select>
           </div>
-          <textarea name="mensaje" placeholder="Mensaje" value={form.mensaje} onChange={handleChange}
+          <textarea name="mensaje" placeholder={t("contact.mensaje")} value={form.mensaje} onChange={handleChange}
             style={{ ...lineInput({ minHeight: 80, resize: "vertical" }), ...focusBorder("mensaje"), marginBottom: 20 }}
             onFocus={() => setFocused("mensaje")} onBlur={() => setFocused(null)} />
           <div style={{ marginBottom: 10 }}>
             <label style={checkLabelStyle}>
               <input type="checkbox" name="datosCheck" checked={form.datosCheck} onChange={handleChange} style={{ marginTop: 3, accentColor: "#1b6fea", flexShrink: 0 }} />
-              <span>Acepto la <a href="/tratamiento-de-datos" style={{ color: "#1b6fea", textDecoration: "underline", cursor: "pointer" }}>política de tratamiento de datos</a> y el <a href="/aviso-de-privacidad" style={{ color: "#1b6fea", textDecoration: "underline", cursor: "pointer" }}>aviso de privacidad</a></span>
+              <span>{t("contact.datos")} <a href="/tratamiento-de-datos" style={{ color: "#1b6fea", textDecoration: "underline", cursor: "pointer" }}>{t("contact.datos.politica")}</a> {t("contact.datos.y")} <a href="/aviso-de-privacidad" style={{ color: "#1b6fea", textDecoration: "underline", cursor: "pointer" }}>{t("contact.datos.aviso")}</a></span>
             </label>
-            {datosError && <p style={{ color: "#ef4444", fontSize: 12, marginTop: 4, marginLeft: 24 }}>* Debes aceptar la política de tratamiento de datos para continuar</p>}
+            {datosError && <p style={{ color: "#ef4444", fontSize: 12, marginTop: 4, marginLeft: 24 }}>{t("contact.datos.error")}</p>}
           </div>
           <label style={checkLabelStyle}>
             <input type="checkbox" name="novedadesCheck" checked={form.novedadesCheck} onChange={handleChange} style={{ marginTop: 3, accentColor: "#1b6fea", flexShrink: 0 }} />
-            <span>Acepto recibir información sobre servicios y novedades</span>
+            <span>{t("contact.newsletter")}</span>
           </label>
           <div>
             <button type="submit" disabled={sending}
               onMouseEnter={() => setBtnHov(true)} onMouseLeave={() => setBtnHov(false)}
               style={{ marginTop: 24, padding: "14px 40px", borderRadius: 50, border: "none", cursor: sending ? "not-allowed" : "pointer", color: "#fff", fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 15, transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", background: sending ? "#9ca3af" : btnHov ? "linear-gradient(135deg, #00a6ff, #1b6fea)" : "#1b6fea", transform: btnHov && !sending ? "translateY(-2px)" : "translateY(0)", boxShadow: btnHov && !sending ? "0 8px 24px rgba(27,111,234,0.35)" : "none" }}>
-              {sending ? "Enviando..." : "Enviar mensaje"}
+              {sending ? t("contact.enviando") : t("contact.enviar")}
             </button>
           </div>
         </form>
@@ -2127,6 +2199,7 @@ function ContactForm() {
 }
 
 function Footer() {
+  const { t } = useContext(LanguageContext);
   const [routePhase, setRoutePhase] = useState("hidden");
   const sectionRef = useRef(null);
   useEffect(() => {
@@ -2201,7 +2274,7 @@ function Footer() {
         <div className="grid lg:grid-cols-2 gap-12" style={{ alignItems: "stretch" }}>
           <R dir="left"><div style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "32px 28px" }}>
             <Logo h={70} style={{ marginBottom: 10 }} />
-            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#ffffff", lineHeight: 1.75, maxWidth: 420, marginBottom: 20 }}>Operador Logístico Integral en Colombia. Especialistas en logística internacional aérea, importaciones y exportaciones por courier. ¡Desde donde estés, hasta donde lo necesites!</p>
+            <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#ffffff", lineHeight: 1.75, maxWidth: 420, marginBottom: 20 }}>{t("footer.desc")}</p>
             <div style={{ marginBottom: 12 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 8 }}>
                 <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, filter: "drop-shadow(0 0 8px rgba(0,166,255,0.3))" }}>
@@ -2234,8 +2307,8 @@ function Footer() {
       </div>
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", position: "relative", zIndex: 2 }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "12px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#6b7280" }}>© {new Date().getFullYear()} Atlas Logistic SAS — Todos los derechos reservados.</p>
-          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#4b5563" }}>Bogotá, Colombia</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#6b7280" }}>© {new Date().getFullYear()} Atlas Logistic SAS — {t("footer.rights")}</p>
+          <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#4b5563" }}>{t("footer.city")}</p>
         </div>
       </div>
     </footer>
