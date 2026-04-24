@@ -283,9 +283,20 @@ function TypeWriter() {
 
 function Hero() {
   const { t } = useContext(LanguageContext);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   return (
-    <section id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
-      <video autoPlay loop muted playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}>
+    <section id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", background: "#0c2340" }}>
+      <video
+        autoPlay loop muted playsInline preload="auto"
+        poster="/images/banner.webp"
+        onLoadedData={() => setVideoLoaded(true)}
+        style={{
+          position: "absolute", inset: 0, width: "100%", height: "100%",
+          objectFit: "cover", objectPosition: "center",
+          opacity: videoLoaded ? 1 : 0,
+          transition: "opacity 0.8s ease-in-out",
+        }}
+      >
         <source src="/videos/video.mp4" type="video/mp4" />
       </video>
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(12,35,64,0.9) 0%, rgba(12,35,64,0.72) 40%, rgba(12,35,64,0.55) 100%)" }} />
