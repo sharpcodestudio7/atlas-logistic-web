@@ -19,7 +19,7 @@ const getInitials = (nombre) => {
 };
 
 const equipoData = [
-  { key: "hidally", nombre: "Hidally Soler", experiencia: "12 años", img: "/images/team/Marlen.png", imgPos: "center 10%", imgStyle: { transform: "scale(0.85)", transformOrigin: "center top" } },
+  { key: "hidally", nombre: "Hidally Soler", experiencia: "12 años", img: "/images/team/Marlen.png", imgPos: "center 5%", imgStyle: { transform: "scale(0.75)", transformOrigin: "center top" } },
   { key: "brayan",  nombre: "Brayan Delgado",      experiencia: "4 años",  img: "/images/team/Hombre1.png",          imgPos: "center 20%" },
   { key: "viviana", nombre: "Viviana Virviescas",   experiencia: "10 años", img: "/images/team/Mujer1.png",           imgPos: "center 20%" },
   { key: "ashlie",  nombre: "Ashlie Pulgarín",      experiencia: "2 años",  img: "/images/team/Ashley.png",           imgPos: "center 20%" },
