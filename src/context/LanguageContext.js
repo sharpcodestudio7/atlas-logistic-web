@@ -161,6 +161,9 @@ const translations = {
     "equipo.viviana.esp": "Liderazgo estratégico del área comercial, desarrollo de clientes corporativos y estructuración de soluciones logísticas internacionales, con enfoque en importaciones y exportaciones por courier.",
     "equipo.ashlie.cargo": "Ejecutiva Comercial Senior",
     "equipo.ashlie.esp": "Desarrollo de clientes y asesoría en soluciones logísticas internacionales, especializada en exportación por courier, ofreciendo propuestas estratégicas adaptadas a cada operación.",
+    "equipo.cta.titulo": "¿Quieres hacer parte de nuestro equipo?",
+    "equipo.cta.desc": "Buscamos profesionales apasionados por la logística internacional",
+    "equipo.cta.btn": "Contáctanos",
   },
   en: {
     // Nav
@@ -321,6 +324,9 @@ const translations = {
     "equipo.viviana.esp": "Strategic leadership of the commercial area, corporate client development and structuring of international logistics solutions, focused on imports and exports by courier.",
     "equipo.ashlie.cargo": "Senior Commercial Executive",
     "equipo.ashlie.esp": "Client development and advisory in international logistics solutions, specialized in courier export, offering strategic proposals adapted to each operation.",
+    "equipo.cta.titulo": "Want to join our team?",
+    "equipo.cta.desc": "We're looking for professionals passionate about international logistics",
+    "equipo.cta.btn": "Contact us",
   }
 };
 

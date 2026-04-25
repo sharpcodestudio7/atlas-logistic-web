@@ -652,6 +652,7 @@ function TeamGrid() {
 
 /* ─── CTA ─── */
 function CTA() {
+  const { t } = useContext(LanguageContext);
   const [ref, visible] = useInView();
   return (
     <section style={{
@@ -672,13 +673,13 @@ function CTA() {
             fontFamily: "'Fira Sans',sans-serif", fontWeight: 800,
             fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", color: "#ffffff", marginBottom: 16,
           }}>
-            ¿Quieres hacer parte de nuestro equipo?
+            {t("equipo.cta.titulo")}
           </h2>
           <p style={{
             fontFamily: "'Roboto',sans-serif", color: "rgba(255,255,255,0.7)",
             fontSize: "clamp(0.95rem, 1.8vw, 1.1rem)", lineHeight: 1.7, marginBottom: 36,
           }}>
-            Buscamos profesionales apasionados por la logística internacional
+            {t("equipo.cta.desc")}
           </p>
           <AnimBtn
             href="/#contacto"
@@ -689,7 +690,7 @@ function CTA() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
             </svg>
-            Contáctanos
+            {t("equipo.cta.btn")}
           </AnimBtn>
         </div>
       </div>
