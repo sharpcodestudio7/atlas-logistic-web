@@ -149,7 +149,7 @@ const translations = {
     // Equipo page
     "equipo.titulo": "Nuestro Equipo",
     "equipo.subtitulo": "Profesionales apasionados por mover el mundo",
-    "equipo.seccion": "Las personas detrás de cada envío",
+    "equipo.seccion": "Conoce a nuestros líderes de área",
     "equipo.stats.profesionales": "Profesionales",
     "equipo.stats.experiencia": "Años de experiencia combinada",
     "equipo.stats.areas": "Áreas especializadas",
