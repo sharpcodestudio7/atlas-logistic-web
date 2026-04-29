@@ -1516,10 +1516,10 @@ function WhyUs() {
 function ShowcaseSlider() {
   const { t } = useContext(LanguageContext);
   const images = [
-    { src: "/images/team/OPCION.jpg", fit: "cover", pos: "center center" },
-    { src: "/images/exportaciones.png",  fit: "cover", pos: "center center" },
-    { src: "/images/casillero.png",      fit: "cover", pos: "center center" },
-    { src: "/images/redglobal.png",      fit: "cover", pos: "left top" },
+    { src: "/images/team/OPCION.jpg",   fit: "cover", pos: "center center", alt: "Servicio de importaciones internacionales Atlas Logistic" },
+    { src: "/images/exportaciones.png", fit: "cover", pos: "center center", alt: "Servicio de exportaciones internacionales Atlas Logistic" },
+    { src: "/images/casillero.png",     fit: "cover", pos: "center center", alt: "Servicio de casillero internacional Atlas Logistic" },
+    { src: "/images/redglobal.png",     fit: "cover", pos: "left top",      alt: "Red global de logística Atlas Logistic" },
   ];
   const slides = [
     { tag: t("showcase.s0.tag"), title: t("showcase.s0.title"), desc: t("showcase.s0.desc"), statLines: [t("showcase.s0.statLine1"), t("showcase.s0.statLine2")], statFontSize: 32, statLabel: t("showcase.s0.statlabel") },
@@ -1636,7 +1636,7 @@ function ShowcaseSlider() {
               <img
                 key={i}
                 src={img.src}
-                alt=""
+                alt={img.alt}
                 style={{
                   position: "absolute", inset: 0, width: "100%", height: "100%",
                   objectFit: img.fit, objectPosition: img.pos,
