@@ -15,7 +15,7 @@ const translations = {
     "hero.titulo.l1": "¡Desde donde estés",
     "hero.titulo.l2": "hasta donde lo necesites!",
     "hero.subtitulo": "Especialistas en",
-    "hero.words": "Importaciones|Exportaciones|Courier|Agenciamiento Aduanero|Logística Internacional",
+    "hero.words": "Importaciones|Exportaciones|Courier|Logística Internacional",
     "hero.cta1": "Cotizar mi envío",
     "hero.cta2": "Contáctanos",
     // Services
@@ -178,7 +178,7 @@ const translations = {
     "hero.titulo.l1": "From wherever you are,",
     "hero.titulo.l2": "to wherever you need it!",
     "hero.subtitulo": "Specialists in",
-    "hero.words": "Imports|Exports|Courier|Customs Agency|International Logistics",
+    "hero.words": "Imports|Exports|Courier|International Logistics",
     "hero.cta1": "Quote my shipment",
     "hero.cta2": "Contact us",
     // Services
