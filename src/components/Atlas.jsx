@@ -957,14 +957,14 @@ function SvcCard({ icon, title, desc, color, hoverAnim, serviceKey, onOpenModal 
         <div style={{ marginBottom: 14 }}>
           <AnimIcon hov={hov} color={color} hoverAnim={hoverAnim}>{icon}</AnimIcon>
         </div>
-        <h3 style={{
+        <p style={{
           fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 18, marginBottom: 8, lineHeight: 1.35,
           color: hov ? "transparent" : "#1d1d1b",
           background: hov ? "linear-gradient(135deg, #00a6ff, #1b6fea)" : "none",
           WebkitBackgroundClip: hov ? "text" : "unset",
           backgroundClip: hov ? "text" : "unset",
           transition: "color 0.3s",
-        }}>{title}</h3>
+        }}>{title}</p>
         <p style={{
           fontFamily: "'Roboto',sans-serif", fontSize: 15, lineHeight: 1.6,
           color: hov ? "#4b5563" : "#6b7280",
@@ -1154,7 +1154,7 @@ function StatCard({ icon, value, numEnd, numSuffix, label, color, hoverAnim }) {
       <div style={{ marginBottom: 10 }}>
         <AnimIcon hov={hov} color={color} size={60} hoverAnim={hoverAnim || "whyusPulse"}>{icon}</AnimIcon>
       </div>
-      <h3 style={{
+      <p style={{
         fontFamily: "'Fira Sans',sans-serif", fontWeight: 800, fontSize: 36, marginBottom: 4, lineHeight: 1.1,
         color: hov ? "transparent" : "#1d1d1b",
         background: hov ? "linear-gradient(135deg, #00a6ff, #1b6fea)" : "none",
@@ -1162,7 +1162,7 @@ function StatCard({ icon, value, numEnd, numSuffix, label, color, hoverAnim }) {
         backgroundClip: hov ? "text" : "unset",
         transition: "color 0.3s",
         textShadow: hov ? "none" : "none",
-      }}>{numEnd != null ? <AnimCounter end={numEnd} suffix={numSuffix} /> : value}</h3>
+      }}>{numEnd != null ? <AnimCounter end={numEnd} suffix={numSuffix} /> : value}</p>
       <p style={{
         fontFamily: "'Roboto',sans-serif", fontSize: 13, lineHeight: 1.35,
         color: hov ? "#1b6fea" : "#6b7280",
@@ -1397,11 +1397,11 @@ function WhyUsCard({ icon, title, desc, color, hoverAnim }) {
       <div style={{ marginBottom: 20 }}>
         <AnimIcon hov={hov} color={color} size={56} hoverAnim={hoverAnim}>{icon}</AnimIcon>
       </div>
-      <h3 style={{
+      <p style={{
         fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 18, marginBottom: 10, lineHeight: 1.35,
         color: "#ffffff", transition: "all 0.3s",
         textShadow: hov ? "0 0 20px rgba(0,166,255,0.3)" : "none",
-      }}>{title}</h3>
+      }}>{title}</p>
       <p style={{
         fontFamily: "'Roboto',sans-serif", fontSize: 14, lineHeight: 1.65,
         color: hov ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.65)",
@@ -1900,14 +1900,14 @@ function CTA() {
                 height: calcHov ? "100%" : "0%",
                 transition: "height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
               }} />
-              <h3 style={{
+              <p style={{
                 fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 18, marginBottom: 6,
                 color: calcHov ? "transparent" : "#1d1d1b",
                 background: calcHov ? "linear-gradient(135deg, #00a6ff, #1b6fea)" : "none",
                 WebkitBackgroundClip: calcHov ? "text" : "unset",
                 backgroundClip: calcHov ? "text" : "unset",
                 transition: "color 0.3s",
-              }}>{t("cta.calc.titulo")}</h3>
+              }}>{t("cta.calc.titulo")}</p>
               <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 14, color: "#6b7280", marginBottom: 20, lineHeight: 1.5 }}>{t("cta.calc.desc")}</p>
               <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 12, marginBottom: 14 }}>
                 {[["largo", t("cta.largo")], ["ancho", t("cta.ancho")], ["alto", t("cta.alto")]].map(([k, label]) => (
@@ -1953,7 +1953,7 @@ function CTA() {
           {/* CTA side */}
           <R dir="right" delay={200}>
             <div style={{ textAlign: "center", padding: "20px 0" }}>
-              <h3 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 22, color: "#1d1d1b", marginBottom: 12 }}>{t("cta.cta.titulo")}</h3>
+              <p style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 700, fontSize: 22, color: "#1d1d1b", marginBottom: 12 }}>{t("cta.cta.titulo")}</p>
               <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 16, color: "#6b7280", maxWidth: 400, margin: "0 auto 28px", lineHeight: 1.7 }}>{t("cta.cta.desc")}</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center" }}>
                 <AnimBtn href={WA} external bg="#25D366" hoverBg="#1ea855" shadow="0 6px 20px rgba(37,211,102,0.25)" hoverShadow="0 14px 32px rgba(37,211,102,0.35)">
@@ -2036,10 +2036,10 @@ function SuccessTypeWriter() {
   const before = displayed.slice(0, Math.min(displayed.length, blueStart));
   const blue = displayed.length > blueStart ? displayed.slice(blueStart) : "";
   return (
-    <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 300, fontSize: "clamp(2rem, 4vw, 3rem)", color: "#1d1d1b", lineHeight: 1.15 }}>
+    <p style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 300, fontSize: "clamp(2rem, 4vw, 3rem)", color: "#1d1d1b", lineHeight: 1.15 }}>
       {before}<span style={{ color: "#1b6fea" }}>{blue}</span>
       {displayed.length < full.length && <span style={{ animation: "blink 0.5s step-end infinite" }}>|</span>}
-    </h2>
+    </p>
   );
 }
 
@@ -2073,9 +2073,9 @@ function ContactTypeWriter() {
     return () => clearTimeout(timeout);
   }, [displayed, phase, wordIndex]);
   return (
-    <h2 style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 300, fontSize: "clamp(2.5rem, 5vw, 3.8rem)", color: "#1d1d1b", lineHeight: 1.15, margin: 0, minHeight: "4.5em" }}>
+    <p style={{ fontFamily: "'Fira Sans',sans-serif", fontWeight: 300, fontSize: "clamp(2.5rem, 5vw, 3.8rem)", color: "#1d1d1b", lineHeight: 1.15, margin: 0, minHeight: "4.5em" }}>
       {displayed}<span style={{ animation: "blink 0.5s step-end infinite" }}>|</span>
-    </h2>
+    </p>
   );
 }
 
@@ -2338,7 +2338,20 @@ function Footer() {
         </div>
       </div>
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", position: "relative", zIndex: 2 }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "12px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "14px 24px 10px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "8px 20px" }}>
+          {[
+            { label: "Inicio", href: "/" },
+            { label: "Nuestro Equipo", href: "/equipo" },
+            { label: "Tratamiento de Datos", href: "/tratamiento-de-datos" },
+            { label: "Aviso de Privacidad", href: "/aviso-de-privacidad" },
+          ].map(({ label, href }) => (
+            <a key={href} href={href} style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#6b7280", textDecoration: "none", transition: "color 0.2s" }}
+              onMouseEnter={e => { e.currentTarget.style.color = "#00a6ff"; }}
+              onMouseLeave={e => { e.currentTarget.style.color = "#6b7280"; }}
+            >{label}</a>
+          ))}
+        </div>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px 12px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#6b7280" }}>© {new Date().getFullYear()} Atlas Logistic SAS — {t("footer.rights")}</p>
           <p style={{ fontFamily: "'Roboto',sans-serif", fontSize: 13, color: "#4b5563" }}>{t("footer.city")}</p>
         </div>
