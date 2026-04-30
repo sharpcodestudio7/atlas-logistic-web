@@ -1,11 +1,11 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Atlas Logistic SAS — Soluciones Logísticas Internacionales | Courier, Importación y Exportación',
-  description: 'Operador logístico integral en Colombia. Importación y exportación por courier, transporte marítimo, aéreo y agenciamiento aduanero. Envíos a más de 220 países. Cotiza ahora.',
+  title: 'Atlas Logistic SAS | Courier, Importación y Exportación',
+  description: 'Operador logístico en Colombia. Importación y exportación por courier hacia más de 220 países. Envíos rápidos y seguros. ¡Cotiza ahora!',
   keywords: [
     'logística internacional', 'courier Colombia', 'importación por courier',
-    'exportación Colombia', 'envíos internacionales', 'agenciamiento aduanero',
+    'exportación Colombia', 'envíos internacionales',
     'transporte aéreo de carga', 'transporte marítimo', 'casillero internacional',
     'envíos a Venezuela', 'Atlas Logistic', 'operador logístico Bogotá',
   ],
@@ -59,6 +59,7 @@ export default function RootLayout({ children }) {
     <html lang="es">
       <head>
         <link rel="icon" href="/images/logo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
@@ -70,7 +71,7 @@ export default function RootLayout({ children }) {
               name: 'Atlas Logistic SAS',
               url: 'https://atlaslogistic.com.co',
               logo: 'https://atlaslogistic.com.co/images/logo.svg',
-              description: 'Operador logístico integral en Colombia. Importación y exportación por courier, transporte marítimo, aéreo y agenciamiento aduanero.',
+              description: 'Operador logístico en Colombia. Importación y exportación por courier, transporte marítimo y aéreo hacia más de 220 países.',
               address: {
                 '@type': 'PostalAddress',
                 streetAddress: 'Carrera 31b # 4A-11',

@@ -1,0 +1,26 @@
+RewriteEngine On
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirect www to non-www
+RewriteCond %{HTTP_HOST} ^www\.atlaslogistic\.com\.co [NC]
+RewriteRule ^(.*)$ https://atlaslogistic.com.co/$1 [L,R=301]
+
+# Redirect trailing slashes
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# If the request is not a file and not a directory
+# Try adding .html extension
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ /$1.html [L]
+
+# Custom 404
+ErrorDocument 404 /404.html
+
+# UTF-8 encoding
+AddDefaultCharset UTF-8
