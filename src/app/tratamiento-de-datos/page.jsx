@@ -6,7 +6,7 @@ function BackBtn() {
   const [pressed, setPressed] = useState(false);
   return (
     <a
-      href="/"
+      href="/#contacto"
       style={{
         display: "inline-flex", alignItems: "center", gap: 10,
         background: hov ? "rgba(27,111,234,0.18)" : "rgba(255,255,255,0.08)",

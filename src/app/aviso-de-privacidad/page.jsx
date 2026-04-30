@@ -155,7 +155,7 @@ y 15 días hábiles para reclamos.`
           </a>
         </div>
 
-        <a href="/" style={{
+        <a href="/#contacto" style={{
           display: "inline-flex", alignItems: "center", gap: 8,
           marginTop: 40, color: "#1b6fea", fontSize: 14,
           fontWeight: 600, textDecoration: "none"
